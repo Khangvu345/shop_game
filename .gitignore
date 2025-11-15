@@ -1,0 +1,36 @@
+# --- General ---
+.DS_Store
+*.log
+*.err
+
+# --- Local Environment Files ---
+# Chặn tất cả các file .env để bảo vệ bí mật
+*.env
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
+# --- Frontend (Vite/React) ---
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/coverage/
+
+# --- Backend (Spring Boot / Java) ---
+backend/target/
+backend/build/
+backend/.gradle/
+*.class
+*.jar
+*.war
+
+# --- IDE & Tool Specific ---
+# VS Code
+.vscode/
+.idea/
+
+# MySQL Workbench
+*.mwb
+*.mwb.bak
+*.mwb~
