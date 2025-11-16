@@ -95,7 +95,6 @@ Hướng dẫn cài đặt và chạy dự án ở môi trường local.
 │   │   │
 │   │   └── features/       # Component "thông minh" (Smart Components), có thể ghép bởi ui, có logic
 │   │       └── ...         # Cấu trúc tương tự, cần một thư mục chứ .tsx và .css riêng
-
 │   │
 │   ├── hooks/              # Custom Hooks (ngoài Redux)
 │   │
