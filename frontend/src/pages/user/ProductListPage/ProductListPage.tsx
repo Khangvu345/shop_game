@@ -17,7 +17,7 @@ interface ProductListProps {
     products: IProduct[]; // Chỉ nhận mảng sản phẩm
 }
 
-export const ProductListPage: React.FC = () => {
+export function ProductListPage() {
     const dispatch = useAppDispatch();
 
     // 1. Lấy state từ Redux

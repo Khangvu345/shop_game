@@ -7,7 +7,7 @@ interface ProductListProps {
     products: IProduct[];
 }
 
-export const ProductList: React.FC<ProductListProps> = ({ products }) => {
+export function ProductList  ({ products }:ProductListProps){
     const dispatch = useAppDispatch();
 
     // Logic thêm vào giỏ hàng được quản lý ở đây

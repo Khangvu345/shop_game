@@ -5,7 +5,7 @@ import type { IProduct } from '../../../types';
 
 import './HomePage.css'
 
-export const HomePage: React.FC = () => {
+export function HomePage () {
 
     return (
         <div className="homepage">
