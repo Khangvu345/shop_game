@@ -1,0 +1,14 @@
+:root {
+    --color-1: #0EA89B;
+    --font-size-base: clamp(14px, 1.2vw, 18px);
+    --font-family-heading: Sarabun;
+    --font-family-body: Lato, sans-serif;
+}
+
+
+html {
+    box-sizing: border-box;
+    font-size: var(--font-size-base);
+    scroll-behavior: smooth;
+}
+
