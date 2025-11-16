@@ -23,7 +23,7 @@ const LoginButton = () => (
 
 
 
-export const MainLayout: React.FC = () => {
+export function MainLayout() {
     return (
         <div className="app-container">
             <Navbar links={<PublicNavLinks />} actions={<LoginButton /> }/>

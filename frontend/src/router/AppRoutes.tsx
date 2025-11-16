@@ -5,7 +5,7 @@ import { HomePage } from '../pages/user/HomePage/HomePage';
 import { ProductListPage } from '../pages/user/ProductListPage/ProductListPage';
 // import { ProductDetailPage } from '../pages/ProductDetailPage'; // Sẽ thêm sau
 
-export const AppRoutes: React.FC = () => {
+export function AppRoutes() {
     return (
         <Routes>
             <Route path="/" element={<MainLayout />}>

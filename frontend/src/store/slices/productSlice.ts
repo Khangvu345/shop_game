@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { IApiState, IProduct } from '../../types';
-import { productApi } from '../../api/productAPI';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import type {IApiState, IProduct} from '../../types';
+import {productApi} from '../../api/productAPI';
 
 interface ProductState extends IApiState<IProduct[]> {
     selectedProduct: IApiState<IProduct>;
@@ -20,16 +20,14 @@ const initialState: ProductState = {
 export const fetchProducts = createAsyncThunk(
     'products/fetchProducts',
     async () => {
-        const response = await productApi.getAll();
-        return response;
+        return await productApi.getAll();
     }
 );
 
 export const fetchProductById = createAsyncThunk(
     'products/fetchProductById',
     async (id: string) => {
-        const response = await productApi.getById(id);
-        return response;
+        return await productApi.getById(id);
     }
 );
 
