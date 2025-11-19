@@ -68,7 +68,7 @@ Hướng dẫn cài đặt và chạy dự án ở môi trường local.
 ---
 
 ## 📁 Cấu trúc Thư mục
-
+```
 ├── public/
 │   └── favicon.ico         # Icon của trang
 │
@@ -140,7 +140,7 @@ Hướng dẫn cài đặt và chạy dự án ở môi trường local.
 ├── package.json            #
 ├── tsconfig.json           # Cấu hình TypeScript
 └── vite.config.ts          # File cấu hình Vite
-
+```
 Dự án được tổ chức theo "feature" (tính năng) và "domain" (khu vực).
 
 ---
