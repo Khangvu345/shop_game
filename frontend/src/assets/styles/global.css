@@ -1,14 +1,156 @@
 :root {
-    --color-1: #0EA89B;
+    --color-1: #0EA89B; /* Màu xanh ngọc/xanh lá (Primary Action) */
+    --color-text: #333333; /* Màu chữ chính */
+    --color-heading: #1a1a1a; /* Màu tiêu đề đậm */
+    --color-background-light: #f8f8f8; /* Màu nền nhạt */
+    --color-primary: #0070d1; /* Màu xanh chủ đạo (PlayStation) */
+    --color-price: #cc0000; /* Màu giá tiền nổi bật (Đỏ) */
+
     --font-size-base: clamp(14px, 1.2vw, 18px);
-    --font-family-heading: Sarabun;
+    --font-family-heading: Sarabun, sans-serif;
     --font-family-body: Lato, sans-serif;
+    
+    --container-max-width: 1200px;
 }
 
+/* BOX SIZING RESET */
+*, *::before, *::after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+}
 
 html {
     box-sizing: border-box;
     font-size: var(--font-size-base);
     scroll-behavior: smooth;
+    color: var(--color-text);
+    font-family: var(--font-family-body);
 }
 
+/* BODY VÀ TYPOGRAPHY CƠ BẢN */
+body {
+    line-height: 1.6;
+    background-color: #ffffff;
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-heading);
+    color: var(--color-heading);
+    line-height: 1.2;
+}
+
+/* ĐỊNH NGHĨA CONTAINER CHUNG */
+.container {
+    width: 90%;
+    max-width: var(--container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* ĐỊNH DẠNG NÚT VÀ LIÊN KẾT CƠ BẢN */
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+a {
+    text-decoration: none;
+    color: var(--color-text);
+}
+
+/* --- ĐỊNH NGHĨA CÁC THÀNH PHẦN UI CHUNG --- */
+
+/* 1. Nút chính (Primary Buttons) */
+.btn-primary, .btn-main {
+    background-color: var(--color-1); 
+    color: white;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    display: inline-block; 
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover, .btn-main:hover {
+    background-color: #008f82;
+}
+
+/* Nút phụ (Secondary Buttons) */
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--color-1);
+    color: var(--color-1);
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-1);
+    color: white;
+}
+
+/* 2. Card, Panel và Form Container */
+.card, .panel, .form-box {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef; 
+    border-radius: 8px; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); 
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+/* 3. Form Inputs và Controls */
+input[type="text"], 
+input[type="email"], 
+input[type="password"],
+input[type="number"], 
+select,
+textarea,
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: var(--color-text);
+    transition: border-color 0.3s;
+}
+
+input:focus, .form-control:focus {
+    border-color: var(--color-1);
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(14, 168, 155, 0.25); 
+}
+
+/* 4. Giá Tiền (Price Display) */
+.product-price, .price-large {
+    color: var(--color-price);
+    font-size: 1.5rem; 
+    font-weight: 700;
+}
+
+.price-small {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+/* 5. Hình ảnh mặc định */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
