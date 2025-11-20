@@ -1,0 +1,6 @@
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    justify-items: left;
+    align-items: start;
+}

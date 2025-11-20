@@ -1,0 +1,9 @@
+.card {
+    position: absolute;
+    box-shadow: 0 0 1px #171a1f1C, 0 0 2px #171a1f29;
+}
+
+.product-card {
+    background: #FFFFFFFF; /* white */
+    border-radius: 6px;
+}

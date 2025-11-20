@@ -1,11 +1,10 @@
 .btn{
-    position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* */
+/*  */
 .btn-shape-base{
     border: none;
     border-radius: 4px;
@@ -16,8 +15,8 @@
 
 /* Size */
 .btn-size-small {
-    font-size: 0.9rem;
-    width: 5.2rem;
+    font-size: 0.7rem;
+    width: 6rem;
     height: 2.2rem;
     margin: 0.2rem;
 }

@@ -9,20 +9,20 @@ import {ProductCard} from "../../../components/features/product/ProductCard/Prod
 import {ProductList} from "../../../components/features/product/ProductList/ProductList";
 
 import './ProductListPage.css'
+import {ProductSidebar} from "../../../components/features/product/ProductSidebar/ProductSidebar.tsx";
 
 
 
 
 interface ProductListProps {
-    products: IProduct[]; // Chỉ nhận mảng sản phẩm
+    products: IProduct[];
 }
 
 export function ProductListPage() {
     const dispatch = useAppDispatch();
 
-    // 1. Lấy state từ Redux
     const {
-        data: products, // products là mảng IProduct[]
+        data: products,
         status,
         error
     } = useAppSelector((state) => state.products); // Lấy từ 'products' slice
@@ -34,46 +34,33 @@ export function ProductListPage() {
         }
     }, [status, dispatch]);
 
-    // 3. Hàm render nội dung chính (cột phải)
-    const renderContent = () => {
-        // Trường hợp 1: Đang tải
-        if (status === 'loading') {
-            return <Spinner type="spinner1" />; // Dùng Spinner UI Kit của bạn
+
+
+    function renderContent (){
+        switch (status) {
+            case 'loading': return <Spinner type="spinner1" />;
+            case 'failed': return <p style={{ color: 'red' }}>Lỗi khi tải sản phẩm: {error}</p>;
+            case 'succeeded': return products? <ProductList products={products} /> : <p>Không có sản phẩm nào.</p>;
         }
 
-        // Trường hợp 2: Tải lỗi
-        if (status === 'failed') {
-            return <p style={{ color: 'red' }}>Lỗi khi tải sản phẩm: {error}</p>;
-        }
-
-        // Trường hợp 3: Tải thành công
-        if (status === 'succeeded' && products) {
-            // Truyền mảng products cho component "ngu"
-            return <ProductList products={products} />;
-        }
-
-        return null; // Trả về null nếu đang 'idle'
-    };
+        return null;
+    }
 
     return (
-        // Dùng class 'container' để căn giữa và 'page-container' để chia 2 cột
-        <div className="container page-container">
 
-
-
-            {/* CỘT 2: SẢN PHẨM */}
-            <main className="page-content">
-                <h2>MÁY CHƠI GAME & THIẾT BỊ CẦM TAY</h2>
-                <p>
-                    Khám phá máy chơi game PlayStation 5 và Xbox mới nhất...
-                </p>
-
-                <hr style={{ margin: '1rem 0' }} />
-
-                {/* 4. Render nội dung dựa trên trạng thái API */}
-                {renderContent()}
-            </main>
+        <div className="product-page-container">
+            <div className="product-page-header">
+                <h1>Danh sách sản phẩm</h1>
+            </div>
+            <div className={'product-page-body'}>
+                <ProductSidebar></ProductSidebar>
+                <main className="product-page-content">
+                    {renderContent()}
+                </main>
+            </div>
 
         </div>
+
+
     );
 };
