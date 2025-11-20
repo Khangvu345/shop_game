@@ -20,7 +20,7 @@ public class ApiResponse<T> {
     private String error;
 
     public static <T> ApiResponse<T> success(String message, T data) {
-        return new ApiResponse<>(true, message, data, LocalDateTime.now(), null);
+        return new ApiResponse<T>(true, message, data, LocalDateTime.now(), null);
     }
 
     public static <T> ApiResponse<T> success(String message) {
@@ -28,7 +28,7 @@ public class ApiResponse<T> {
     }
 
     public static <T> ApiResponse<T> error(String message, String errorDetail) {
-        return new ApiResponse<>(false, message, null, LocalDateTime.now(), errorDetail);
+        return new ApiResponse<T>(false, message, null, LocalDateTime.now(), errorDetail);
     }
 
     public static <T> ApiResponse<T> error(String message) {
