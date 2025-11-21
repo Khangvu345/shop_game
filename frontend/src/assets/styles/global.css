@@ -3,11 +3,11 @@
     --color-primary-1: #171A1F;
     --color-primary-2: #F3F4F6;
 
-    --color-secondary-0: #0EA89B;
+        --color-secondary-0: #0EA89B;
     --color-secondary-1: #0D83A8;
 
     --color-accent-0: #0DA832;
-    --color-accent-1:   #A8250D;
+    --color-accent-1: #A8250D;
 
     --font-size-base: clamp(14px, 1.2vw, 18px);
     --font-family-heading: Sarabun;
@@ -32,30 +32,5 @@ html {
     outline: none;
     align-items: center;
 
-}
-
-.bg-color-0 {
-    background-color: var(--color-primary-0);
-}
-
-.bg-color-1 {
-    background-color: var(--color-primary-2);
-}
-
-.bg-color-2 {
-    background-color: var(--color-secondary-0);
-}
-
-
-.text-color-0 {
-    color: var(--color-primary-1);
-}
-
-.text-color-1 {
-    color: var(--color-primary-0);
-}
-
-.text-color-2 {
-    color: var(--color-secondary-1);
 }
 
