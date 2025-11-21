@@ -4,30 +4,28 @@ import './Navbar.css';
 interface NavbarProps {
     logo?: React.ReactNode;
     links: React.ReactNode;
+    search?: React.ReactNode;
     actions?: React.ReactNode;
 }
 
 
 export function Navbar({ logo, links, actions }: NavbarProps) {
     return (
-        <nav className="navbar">
-            <div className="container navbar-container">
-
-                <div className="navbar-logo-area">
-                    {logo}
-                </div>
-
-                {links && (
-                    <div className="navbar-nav">
-                        {links}
-                    </div>
-                )}
-
-                <div className="navbar-actions">
-                    {actions}
-                </div>
-
+        <div className="navbar">
+            <div className="navbar-logo">
+                {logo}
             </div>
-        </nav>
+
+            {links && (
+                <nav className="navbar-nav">
+                    {links}
+                </nav>
+            )}
+
+            <div className="navbar-actions">
+                {actions}
+            </div>
+
+        </div>
     );
-};
+}

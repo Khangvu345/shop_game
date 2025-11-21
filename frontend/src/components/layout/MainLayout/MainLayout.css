@@ -1,0 +1,11 @@
+.main-container{
+    width: 100%;
+    display: grid;
+    grid-template-areas:
+        "main-header"
+        "main-content"
+        "main-footer";
+    grid-template-rows: 1fr auto 3fr;
+}
+
+

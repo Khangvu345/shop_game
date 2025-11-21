@@ -1,0 +1,14 @@
+.product-page-header{
+
+}
+
+.product-page-body{
+    width: 100%;
+    display: grid;
+    grid-template-areas:"product-sidebar" "product-list";
+    grid-template-columns: 1fr 3fr;
+}
+
+.product-page-content{
+    justify-items: center;
+}
