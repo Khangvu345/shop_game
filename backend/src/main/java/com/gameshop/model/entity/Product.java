@@ -43,7 +43,7 @@ public class Product {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "list_price", nullable = false, precision = 12, scale = 2)
+    @Column(name = "list_price", nullable = false, precision = 10, scale = 0) // Mệnh giá VNĐ không có phần thập phân và tối đa 10 chữ số
     private BigDecimal listPrice;
     
     // --- BỔ SUNG TRƯỜNG TỒN KHO (QUAN TRỌNG) ---
@@ -52,10 +52,11 @@ public class Product {
 
     @Column(name = "status", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
-    private ProductStatus status = ProductStatus.ACTIVE;
+    private ProductStatus status = ProductStatus.Active; // Viết thường để đồng bộ với cơ sở dữ liệu
 
-    @Column(name = "category_id", nullable = false)
-    private Long categoryId;
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category; 
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

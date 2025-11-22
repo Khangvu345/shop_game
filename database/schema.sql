@@ -88,7 +88,7 @@ CREATE TABLE product (
     sku VARCHAR(100) UNIQUE,
     product_name VARCHAR(200) NOT NULL,
     description TEXT,
-    list_price DECIMAL(12,2) NOT NULL,
+    list_price DECIMAL(10,0) NOT NULL, -- Mệnh giá VNĐ 
     status ENUM('Active', 'Inactive') DEFAULT 'Active',
     category_id BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
