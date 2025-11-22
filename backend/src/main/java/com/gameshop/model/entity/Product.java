@@ -3,7 +3,6 @@ package com.gameshop.model.entity;
 import com.gameshop.model.enums.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
@@ -11,7 +10,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "product")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
@@ -21,6 +19,21 @@ public class Product {
     @Column(name = "product_id")
     private Long productId;
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
     @Column(name = "sku", unique = true, length = 100)
     private String sku;
 
@@ -32,6 +45,10 @@ public class Product {
 
     @Column(name = "list_price", nullable = false, precision = 12, scale = 2)
     private BigDecimal listPrice;
+    
+    // --- BỔ SUNG TRƯỜNG TỒN KHO (QUAN TRỌNG) ---
+    @Column(name = "stock_quantity")
+    private Integer stockQuantity = 0; // Mặc định là 0
 
     @Column(name = "status", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
@@ -57,4 +74,36 @@ public class Product {
         this.updatedAt = LocalDateTime.now();
     }
 
+    // ==========================================
+    // GETTER & SETTER THỦ CÔNG (FIX LỖI LOMBOK)
+    // ==========================================
+
+    public Long getProductId() { return productId; }
+    public void setProductId(Long productId) { this.productId = productId; }
+
+    // Helper để khớp với OrderService (getName -> productName)
+    public String getName() { return productName; } 
+    public String getProductName() { return productName; }
+    public void setProductName(String productName) { this.productName = productName; }
+
+    // Helper để khớp với OrderService (getPrice -> listPrice)
+    public BigDecimal getPrice() { return listPrice; }
+    public BigDecimal getListPrice() { return listPrice; }
+    public void setListPrice(BigDecimal listPrice) { this.listPrice = listPrice; }
+
+    // Getter Stock (Quan trọng)
+    public Integer getStockQuantity() { return stockQuantity; }
+    public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
+
+    public String getSku() { return sku; }
+    public void setSku(String sku) { this.sku = sku; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public ProductStatus getStatus() { return status; }
+    public void setStatus(ProductStatus status) { this.status = status; }
+
+    public Long getCategoryId() { return categoryId; }
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
 }
