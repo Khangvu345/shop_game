@@ -199,6 +199,7 @@ Dự án được tổ chức theo "feature" (tính năng) và "domain" (khu v�
 * Mỗi component nên có file CSS riêng (ví dụ: `Button.css` cho `Button.tsx`), có tác dụng css hình dạng, kích thước.
 * Màu sắc liên quan đến theme (chủ đề) chung của ứng dụng nên đặt trong `global.css` để đồng nhất. Một vài màu đặc thù của component có thể đặt trong file CSS riêng của component đó.
 * Kích thước nên dùng đơn vị rem (theo cỡ chữ) hoặc % (theo kích thước thành phần cha). Hạn chế tối đa dùng đơn vị px
+* Nên dùng grid cho layout 
 ---
 
 ## 🌐 Luồng làm việc với Git (Git Workflow)
