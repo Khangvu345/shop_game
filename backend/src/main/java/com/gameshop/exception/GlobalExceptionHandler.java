@@ -47,5 +47,3 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error("Đã xảy ra lỗi không mong muốn. Vui lòng thử lại sau.", ex.getMessage()));
     }
 }
-
-

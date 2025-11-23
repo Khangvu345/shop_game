@@ -3,6 +3,8 @@ import { ProductCard } from '../ProductCard/ProductCard';
 import { useAppDispatch } from '../../../../store/hooks';
 import { addItem } from '../../../../store/slices/cartSlice';
 
+import './ProductList.css'
+
 interface ProductListProps {
     products: IProduct[];
 }
@@ -20,7 +22,6 @@ export function ProductList  ({ products }:ProductListProps){
         return <div>Không tìm thấy sản phẩm nào.</div>;
     }
 
-    // Dùng .product-grid CSS
     return (
         <div className="product-grid">
             {products.map((product) => (

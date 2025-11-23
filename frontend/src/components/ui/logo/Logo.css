@@ -1,0 +1,12 @@
+.logo{
+    max-width: 100%;
+}
+.logo-size-small{
+    width: 2rem;
+}
+.logo-size-medium{
+    width: 4rem;
+}
+.logo-size-large{
+    width: 6rem;
+}
