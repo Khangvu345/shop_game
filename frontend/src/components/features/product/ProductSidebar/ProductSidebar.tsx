@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
 import { setFilters } from '../../../../store/slices/productSlice';
 import { Button } from '../../../ui/button/Button';
 
-export const ProductSidebar: React.FC = () => {
+export function ProductSidebar(){
     const dispatch = useAppDispatch();
     const filters = useAppSelector((state) => state.products.filters);
 
@@ -22,6 +22,10 @@ export const ProductSidebar: React.FC = () => {
 
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setFilters({ priceRange: e.target.value as never }));
+    };
+
+    const handleSortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setFilters({ sortBy: e.target.value as never }));
     };
 
     return (
@@ -97,6 +101,40 @@ export const ProductSidebar: React.FC = () => {
                 </label>
             </div>
 
+            <div className="filter-group">
+                <h4>Sắp xếp theo</h4>
+                <label>
+                    <input
+                        type="radio"
+                        name="sort"
+                        value="default"
+                        checked={filters.sortBy === 'default'}
+                        onChange={handleSortChange}
+                    />{' '}
+                    Mặc định
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        name="sort"
+                        value="price-asc"
+                        checked={filters.sortBy === 'price-asc'}
+                        onChange={handleSortChange}
+                    />{' '}
+                    Giá thấp đến cao
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        name="sort"
+                        value="price-desc"
+                        checked={filters.sortBy === 'price-desc'}
+                        onChange={handleSortChange}
+                    />{' '}
+                    Giá cao đến thấp
+                </label>
+            </div>
+
             <Button
                 onClick={() => dispatch(setFilters({ categoryIds: [], priceRange: 'all' }))}
             >
@@ -104,4 +142,4 @@ export const ProductSidebar: React.FC = () => {
             </Button>
         </aside>
     );
-};
+}

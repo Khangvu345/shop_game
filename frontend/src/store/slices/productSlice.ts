@@ -21,7 +21,8 @@ const initialState: ProductState = {
     filters:{
         categoryIds:[],
         priceRange:'all',
-        status:'all'
+        status:'all',
+        sortBy: 'default',
     },
 };
 
@@ -65,7 +66,7 @@ const productSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.error.message;
             })
-            // Xử lý fetchProductById
+
             .addCase(fetchProductById.pending, (state) => {
                 state.selectedProduct.status = 'loading';
             })
@@ -79,12 +80,9 @@ const productSlice = createSlice({
             });
     },
 });
-export const { setFilters, clearFilters } = productSlice.actions;
-export default productSlice.reducer;
 
 
 const selectAllProducts = (state: RootState) => state.products.data;
-// Input 2: Bộ lọc hiện tại
 const selectFilters = (state: RootState) => state.products.filters;
 
 export const selectFilteredProducts = createSelector(
@@ -92,9 +90,8 @@ export const selectFilteredProducts = createSelector(
     (products, filters) => {
         if (!products) return [];
 
-        return products.filter((product) => {
+        const filtered = products.filter((product) => {
             if (filters.categoryIds.length > 0) {
-                // Nếu sản phẩm không thuộc category nào trong list đã chọn -> loại
                 if (!filters.categoryIds.includes(product.category_id)) return false;
             }
 
@@ -108,8 +105,27 @@ export const selectFilteredProducts = createSelector(
                 }
             }
 
-
             return true;
         });
+        const sorted = [...filtered];
+
+        switch (filters.sortBy) {
+            case 'price-asc': // Giá thấp đến cao
+                sorted.sort((a, b) => a.list_price - b.list_price);
+                break;
+            case 'price-desc': // Giá cao đến thấp
+                sorted.sort((a, b) => b.list_price - a.list_price);
+                break;
+            default: // Mặc định (giữ nguyên thứ tự từ API hoặc theo ngày tạo)
+                break;
+        }
+
+        return sorted;
     }
+
+
+
 );
+
+export const { setFilters, clearFilters } = productSlice.actions;
+export default productSlice.reducer;
