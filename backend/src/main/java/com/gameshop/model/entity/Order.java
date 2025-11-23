@@ -26,7 +26,7 @@ public class Order {
     private OrderAddress shippingAddress;
 
     // Quan trọng: Khởi tạo sẵn ArrayList để code Service .add() không bị lỗi
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<OrderLine> orderLines = new ArrayList<>();
 
     private BigDecimal subTotal;

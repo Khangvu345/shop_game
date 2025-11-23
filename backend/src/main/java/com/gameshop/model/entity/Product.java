@@ -105,6 +105,24 @@ public class Product {
     public ProductStatus getStatus() { return status; }
     public void setStatus(ProductStatus status) { this.status = status; }
 
-    public Long getCategoryId() { return categoryId; }
-    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
+    public Category getCategory() { 
+        return category; 
+    }
+
+    public void setCategory(Category category) { 
+        this.category = category; 
+    }
+
+    // 2. Helper để lấy ID (Sửa lại để lấy từ đối tượng category)
+    public Long getCategoryId() { 
+        return category != null ? category.getCategoryId() : null; 
+    }
+
+    // 3. Helper để set ID (Tự động tạo đối tượng Category giả để giữ ID)
+    public void setCategoryId(Long categoryId) {
+        if (this.category == null) {
+            this.category = new Category();
+        }
+        this.category.setCategoryId(categoryId);
+    }
 }
