@@ -91,7 +91,8 @@ export interface IReviewEditHistory {
 }
 
 export interface IProductFilters {
-    categoryIds: string[]; // Mảng chứa các category_id được chọn
+    categoryIds: string[];
     priceRange: 'all' | 'under-1m' | '1m-5m' | '5m-10m' | 'above-10m';
     status: 'all' | 'new' | 'used';
+    sortBy: 'default' | 'price-asc' | 'price-desc';
 }
