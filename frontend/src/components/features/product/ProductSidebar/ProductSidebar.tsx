@@ -1,63 +1,145 @@
 import React from 'react';
-import {Button} from "../../../ui/button/Button.tsx";
+import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
+import { setFilters } from '../../../../store/slices/productSlice';
+import { Button } from '../../../ui/button/Button';
 
-import './ProductSlidebar.css'
+export function ProductSidebar(){
+    const dispatch = useAppDispatch();
+    const filters = useAppSelector((state) => state.products.filters);
 
-export function ProductSidebar() {
+    const handleCategoryChange = (categoryId: string) => {
+        const currentIndex = filters.categoryIds.indexOf(categoryId);
+        const newCategoryIds = [...filters.categoryIds];
+
+        if (currentIndex === -1) {
+            newCategoryIds.push(categoryId);
+        } else {
+            newCategoryIds.splice(currentIndex, 1);
+        }
+
+        dispatch(setFilters({ categoryIds: newCategoryIds }));
+    };
+
+    const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setFilters({ priceRange: e.target.value as never }));
+    };
+
+    const handleSortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setFilters({ sortBy: e.target.value as never }));
+    };
+
     return (
-        <aside className="product-sidebar">
-            <h3>BỘ LỌC</h3>
+        <aside className="page-sidebar">
+            <h3 style={{ marginBottom: '1.5rem' }}>BỘ LỌC</h3>
 
             <div className="filter-group">
                 <h4>Loại sản phẩm</h4>
-                {}
-                <label>
-                    <input type="checkbox" /> Consoles
-                </label>
-                <label>
-                    <input type="checkbox" /> Thiết bị cầm tay
-                </label>
-                <label>
-                    <input type="checkbox" /> Phụ kiện
-                </label>
-                <label>
-                    <input type="checkbox" /> Trò chơi
-                </label>
-            </div>
-
-            {}
-            <div className="filter-group">
-                <h4>Tình trạng</h4>
-                <label>
-                    <input type="radio" name="status" /> Mới
-                </label>
-                <label>
-                    <input type="radio" name="status" /> Đã qua sử dụng
-                </label>
+                {['consoles', 'handheld', 'accessories', 'games'].map((cat) => (
+                    <label key={cat} style={{ textTransform: 'capitalize' }}>
+                        <input
+                            type="checkbox"
+                            checked={filters.categoryIds.includes(cat)}
+                            onChange={() => handleCategoryChange(cat)}
+                        />{' '}
+                        {cat}
+                    </label>
+                ))}
             </div>
 
             <div className="filter-group">
                 <h4>Mức giá</h4>
                 <label>
-                    <input type="radio" name="price" /> Tất cả
+                    <input
+                        type="radio"
+                        name="price"
+                        value="all"
+                        checked={filters.priceRange === 'all'}
+                        onChange={handlePriceChange}
+                    />{' '}
+                    Tất cả
                 </label>
                 <label>
-                    <input type="radio" name="price" /> Dưới 1 Triệu
+                    <input
+                        type="radio"
+                        name="price"
+                        value="under-1m"
+                        checked={filters.priceRange === 'under-1m'}
+                        onChange={handlePriceChange}
+                    />{' '}
+                    Dưới 1 Triệu
                 </label>
                 <label>
-                    <input type="radio" name="price" /> 1 - 5 Triệu
+                    <input
+                        type="radio"
+                        name="price"
+                        value="1m-5m"
+                        checked={filters.priceRange === '1m-5m'}
+                        onChange={handlePriceChange}
+                    />{' '}
+                    1 - 5 Triệu
+                </label>
+                <input
+                    type="radio"
+                    name="price"
+                    value="5m-10m"
+                    checked={filters.priceRange === '5m-10m'}
+                    onChange={handlePriceChange}
+                />{' '}
+                5 - 10 Triệu
+                <label>
+
                 </label>
                 <label>
-                    <input type="radio" name="price" /> 5 - 10 Triệu
-                </label>
-                <label>
-                    <input type="radio" name="price" /> Trên 10 Triệu
+                    <input
+                        type="radio"
+                        name="price"
+                        value="above-10m"
+                        checked={filters.priceRange === 'above-10m'}
+                        onChange={handlePriceChange}
+                    />{' '}
+                    Trên 10 Triệu
                 </label>
             </div>
 
-            <Button className={''} >
-                Áp dụng bộ lọc
+            <div className="filter-group">
+                <h4>Sắp xếp theo</h4>
+                <label>
+                    <input
+                        type="radio"
+                        name="sort"
+                        value="default"
+                        checked={filters.sortBy === 'default'}
+                        onChange={handleSortChange}
+                    />{' '}
+                    Mặc định
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        name="sort"
+                        value="price-asc"
+                        checked={filters.sortBy === 'price-asc'}
+                        onChange={handleSortChange}
+                    />{' '}
+                    Giá thấp đến cao
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        name="sort"
+                        value="price-desc"
+                        checked={filters.sortBy === 'price-desc'}
+                        onChange={handleSortChange}
+                    />{' '}
+                    Giá cao đến thấp
+                </label>
+            </div>
+
+            <Button
+                onClick={() => dispatch(setFilters({ categoryIds: [], priceRange: 'all' }))}
+            >
+                Xóa bộ lọc
             </Button>
         </aside>
     );
-};
+}

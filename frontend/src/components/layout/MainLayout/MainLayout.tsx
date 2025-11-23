@@ -41,7 +41,7 @@ function ActionBar (){
                 <Link to={'/cart'}>
                     giỏ hàng
                 </Link>
-                <Button className={'bg-color-2 text-color-1'}>Đăng nhập</Button>
+                <Button color={'1'}>Đăng nhập</Button>
                 <Button>Đăng ký</Button>
             </>
         )
