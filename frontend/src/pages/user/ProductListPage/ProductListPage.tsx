@@ -38,7 +38,11 @@ export function ProductListPage() {
 
     function renderContent (){
         switch (status) {
-            case 'loading': return <Spinner type="spinner1" />;
+            case 'loading': return (
+                <div className="product-list-loading"> 
+                    <Spinner type="spinner1" />
+                </div>
+            );
             case 'failed': return <p style={{ color: 'red' }}>Lỗi khi tải sản phẩm: {error}</p>;
             case 'succeeded': return filteredProducts? <ProductList products={filteredProducts} /> : <p>Không có sản phẩm nào.</p>;
         }
@@ -51,6 +55,7 @@ export function ProductListPage() {
         <div className="product-page-container">
             <div className="product-page-header">
                 <h1>Danh sách sản phẩm</h1>
+                <p>Khám phá bộ sưu tập máy chơi game PlayStation và thiết bị cầm tay mới nhất. Tìm kiếm trải nghiệm giải trí hoàn hảo của bạn.</p>
             </div>
             <div className={'product-page-body'}>
                 <ProductSidebar></ProductSidebar>
