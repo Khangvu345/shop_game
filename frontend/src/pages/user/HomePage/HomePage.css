@@ -6,7 +6,7 @@
 
 /* HERO BANNER  */
 .hero-banner {
-    background: url('../../../assets/images/BannerHompage.png') center center no-repeat;
+    background: url('/assets/images/BannerHompage.png') center center no-repeat;
     background-size: cover;
     color: var(--color-primary-0);
     position: relative;

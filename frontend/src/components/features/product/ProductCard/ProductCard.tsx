@@ -30,7 +30,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
         <Card className="product-card">
             <Link to={`/products/${product.product_id}`}>
                 <img
-                    src={'../../../../assets/images/products' + product.product_id}
+                    src={'../../../../assets/images/products/' + product.product_id+'.png'}
                     alt={product.product_name}
                     className="product-card-image"
                 />
