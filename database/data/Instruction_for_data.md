@@ -1,4 +1,4 @@
-# HOW TO USE DATA
+## HOW TO USE DATA
 
 ## 1. Giới thiệu
 - Các ảnh được lấy từ tập tin `pictures_for_product`.  
