@@ -3,6 +3,8 @@ import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
 import { setFilters } from '../../../../store/slices/productSlice';
 import { Button } from '../../../ui/button/Button';
 
+import './ProductSlidebar.css';
+
 export function ProductSidebar(){
     const dispatch = useAppDispatch();
     const filters = useAppSelector((state) => state.products.filters);
@@ -30,12 +32,12 @@ export function ProductSidebar(){
 
     return (
         <aside className="page-sidebar">
-            <h3 style={{ marginBottom: '1.5rem' }}>BỘ LỌC</h3>
+            <h3>BỘ LỌC</h3>
 
             <div className="filter-group">
                 <h4>Loại sản phẩm</h4>
                 {['consoles', 'handheld', 'accessories', 'games'].map((cat) => (
-                    <label key={cat} style={{ textTransform: 'capitalize' }}>
+                    <label key={cat}>
                         <input
                             type="checkbox"
                             checked={filters.categoryIds.includes(cat)}
@@ -78,16 +80,15 @@ export function ProductSidebar(){
                     />{' '}
                     1 - 5 Triệu
                 </label>
-                <input
-                    type="radio"
-                    name="price"
-                    value="5m-10m"
-                    checked={filters.priceRange === '5m-10m'}
-                    onChange={handlePriceChange}
-                />{' '}
-                5 - 10 Triệu
-                <label>
-
+                <label> 
+                    <input
+                        type="radio"
+                        name="price"
+                        value="5m-10m"
+                        checked={filters.priceRange === '5m-10m'}
+                        onChange={handlePriceChange}
+                    />{' '}
+                    5 - 10 Triệu
                 </label>
                 <label>
                     <input

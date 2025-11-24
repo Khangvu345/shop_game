@@ -9,13 +9,13 @@ export function HomePage () {
 
     return (
         <div className="homepage">
-            <section className="hero-banner" style={{ textAlign: 'center', padding: '4rem 1rem', backgroundColor: '#e9ecef' }}>
+            <section className="hero-banner" >
                 <h1>TRẢI NGHIỆM TƯƠNG LAI CỦA TRÒ CHƠI</h1>
                 <p>Khám phá thế giới game mới...</p>
             </section>
 
-            <section className="featured-products container" style={{ padding: '3rem 15px' }}>
-                <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>SẢN PHẨM NỔI BẬT</h2>
+            <section className="featured-products container" >
+                <h2>SẢN PHẨM NỔI BẬT</h2>
             </section>
 
         </div>

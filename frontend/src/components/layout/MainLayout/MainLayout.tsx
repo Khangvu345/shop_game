@@ -9,6 +9,7 @@ import {Logo} from "../../ui/logo/Logo.tsx";
 
 
 
+
 function NavLogo() {
     return (
         <Link to="/" className="nav-logo">
@@ -41,8 +42,8 @@ function ActionBar (){
                 <Link to={'/cart'}>
                     giỏ hàng
                 </Link>
-                <Button color={'1'}>Đăng nhập</Button>
-                <Button>Đăng ký</Button>
+                <Button size = "small" color = "0" >Đăng nhập</Button>
+                <Button size = "small" color = "0">Đăng ký</Button>
             </>
         )
     }
