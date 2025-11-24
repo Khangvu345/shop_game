@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -25,14 +26,18 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    @Operation(summary = "Lấy danh sách sản phẩm", description = "Lấy danh sách tất cả sản phẩm, có hỗ trợ tìm kiếm theo tên và lọc theo danh mục")
+    @Operation(summary = "Lấy danh sách sản phẩm", description = "Lấy danh sách tất cả sản phẩm với bộ lọc đa điều kiện: tìm kiếm theo tên, lọc theo danh mục, lọc theo khoảng giá")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts(
             @Parameter(description = "Từ khóa tìm kiếm trong tên sản phẩm")
             @RequestParam(required = false) String keyword,
-            @Parameter(description = "ID danh mục để lọc sản phẩm")
-            @RequestParam(required = false) Long categoryId
+            @Parameter(description = "ID danh mục để lọc sản phẩm (bao gồm cả danh mục con)")
+            @RequestParam(required = false) Long categoryId,
+            @Parameter(description = "Giá tối thiểu (VND)")
+            @RequestParam(required = false) BigDecimal minPrice,
+            @Parameter(description = "Giá tối đa (VND)")
+            @RequestParam(required = false) BigDecimal maxPrice    
     ) {
-        List<ProductResponse> products = productService.getAllProducts(keyword, categoryId);
+        List<ProductResponse> products = productService.getAllProducts(keyword, categoryId, minPrice, maxPrice);
         return ResponseEntity.ok(
                 ApiResponse.success("Lấy danh sách sản phẩm thành công", products)
         );

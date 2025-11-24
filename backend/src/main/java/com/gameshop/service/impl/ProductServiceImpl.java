@@ -8,13 +8,16 @@ import com.gameshop.model.entity.Category;
 import com.gameshop.model.entity.Product;
 import com.gameshop.repository.CategoryRepository;
 import com.gameshop.repository.ProductRepository;
+import com.gameshop.repository.specification.ProductSpecification;
 import com.gameshop.service.CategoryService;
 import com.gameshop.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,21 +31,28 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryService categoryService;
 
     @Override
-    public List<ProductResponse> getAllProducts(String keyword, Long categoryId) {
-        List<Product> products;
+    public List<ProductResponse> getAllProducts(String keyword, Long categoryId, BigDecimal minPrice, BigDecimal maxPrice) {
+        log.debug("Filter params - keyword: {}, categoryId: {}, minPrice: {}, maxPrice: {}",
+                  keyword, categoryId, minPrice, maxPrice);
 
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            products = productRepository.findByProductNameContaining(keyword.trim());
-            log.debug("Tìm kiếm sản phẩm với keyword: {}", keyword);
-        } else if (categoryId != null) {
-            // Lấy danh sách categoryId bao gồm cả children (đệ quy)
-            List<Long> categoryIds = categoryService.getAllCategoryIdsIncludingChildren(categoryId);
-            products = productRepository.findByCategory_CategoryIdIn(categoryIds);
-            log.debug("Lọc sản phẩm theo categoryId: {} (bao gồm {} danh mục con)", categoryId, categoryIds.size() - 1);
-        } else {
-            products = productRepository.findAll();
-            log.debug("Lấy tất cả sản phẩm");
+        // Lấy danh sách categoryIds (bao gồm children) nếu có categoryId
+        List<Long> categoryIds = null;
+        if (categoryId != null) {
+            categoryIds = categoryService.getAllCategoryIdsIncludingChildren(categoryId);
+            log.debug("Lọc theo categoryId: {} (bao gồm {} danh mục con)", categoryId, categoryIds.size() - 1);
         }
+
+        // Build Specification với tất cả filters
+        Specification<Product> spec = ProductSpecification.filterProducts(
+                keyword,
+                categoryIds,
+                minPrice,
+                maxPrice
+        );
+
+        // Thực hiện query với Specification
+        List<Product> products = productRepository.findAll(spec);
+        log.debug("Tìm thấy {} sản phẩm", products.size());
 
         return products.stream()
                 .map(this::mapToResponse)

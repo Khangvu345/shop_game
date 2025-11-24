@@ -4,11 +4,12 @@ import com.gameshop.model.dto.request.CreateProductRequest;
 import com.gameshop.model.dto.request.UpdateProductRequest;
 import com.gameshop.model.dto.response.ProductResponse;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductService {
 
-    List<ProductResponse> getAllProducts(String keyword, Long categoryId);
+    List<ProductResponse> getAllProducts(String keyword, Long categoryId, BigDecimal minPrice, BigDecimal maxPrice);
 
     ProductResponse getProductById(Long id);
 
