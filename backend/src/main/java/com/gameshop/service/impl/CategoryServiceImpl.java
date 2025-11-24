@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,6 +96,22 @@ public class CategoryServiceImpl implements CategoryService {
 
         categoryRepository.delete(category);
         log.info("Đã xóa danh mục ID: {}", id);
+    }
+
+    @Override
+    public List<Long> getAllCategoryIdsIncludingChildren(Long categoryId) {
+        List<Long> categoryIds = new ArrayList<>();
+        categoryIds.add(categoryId);
+        collectChildCategoryIds(categoryId, categoryIds);
+        return categoryIds;
+    }
+
+    private void collectChildCategoryIds(Long parentId, List<Long> categoryIds) {
+        List<Category> children = categoryRepository.findByParent_CategoryId(parentId);
+        for (Category child : children) {
+            categoryIds.add(child.getCategoryId());
+            collectChildCategoryIds(child.getCategoryId(), categoryIds);
+        }
     }
 
     private CategoryResponse mapToResponse(Category category) {
