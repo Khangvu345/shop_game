@@ -4,7 +4,10 @@ import com.gameshop.model.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    // Hiện tại để trống, sau này thêm các hàm tìm kiếm sau
+    List<Product> findByProductNameContaining(String keyword);
+
+    List<Product> findByCategory_CategoryId(Long categoryId);
 }
