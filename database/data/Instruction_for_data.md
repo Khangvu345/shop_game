@@ -13,4 +13,4 @@
 1. Chuẩn bị các file ảnh trong thư mục `pictures_for_product`.  
 2. Map ảnh với sản phẩm theo tên/categoryID.
 3. Chạy script seed hoặc upload dữ liệu vào database theo hướng dẫn trong `seed_dev.sql` / `data.sql`.  
-
+4. Dữ liệu bị lỗi cần xoá hết copy/paste file xoa_all_bang.sql.
