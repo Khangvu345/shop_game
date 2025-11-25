@@ -15,7 +15,7 @@ export function ProductList  ({ products }:ProductListProps){
     // Logic thêm vào giỏ hàng được quản lý ở đây
     const handleAddToCart = (product: IProduct) => {
         dispatch(addItem(product));
-        alert(`Đã thêm ${product.product_name} vào giỏ!`);
+        alert(`Đã thêm ${product.productName} vào giỏ!`);
     };
 
     if (products.length === 0) {
@@ -26,7 +26,7 @@ export function ProductList  ({ products }:ProductListProps){
         <div className="product-grid">
             {products.map((product) => (
                 <ProductCard
-                    key={product.product_id}
+                    key={product.productId}
                     product={product}
                     onAddToCart={handleAddToCart}
                 />

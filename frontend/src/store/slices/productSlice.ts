@@ -92,11 +92,11 @@ export const selectFilteredProducts = createSelector(
 
         const filtered = products.filter((product) => {
             if (filters.categoryIds.length > 0) {
-                if (!filters.categoryIds.includes(product.category_id)) return false;
+                if (!filters.categoryIds.includes(product.categoryId)) return false;
             }
 
             if (filters.priceRange !== 'all') {
-                const p = product.list_price;
+                const p = product.listPrice;
                 switch (filters.priceRange) {
                     case 'under-1m': if (p >= 1000000) return false; break;
                     case '1m-5m': if (p < 1000000 || p >= 5000000) return false; break;
@@ -111,10 +111,10 @@ export const selectFilteredProducts = createSelector(
 
         switch (filters.sortBy) {
             case 'price-asc': // Giá thấp đến cao
-                sorted.sort((a, b) => a.list_price - b.list_price);
+                sorted.sort((a, b) => a.listPrice - b.listPrice);
                 break;
             case 'price-desc': // Giá cao đến thấp
-                sorted.sort((a, b) => b.list_price - a.list_price);
+                sorted.sort((a, b) => b.listPrice - a.listPrice);
                 break;
             default: // Mặc định (giữ nguyên thứ tự từ API hoặc theo ngày tạo)
                 break;

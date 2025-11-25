@@ -1,0 +1,72 @@
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px) scale(1.02); 
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+/*  KHU VỰC ẢNH SẢN PHẨM */
+.product-card-image {
+    width: 100%;
+    height: 180px; 
+    object-fit: contain; 
+    margin-bottom: 0;
+    transition: transform 0.3s ease;
+}
+
+.product-card-image:hover {
+    transform: scale(1.02);
+}
+
+/* NỘI DUNG CARD  */
+.product-card-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; 
+    text-align: center;
+    padding: 0 15px 15px 15px;
+
+}
+
+/* TIÊU ĐỀ SẢN PHẨM */
+.product-card-title {
+    font-size: 1rem; 
+    font-weight: 700;
+    color: var(--color-primary-1);
+    line-height: 1.3;
+    margin-bottom: 5px;
+    flex-grow: 1; 
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; 
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* GIÁ SẢN PHẨM */
+.product-card-price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary-1); 
+    margin-top: auto; 
+    margin-bottom: 15px; 
+}
+
+
+/* NÚT "THÊM VÀO GIỎ"  */
+.product-card-content .btn {
+    width: 95%; 
+    max-width: 220px;
+    padding: 10px 0;
+    margin: 0 auto;
+    margin-top: 0; 
+    border-radius: 10px;
+    z-index: 2;
+}
