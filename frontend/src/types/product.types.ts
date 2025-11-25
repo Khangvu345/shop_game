@@ -23,19 +23,20 @@ export interface ISupplier {
 }
 
 export interface IProduct {
-    product_id: string;
-    sku?: string;
-    product_name: string;
+    productId: number;
+    sku: string;
+    productName: string;
     description?: string;
-    list_price: number;
-    status: TProductStatus;
-    category_id: string;
-    created_at: string;
-    updated_at: string;
+    listPrice: number;
+    status: string;
+    categoryId: number;
+    categoryName?: string;
+    thumbnailUrl?: string;
+    createdAt?: string;
+    updatedAt?: string;
 
-    category?: ICategory;
-    reviews?: IProductReview[];
-    suppliers?: ISupplier[];
+
+    // reviews?: ...
 }
 
 export interface IProductReview {
@@ -91,7 +92,7 @@ export interface IReviewEditHistory {
 }
 
 export interface IProductFilters {
-    categoryIds: string[];
+    categoryIds: number[];
     priceRange: 'all' | 'under-1m' | '1m-5m' | '5m-10m' | 'above-10m';
     status: 'all' | 'new' | 'used';
     sortBy: 'default' | 'price-asc' | 'price-desc';
