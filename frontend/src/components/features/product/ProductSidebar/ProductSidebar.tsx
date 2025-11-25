@@ -9,7 +9,7 @@ export function ProductSidebar(){
     const dispatch = useAppDispatch();
     const filters = useAppSelector((state) => state.products.filters);
 
-    const handleCategoryChange = (categoryId: string) => {
+    const handleCategoryChange = (categoryId: number) => {
         const currentIndex = filters.categoryIds.indexOf(categoryId);
         const newCategoryIds = [...filters.categoryIds];
 
@@ -18,7 +18,6 @@ export function ProductSidebar(){
         } else {
             newCategoryIds.splice(currentIndex, 1);
         }
-
         dispatch(setFilters({ categoryIds: newCategoryIds }));
     };
 
@@ -35,17 +34,11 @@ export function ProductSidebar(){
             <h3>BỘ LỌC</h3>
 
             <div className="filter-group">
-                <h4>Loại sản phẩm</h4>
-                {['consoles', 'handheld', 'accessories', 'games'].map((cat) => (
-                    <label key={cat}>
-                        <input
-                            type="checkbox"
-                            checked={filters.categoryIds.includes(cat)}
-                            onChange={() => handleCategoryChange(cat)}
-                        />{' '}
-                        {cat}
-                    </label>
-                ))}
+                <h4>Danh mục</h4>
+                <label><input type="checkbox" checked={filters.categoryIds.includes(101)} onChange={() => handleCategoryChange(101)} /> PlayStation 5</label>
+                <label><input type="checkbox" checked={filters.categoryIds.includes(102)} onChange={() => handleCategoryChange(102)} /> PlayStation 4</label>
+                <label><input type="checkbox" checked={filters.categoryIds.includes(103)} onChange={() => handleCategoryChange(103)} /> Nintendo Switch</label>
+                <label><input type="checkbox" checked={filters.categoryIds.includes(301)} onChange={() => handleCategoryChange(301)} /> Phụ kiện PS5</label>
             </div>
 
             <div className="filter-group">
