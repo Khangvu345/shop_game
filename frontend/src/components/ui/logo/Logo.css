@@ -1,5 +1,6 @@
 .logo{
     max-width: 100%;
+    height: auto;
 }
 .logo-size-small{
     width: 2rem;
@@ -9,4 +10,10 @@
 }
 .logo-size-large{
     width: 6rem;
+}
+
+.navbar-logo img,
+.navbar-logo svg {
+    height: 55px; 
+    width: auto; 
 }
