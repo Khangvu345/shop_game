@@ -8,12 +8,8 @@ import { Card } from '../../../ui/card/Card.tsx';
 import './ProductCard.css'
 
 
-const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND',
-    }).format(amount);
-};
+const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
 interface ProductCardProps {
     product: IProduct;
@@ -21,33 +17,32 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
-
-    const handleAddToCartClick = () => {
-        onAddToCart(product);
-    };
-
     return (
         <Card className="product-card">
-            <Link to={`/products/${product.product_id}`}>
+            {/* SỬA: Link dùng productId */}
+            <Link to={`/products/${product.productId}`}>
                 <img
-                    src={'../../../../assets/images/products' + product.product_id}
-                    alt={product.product_name}
+                    // SỬA: dùng thumbnailUrl (nếu có) hoặc placeholder
+                    src={product.thumbnailUrl || 'https://placehold.co/400x400?text=No+Image'}
+                    // SỬA: dùng productName
+                    alt={product.productName}
                     className="product-card-image"
                 />
             </Link>
 
-            {/* Nội dung card */}
             <div className="product-card-content">
-                <Link to={`/products/${product.product_id}`} style={{textDecoration: 'none'}}>
-                    <h3 className="product-card-title">{product.product_name}</h3>
+                <Link to={`/products/${product.productId}`} style={{textDecoration: 'none'}}>
+                    {/* SỬA: dùng productName */}
+                    <h3 className="product-card-title">{product.productName}</h3>
                 </Link>
 
+                {/* SỬA: dùng listPrice */}
                 <p className="product-card-price">
-                    {formatCurrency(product.list_price)}
+                    {formatCurrency(product.listPrice)}
                 </p>
 
                 <Button
-                    onClick={handleAddToCartClick}
+                    onClick={() => onAddToCart(product)}
                     style={{ width: '100%' }}
                 >
                     Thêm vào giỏ
