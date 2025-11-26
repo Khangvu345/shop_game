@@ -6,13 +6,11 @@ import type {
 import type { IEmployee, IParty } from './people.types';
 
 export interface ICategory {
-    category_id: string;
-    category_name: string;
-    description?: string;
-    parent_id?: string;
-
-    parent?: ICategory;
-    children?: ICategory[];
+    categoryId: number,
+    categoryName: string,
+    description?: string,
+    parentId?: number,
+    parentName?: string
 }
 
 export interface ISupplier {
@@ -90,6 +88,8 @@ export interface IReviewEditHistory {
     edited_at: string;
     change_note?: string;
 }
+
+
 
 export interface IProductFilters {
     categoryIds: number[];
