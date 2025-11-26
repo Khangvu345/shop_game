@@ -8,7 +8,9 @@ export const productApi = {
     },
     getById: async (id: string): Promise<IProduct> => {
         const response = await axiosClient.get(`/products/${id}`);
-        return response.data.data;
+        const returnData = response.data.data;
+        console.log('Product detail:', returnData);
+        return returnData;
     },
 
     addNew: async (product: Partial<IProduct>): Promise<IProduct> => {
