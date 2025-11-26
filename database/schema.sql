@@ -178,7 +178,13 @@ CREATE TABLE `order` (
     tax_amount DECIMAL(12,2) DEFAULT 0,
     shipping_fee DECIMAL(12,2) DEFAULT 0,
     grand_total DECIMAL(12,2) NOT NULL,
+    -- Trường mới thêm: Phương thức thanh toán
+    payment_method VARCHAR(50),
     notes TEXT,
+    -- Các trường mới thêm: Thông tin hủy đơn
+    cancelled_at DATETIME,
+    cancel_reason VARCHAR(500),
+    cancelled_by BIGINT,
     FOREIGN KEY (customer_id) REFERENCES customer(party_id) ON DELETE RESTRICT,
     INDEX idx_order_date (order_date),
     INDEX idx_customer_date (customer_id, order_date),  
