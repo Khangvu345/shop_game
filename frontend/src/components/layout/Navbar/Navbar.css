@@ -1,5 +1,5 @@
 
-.navbar {
+.navbar-horizontal {
     display: grid;
     grid-template-areas: "navbar-logo navbar-nav navbar-actions";
     grid-template-columns: auto auto 1fr; 
@@ -10,8 +10,18 @@
     background-color: var(--color-primary-0);
 }
 
+.navbar-vertical {
+    display: grid;
+    grid-template-areas:
+        "navbar-logo"
+        "navbar-nav"
+        "navbar-actions";
+    grid-template-rows: 1fr auto 3fr;
+    width: 100%;
+}
+
 /* NAVIGATION LINKS AREA  */
-.navbar-nav {
+.navbar-nav-horizontal {
     grid-area: navbar-nav;
     display: flex;
     align-items: center; 
@@ -20,25 +30,35 @@
     padding-right: 0;
 }
 
-.navbar-logo, .navbar-nav {
+.navbar-nav-vertical {
+    grid-area: navbar-nav;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1rem;
+}
+
+
+.navbar-logo-horizontal, .navbar-nav-horizontal {
     padding-left: var(--spacing-md); 
     display: flex;
     align-items: center; 
 }
 
-.navbar-nav a {
+.navbar-nav-horizontal a {
     color: var(--color-primary-1);
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
-.navbar-nav a:hover {
+.navbar-nav-horizontal a:hover {
     color: var(--color-secondary-0);
 }
 
 
 /* --- ACTIONS AREA --- */
-.navbar-actions {
+.navbar-actions-horizontal {
     grid-area: navbar-actions;
     display: flex;
     flex-direction: row;
@@ -48,7 +68,7 @@
     padding-right: 0.2rem; 
 }
 
-.navbar-actions > * {
+.navbar-actions-horizontal > * {
     color: var(--color-primary-1);
     font-size: 1.25rem;
     cursor: pointer;
@@ -56,7 +76,7 @@
 }
 
 
-.navbar-actions button {
+.navbar-actions-horizontal button {
     font-weight: 600;
     transition: all 0.3s ease;
 }
