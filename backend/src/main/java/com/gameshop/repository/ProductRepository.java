@@ -2,9 +2,16 @@ package com.gameshop.repository;
 
 import com.gameshop.model.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
-    // Hiện tại để trống, sau này thêm các hàm tìm kiếm sau
+public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
+    List<Product> findByProductNameContainingIgnoreCase(String keyword);
+
+    List<Product> findByCategory_CategoryId(Long categoryId);
+
+    List<Product> findByCategory_CategoryIdIn(List<Long> categoryIds);
 }
