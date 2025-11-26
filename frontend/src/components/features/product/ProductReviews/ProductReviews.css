@@ -1,0 +1,202 @@
+/* Reviews Section */
+.reviews-section {
+    padding: var(--spacing-lg) 0;
+    border-top: 1px solid var(--color-primary-2);
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary-1);
+    text-transform: uppercase;
+    margin-bottom: var(--spacing-md);
+}
+
+.reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.reviews-summary {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background-color: var(--color-primary-2);
+    border-radius: 12px;
+}
+
+.average-rating {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: var(--spacing-md);
+    border-right: 1px solid var(--color-primary-3);
+}
+
+.average-rating .rating-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-secondary-0);
+}
+
+.average-rating .rating-total {
+    font-size: 0.9rem;
+    color: var(--color-primary-3);
+}
+
+.rating-bars {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.rating-bar-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.rating-bar-label {
+    font-size: 0.85rem;
+    color: var(--color-primary-1);
+    min-width: 50px;
+}
+
+.rating-bar {
+    flex: 1;
+    height: 8px;
+    background-color: var(--color-primary-4);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.rating-bar-fill {
+    height: 100%;
+    background-color: #fbbf24;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.rating-bar-count {
+    font-size: 0.85rem;
+    color: var(--color-primary-3);
+    min-width: 30px;
+    text-align: right;
+}
+
+/* Review List */
+.review-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.review-item {
+    padding: var(--spacing-md);
+    background-color: var(--color-primary-0);
+    border: 1px solid var(--color-primary-2);
+    border-radius: 12px;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-sm);
+}
+
+.reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.reviewer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--color-secondary-0);
+    color: var(--color-primary-0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.reviewer-name {
+    font-weight: 600;
+    color: var(--color-primary-1);
+}
+
+.review-date {
+    font-size: 0.85rem;
+    color: var(--color-primary-3);
+}
+
+.review-rating {
+    display: flex;
+    gap: 2px;
+}
+
+.review-content {
+    margin-top: var(--spacing-sm);
+}
+
+.review-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-primary-1);
+}
+
+/* Reply */
+.review-replies {
+    margin-top: var(--spacing-md);
+    padding-left: var(--spacing-md);
+    border-left: 3px solid var(--color-secondary-0);
+}
+
+.reply-item {
+    padding: var(--spacing-sm);
+    background-color: var(--color-primary-2);
+    border-radius: 8px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.reply-item:last-child {
+    margin-bottom: 0;
+}
+
+.reply-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.staff-badge {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    background-color: var(--color-secondary-0);
+    color: var(--color-primary-0);
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.reply-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-primary-1);
+}
+
+/* No Reviews */
+.no-reviews {
+    text-align: center;
+    padding: var(--spacing-lg);
+    color: var(--color-primary-3);
+}

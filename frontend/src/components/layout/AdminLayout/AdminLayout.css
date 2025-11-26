@@ -1,0 +1,23 @@
+.admin-container{
+    display: grid;
+    grid-template-areas:
+        "admin-header admin-header"
+        "admin-sidebar admin-content";
+    grid-template-columns: 1fr 12fr;
+}
+
+.admin-header {
+    grid-area: admin-header;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-sidebar{
+    grid-area: admin-sidebar;
+}
+
+.admin-main-content{
+    grid-area: admin-content;
+}
