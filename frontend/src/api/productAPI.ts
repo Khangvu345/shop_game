@@ -1,6 +1,5 @@
 import type { IProduct } from '../types';
 import axiosClient from './axiosClient';
-import {data} from "react-router-dom";
 
 export const productApi = {
     getAll: async (): Promise<IProduct[]> => {
@@ -11,6 +10,8 @@ export const productApi = {
     },
     getById: async (id: string): Promise<IProduct> => {
         const response = await axiosClient.get(`/products/${id}`);
-        return response.data;
+        const returnData = response.data.data;
+        console.log('Product detail:', returnData);
+        return returnData;
     },
 };
