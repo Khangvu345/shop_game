@@ -179,6 +179,11 @@ CREATE TABLE `order` (
     shipping_fee DECIMAL(12,2) DEFAULT 0,
     grand_total DECIMAL(12,2) NOT NULL,
     notes TEXT,
+    -- Thêm mới các trường sau:
+    cancelled_at DATETIME,
+    cancel_reason VARCHAR(500),
+    cancelled_by VARCHAR(50),
+    -- HẾT thêm mới các trường
     FOREIGN KEY (customer_id) REFERENCES customer(party_id) ON DELETE RESTRICT,
     INDEX idx_order_date (order_date),
     INDEX idx_customer_date (customer_id, order_date),  
