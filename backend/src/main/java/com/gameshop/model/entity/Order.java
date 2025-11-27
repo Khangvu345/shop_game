@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "orders") // Tên bảng là orders để tránh trùng từ khóa SQL
+@Table(name = "order") // Tên bảng là orders để tránh trùng từ khóa SQL
 public class Order {
 
     @Id
