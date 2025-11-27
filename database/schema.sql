@@ -198,7 +198,7 @@ CREATE TABLE order_line (
     order_id BIGINT,
     line_no INT,
     product_id BIGINT NOT NULL,
-    quantity INT NOT NULL,
+    quantity INT NOT NULL, -- kết thúc sửa
     unit_price_at_order DECIMAL(12,2) NOT NULL,
     line_total DECIMAL(12,2) NOT NULL,
     PRIMARY KEY (order_id, line_no),
