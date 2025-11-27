@@ -15,7 +15,7 @@ export const ProductSidebar: React.FC = () => {
 
     // 1. Lấy danh sách danh mục từ categorySlice
     // Lưu ý: Dữ liệu nằm trong state.categories.data
-    const { data: categories } = useAppSelector((state) => state.category);
+    const { data: categories } = useAppSelector((state) => state.categories);
 
     // 2. Lấy bộ lọc hiện tại từ productSlice
     const { serverFilters, clientFilters  } = useAppSelector((state) => state.products);
@@ -97,7 +97,7 @@ export const ProductSidebar: React.FC = () => {
             {/* --- NHÓM 1: SẮP XẾP --- */}
             <div className="filter-group">
                 <h4>Sắp xếp</h4>
-                <label>
+                <label  style={{ display: 'block', marginBottom: '0.5rem', cursor: 'pointer' }}>
                     <input
                         type="radio"
                         name="sort"
@@ -106,7 +106,7 @@ export const ProductSidebar: React.FC = () => {
                         onChange={handleSortChange}
                     /> Mặc định
                 </label>
-                <label>
+                <label  style={{ display: 'block', marginBottom: '0.5rem', cursor: 'pointer' }}>
                     <input
                         type="radio"
                         name="sort"
@@ -115,7 +115,7 @@ export const ProductSidebar: React.FC = () => {
                         onChange={handleSortChange}
                     /> Giá tăng dần
                 </label>
-                <label>
+                <label  style={{ display: 'block', marginBottom: '0.5rem', cursor: 'pointer' }}>
                     <input
                         type="radio"
                         name="sort"
@@ -150,7 +150,7 @@ export const ProductSidebar: React.FC = () => {
             {/* --- NHÓM 3: MỨC GIÁ --- */}
             <div className="filter-group">
                 <h4>Mức giá</h4>
-                <label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', cursor: 'pointer' }}>
                     <input
                         type="radio"
                         name="price"
@@ -159,7 +159,7 @@ export const ProductSidebar: React.FC = () => {
                         onChange={handlePriceChange}
                     /> Tất cả
                 </label>
-                <label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', cursor: 'pointer' }}>
                     <input
                         type="radio"
                         name="price"
@@ -168,7 +168,7 @@ export const ProductSidebar: React.FC = () => {
                         onChange={handlePriceChange}
                     /> Dưới 1 Triệu
                 </label>
-                <label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', cursor: 'pointer' }}>
                     <input
                         type="radio"
                         name="price"
@@ -177,7 +177,7 @@ export const ProductSidebar: React.FC = () => {
                         onChange={handlePriceChange}
                     /> 1 - 5 Triệu
                 </label>
-                <label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', cursor: 'pointer' }}>
                     <input
                         type="radio"
                         name="price"
@@ -186,7 +186,7 @@ export const ProductSidebar: React.FC = () => {
                         onChange={handlePriceChange}
                     /> 5 - 10 Triệu
                 </label>
-                <label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', cursor: 'pointer' }}>
                     <input
                         type="radio"
                         name="price"
