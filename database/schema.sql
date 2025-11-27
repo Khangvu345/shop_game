@@ -200,7 +200,6 @@ CREATE TABLE order_line (
     product_id BIGINT NOT NULL,
     quantity INT NOT NULL,
     unit_price_at_order DECIMAL(12,2) NOT NULL,
-    line_discount DECIMAL(12,2) DEFAULT 0,
     line_total DECIMAL(12,2) NOT NULL,
     PRIMARY KEY (order_id, line_no),
     FOREIGN KEY (order_id) REFERENCES `order`(order_id) ON DELETE CASCADE,
