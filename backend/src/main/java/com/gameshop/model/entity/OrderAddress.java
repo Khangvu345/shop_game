@@ -44,35 +44,5 @@ public class OrderAddress {
     @Column(name = "postal_code", length = 20)
     private String postalCode;
 
-    // Backward compatibility constructor
-    public OrderAddress(String receiverName, String receiverPhone, String line1, String city) {
-        this.receiverName = receiverName;
-        this.receiverPhone = receiverPhone;
-        this.line1 = line1;
-        this.city = city;
-    }
-
-    // Backward compatibility methods
-    public String getRecipientName() {
-        return receiverName;
-    }
-
-    public void setRecipientName(String recipientName) {
-        this.receiverName = recipientName;
-    }
-
-    public String getPhone() {
-        return receiverPhone;
-    }
-
-    public void setPhone(String phone) {
-        this.receiverPhone = phone;
-    }
-
-    public String getStreet() {
-        return line1;
-    }
-
-    public void setStreet(String street) {
-        this.line1 = street;
-    }
+    @Column(name = "postal_code", length = 20)
+    private String postalCode;
