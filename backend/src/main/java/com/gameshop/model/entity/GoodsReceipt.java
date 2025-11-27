@@ -1,6 +1,9 @@
 package com.gameshop.model.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,6 +14,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "goods_receipt")
+@Data
+@NoArgsConstructor
 public class GoodsReceipt {
 
     @Id
@@ -36,65 +41,4 @@ public class GoodsReceipt {
 
     @OneToMany(mappedBy = "goodsReceipt", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GoodsReceiptLine> lines = new ArrayList<>();
-
-    // --- CONSTRUCTORS ---
-    public GoodsReceipt() {
-    }
-
-    // --- GETTERS & SETTERS ---
-    public Long getReceiptId() {
-        return receiptId;
-    }
-
-    public void setReceiptId(Long receiptId) {
-        this.receiptId = receiptId;
-    }
-
-    public Supplier getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
-    }
-
-    public LocalDateTime getReceiptDate() {
-        return receiptDate;
-    }
-
-    public void setReceiptDate(LocalDateTime receiptDate) {
-        this.receiptDate = receiptDate;
-    }
-
-    public String getInvoiceNumber() {
-        return invoiceNumber;
-    }
-
-    public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
-
-    public BigDecimal getTotalCost() {
-        return totalCost;
-    }
-
-    public void setTotalCost(BigDecimal totalCost) {
-        this.totalCost = totalCost;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public List<GoodsReceiptLine> getLines() {
-        return lines;
-    }
-
-    public void setLines(List<GoodsReceiptLine> lines) {
-        this.lines = lines;
-    }
 }

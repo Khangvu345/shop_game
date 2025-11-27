@@ -1,14 +1,19 @@
 package com.gameshop.model.entity;
 
-import jakarta.persistence.*;
-import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 /**
  * OrderLine Entity với Composite Primary Key (order_id, line_no)
  */
 @Entity
 @Table(name = "order_line")
+@Data
+@NoArgsConstructor
 public class OrderLine {
 
     @EmbeddedId
@@ -32,57 +37,4 @@ public class OrderLine {
 
     @Column(name = "line_total", nullable = false, precision = 12, scale = 2)
     private BigDecimal lineTotal;
-
-    // --- CONSTRUCTOR ---
-    public OrderLine() {
-    }
-
-    // --- GETTERS & SETTERS ---
-    public OrderLinePK getId() {
-        return id;
-    }
-
-    public void setId(OrderLinePK id) {
-        this.id = id;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public BigDecimal getLineTotal() {
-        return lineTotal;
-    }
-
-    public void setLineTotal(BigDecimal lineTotal) {
-        this.lineTotal = lineTotal;
-    }
 }

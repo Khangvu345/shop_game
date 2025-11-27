@@ -1,6 +1,8 @@
 package com.gameshop.model.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * OrderAddress Entity với Shared Primary Key (order_id)
@@ -8,6 +10,8 @@ import jakarta.persistence.*;
  */
 @Entity
 @Table(name = "order_address")
+@Data
+@NoArgsConstructor
 public class OrderAddress {
 
     @Id
@@ -40,9 +44,7 @@ public class OrderAddress {
     @Column(name = "postal_code", length = 20)
     private String postalCode;
 
-    // --- CONSTRUCTORS ---
-    public OrderAddress() {}
-
+    // Backward compatibility constructor
     public OrderAddress(String receiverName, String receiverPhone, String line1, String city) {
         this.receiverName = receiverName;
         this.receiverPhone = receiverPhone;
@@ -50,80 +52,7 @@ public class OrderAddress {
         this.city = city;
     }
 
-    // --- GETTERS & SETTERS ---
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
-    public String getReceiverName() {
-        return receiverName;
-    }
-
-    public void setReceiverName(String receiverName) {
-        this.receiverName = receiverName;
-    }
-
-    public String getReceiverPhone() {
-        return receiverPhone;
-    }
-
-    public void setReceiverPhone(String receiverPhone) {
-        this.receiverPhone = receiverPhone;
-    }
-
-    public String getLine1() {
-        return line1;
-    }
-
-    public void setLine1(String line1) {
-        this.line1 = line1;
-    }
-
-    public String getLine2() {
-        return line2;
-    }
-
-    public void setLine2(String line2) {
-        this.line2 = line2;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    // Backward compatibility methods (để code cũ không bị lỗi)
+    // Backward compatibility methods
     public String getRecipientName() {
         return receiverName;
     }
