@@ -1,6 +1,8 @@
 package com.gameshop.model.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Warehouse Entity - Quản lý kho
@@ -8,6 +10,8 @@ import jakarta.persistence.*;
  */
 @Entity
 @Table(name = "warehouse")
+@Data
+@NoArgsConstructor
 public class Warehouse {
 
     @Id
@@ -20,38 +24,4 @@ public class Warehouse {
 
     @Column(name = "address_text", length = 255)
     private String addressText;
-
-    // --- CONSTRUCTORS ---
-    public Warehouse() {
-    }
-
-    public Warehouse(String name, String addressText) {
-        this.name = name;
-        this.addressText = addressText;
-    }
-
-    // --- GETTERS & SETTERS ---
-    public Long getWarehouseId() {
-        return warehouseId;
-    }
-
-    public void setWarehouseId(Long warehouseId) {
-        this.warehouseId = warehouseId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddressText() {
-        return addressText;
-    }
-
-    public void setAddressText(String addressText) {
-        this.addressText = addressText;
-    }
 }

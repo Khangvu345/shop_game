@@ -2,6 +2,9 @@ package com.gameshop.model.entity;
 
 import com.gameshop.model.enums.StockMovementReason;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 /**
@@ -9,6 +12,8 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "stock_movement")
+@Data
+@NoArgsConstructor
 public class StockMovement {
 
     @Id
@@ -39,73 +44,4 @@ public class StockMovement {
 
     @Column(name = "order_id")
     private Long orderId; // Nếu liên quan đến đơn hàng
-
-    // --- CONSTRUCTORS ---
-    public StockMovement() {
-    }
-
-    // --- GETTERS & SETTERS ---
-    public Long getMovementId() {
-        return movementId;
-    }
-
-    public void setMovementId(Long movementId) {
-        this.movementId = movementId;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public Warehouse getWarehouse() {
-        return warehouse;
-    }
-
-    public void setWarehouse(Warehouse warehouse) {
-        this.warehouse = warehouse;
-    }
-
-    public Integer getQuantityDelta() {
-        return quantityDelta;
-    }
-
-    public void setQuantityDelta(Integer quantityDelta) {
-        this.quantityDelta = quantityDelta;
-    }
-
-    public StockMovementReason getReason() {
-        return reason;
-    }
-
-    public void setReason(StockMovementReason reason) {
-        this.reason = reason;
-    }
-
-    public LocalDateTime getOccurredAt() {
-        return occurredAt;
-    }
-
-    public void setOccurredAt(LocalDateTime occurredAt) {
-        this.occurredAt = occurredAt;
-    }
-
-    public String getReferenceNo() {
-        return referenceNo;
-    }
-
-    public void setReferenceNo(String referenceNo) {
-        this.referenceNo = referenceNo;
-    }
-
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
 }
