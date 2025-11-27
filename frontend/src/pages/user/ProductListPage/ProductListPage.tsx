@@ -13,6 +13,8 @@ import { ProductSidebar } from '../../../components/features/product/ProductSide
 import { ProductList } from '../../../components/features/product/ProductList/ProductList';
 import { Pagination } from '../../../components/ui/pagination/Pagination';
 
+import './ProductListPage.css'
+
 export const ProductListPage: React.FC = () => {
     const dispatch = useAppDispatch();
 
@@ -78,7 +80,7 @@ export const ProductListPage: React.FC = () => {
                     <ProductList products={paginatedData} />
 
                     {/* Hiển thị thanh phân trang */}
-                    <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', maxWidth: '100%' }}>
                         <Pagination
                             totalRows={totalRows}
                             limit={clientFilters.limit}
@@ -100,12 +102,12 @@ export const ProductListPage: React.FC = () => {
             <ProductSidebar />
 
             {/* CỘT 2: NỘI DUNG CHÍNH */}
-            <main className="page-content">
-                <h2 style={{ marginBottom: '1rem' }}>DANH SÁCH SẢN PHẨM</h2>
-
-                {/* Đường kẻ phân cách */}
-                <hr style={{ margin: '0 0 1.5rem 0', borderTop: '1px solid #eee' }} />
-
+            <main className="product-page-content">
+                <h2>Danh sách sản phẩm</h2>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
                 {/* Nội dung thay đổi (Loading / Error / List) */}
                 {renderContent()}
             </main>

@@ -28,7 +28,7 @@ const initialState: ProductState = {
     // Giá trị mặc định cho phân trang/sắp xếp client
     clientFilters: {
         page: 1,
-        limit: 12,
+        limit: 6,
         sortBy: 'default',
     },
 };
@@ -38,7 +38,7 @@ const initialState: ProductState = {
 // Gọi API lấy danh sách sản phẩm (có truyền tham số lọc)
 export const fetchProducts = createAsyncThunk(
     'products/fetchAll',
-    async (filters: IServerProductFilters) => {
+    async (filters?: IServerProductFilters) => {
         // BaseApi.getAll đã hỗ trợ truyền params
         const response = await productApi.getAll(filters);
         return response;
@@ -48,9 +48,33 @@ export const fetchProducts = createAsyncThunk(
 // Gọi API lấy chi tiết 1 sản phẩm
 export const fetchProductById = createAsyncThunk(
     'products/fetchById',
-    async (id: number) => { // ID là number theo DB mới
+    async (id: number | string) => {
         const response = await productApi.getById(id);
         return response;
+    }
+);
+
+export const addProduct = createAsyncThunk(
+    'products/add',
+    async (data: Partial<IProduct>) => {
+        const response = await productApi.create(data);
+        return response;
+    }
+);
+
+export const editProduct = createAsyncThunk(
+    'products/edit',
+    async ({ id, data }: { id: number | string; data: Partial<IProduct> }) => {
+        const response = await productApi.update(id, data);
+        return response;
+    }
+);
+
+export const deleteProduct = createAsyncThunk(
+    'products/delete',
+    async (id: number | string) => {
+        await productApi.delete(id);
+        return id;
     }
 );
 
@@ -84,6 +108,7 @@ const productSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
+        //GET
         builder
             // Fetch All
             .addCase(fetchProducts.pending, (state) => { state.status = 'loading'; })
@@ -105,6 +130,26 @@ const productSlice = createSlice({
                 state.selectedProduct.status = 'failed';
                 state.selectedProduct.error = action.error.message;
             });
+        // POST
+        builder.addCase(addProduct.fulfilled, (state, action) => {
+            if (state.data) state.data.unshift(action.payload);
+        });
+        // PUT
+        builder.addCase(editProduct.fulfilled, (state, action) => {
+            const index = state.data?.findIndex(p => p.productId === action.payload.productId);
+            if (state.data && index !== undefined && index !== -1) {
+                state.data[index] = action.payload;
+            }
+        });
+        // DELETE
+        builder.addCase(deleteProduct.fulfilled, (state, action) => {
+            if (state.data) {
+                state.data = state.data.filter(p => p.productId !== action.payload);
+            }
+        });
+
+
+
     },
 });
 
