@@ -4,13 +4,21 @@ import com.gameshop.model.enums.OrderStatus;
 import com.gameshop.model.enums.PaymentMethod;
 import com.gameshop.model.enums.PaymentStatus;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Order Entity - Đơn hàng
+ */
 @Entity
-@Table(name = "orders") // Tên bảng là orders để tránh trùng từ khóa SQL
+@Table(name = "`order`") // Tên bảng là order (dùng backticks để tránh từ khóa SQL)
+@Data
+@NoArgsConstructor
 public class Order {
 
     @Id
@@ -32,6 +40,12 @@ public class Order {
 
     private BigDecimal subTotal;
     private BigDecimal grandTotal;
+
+    @Column(name = "discount_amount", precision = 12, scale = 2)
+    private BigDecimal discountAmount = BigDecimal.ZERO;
+
+    @Column(name = "tax_amount", precision = 12, scale = 2)
+    private BigDecimal taxAmount = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
@@ -57,7 +71,6 @@ public class Order {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    // --- TỰ ĐỘNG LƯU NGÀY GIỜ (Create/Update) ---
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -67,123 +80,5 @@ public class Order {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    // --- CONSTRUCTOR ---
-    public Order() {
-    }
-
-    // --- GETTER & SETTER THỦ CÔNG ---
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public OrderAddress getShippingAddress() {
-        return shippingAddress;
-    }
-
-    public void setShippingAddress(OrderAddress shippingAddress) {
-        this.shippingAddress = shippingAddress;
-    }
-
-    public List<OrderLine> getOrderLines() {
-        return orderLines;
-    }
-
-    public void setOrderLines(List<OrderLine> orderLines) {
-        this.orderLines = orderLines;
-    }
-
-    public BigDecimal getSubTotal() {
-        return subTotal;
-    }
-
-    public void setSubTotal(BigDecimal subTotal) {
-        this.subTotal = subTotal;
-    }
-
-    public BigDecimal getGrandTotal() {
-        return grandTotal;
-    }
-
-    public void setGrandTotal(BigDecimal grandTotal) {
-        this.grandTotal = grandTotal;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
-    public PaymentStatus getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(PaymentStatus paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
-
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public LocalDateTime getCancelledAt() {
-        return cancelledAt;
-    }
-
-    public void setCancelledAt(LocalDateTime cancelledAt) {
-        this.cancelledAt = cancelledAt;
-    }
-
-    public String getCancelReason() {
-        return cancelReason;
-    }
-
-    public void setCancelReason(String cancelReason) {
-        this.cancelReason = cancelReason;
-    }
-
-    public String getCancelledBy() {
-        return cancelledBy;
-    }
-
-    public void setCancelledBy(String cancelledBy) {
-        this.cancelledBy = cancelledBy;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }
