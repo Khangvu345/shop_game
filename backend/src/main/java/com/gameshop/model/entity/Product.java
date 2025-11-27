@@ -34,9 +34,11 @@ public class Product {
                                                                               // tối đa 10 chữ số
     private BigDecimal listPrice;
 
-    @Transient
-    @Column(name = "stock_quantity")
-    private Integer stockQuantity = 0;
+    @Column(name = "purchase_price", precision = 10, scale = 0)
+    private BigDecimal purchasePrice = BigDecimal.ZERO; // Giá vốn bình quân gia quyền
+
+    @Column(name = "stock_quantity", nullable = false)
+    private Integer stockQuantity = 0; // Tồn kho hiện tại
 
     @Column(name = "status", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
