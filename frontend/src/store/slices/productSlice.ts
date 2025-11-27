@@ -1,87 +1,92 @@
-import {createAsyncThunk, type PayloadAction, createSelector, createSlice} from '@reduxjs/toolkit';
-import type {IApiState, IProduct, IProductFilters} from '../../types';
-import {productApi} from '../../api/productAPI';
+import { createSlice, createAsyncThunk, type PayloadAction, createSelector } from '@reduxjs/toolkit';
+import type { IApiState, IProduct, IServerProductFilters, IProductFilters } from '../../types';
+import { productApi } from '../../api/productApi'; // Instance của class ProductApi (kế thừa BaseApi)
 import { type RootState } from '../store';
 
+// 1. Định nghĩa State
 interface ProductState extends IApiState<IProduct[]> {
+    // State cho chi tiết 1 sản phẩm
     selectedProduct: IApiState<IProduct>;
-    filters: IProductFilters;
+
+    // State quản lý bộ lọc (Gửi lên Server)
+    serverFilters: IServerProductFilters;
+
+    // State quản lý hiển thị (Xử lý tại Client)
+    clientFilters: IProductFilters;
+
 }
 
 const initialState: ProductState = {
     data: [],
     status: 'idle',
     error: null,
-    selectedProduct: {
-        data: null,
-        status: 'idle',
-        error: null,
-    },
+    selectedProduct: { data: null, status: 'idle', error: null },
 
-    filters:{
-        categoryIds:[],
-        priceRange:'all',
-        status:'all',
+    // Giá trị mặc định cho bộ lọc gửi lên server
+    serverFilters: {},
+
+    // Giá trị mặc định cho phân trang/sắp xếp client
+    clientFilters: {
+        page: 1,
+        limit: 12,
         sortBy: 'default',
     },
 };
 
+// --- ASYNC THUNKS ---
+
+// Gọi API lấy danh sách sản phẩm (có truyền tham số lọc)
 export const fetchProducts = createAsyncThunk(
-    'products/fetchProducts',
-    async () => {
-        return await productApi.getAll();
+    'products/fetchAll',
+    async (filters: IServerProductFilters) => {
+        // BaseApi.getAll đã hỗ trợ truyền params
+        const response = await productApi.getAll(filters);
+        return response;
     }
 );
 
+// Gọi API lấy chi tiết 1 sản phẩm
 export const fetchProductById = createAsyncThunk(
-    'products/fetchProductById',
-    async (id: string) => {
-        return await productApi.getById(id);
-    }
-);
-
-export const addProduct = createAsyncThunk(
-    'products/add',
-    async (product: Partial<IProduct>) => {
-        const response = await productApi.addNew(product);
+    'products/fetchById',
+    async (id: number) => { // ID là number theo DB mới
+        const response = await productApi.getById(id);
         return response;
     }
 );
-
-export const updateProduct = createAsyncThunk(
-    'products/update',
-    async ({ id, data }: { id: number | string, data: Partial<IProduct> }) => {
-        const response = await productApi.update(id, data);
-        return response;
-    }
-);
-
-export const deleteProduct = createAsyncThunk(
-    'products/delete',
-    async (id: number | string) => {
-        await productApi.delete(id);
-        return id;
-    }
-);
-
 
 
 const productSlice = createSlice({
     name: 'products',
     initialState,
     reducers: {
-        setFilters: (state, action: PayloadAction<Partial<IProductFilters>>) => {
-            state.filters = { ...state.filters, ...action.payload };
+        // 1. Cập nhật bộ lọc Server -> Reset trang về 1
+        setServerFilters: (state, action: PayloadAction<IServerProductFilters>) => {
+            state.serverFilters = { ...state.serverFilters, ...action.payload };
+            state.clientFilters.page = 1;
         },
-        clearFilters: (state) => {
-            state.filters = initialState.filters;
+
+        // 2. Đổi trang (Client)
+        setPage: (state, action: PayloadAction<number>) => {
+            state.clientFilters.page = action.payload;
         },
+
+        // 3. Đổi sắp xếp (Client) -> Reset trang về 1
+        setSort: (state, action: PayloadAction<IProductFilters['sortBy']>) => {
+            state.clientFilters.sortBy = action.payload;
+            state.clientFilters.page = 1;
+        },
+
+        // 4. Reset tất cả về mặc định
+        resetProductState: (state) => {
+            state.serverFilters = {};
+            state.clientFilters = initialState.clientFilters;
+            state.status = 'idle';
+        }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchProducts.pending, (state) => {
-                state.status = 'loading';
-            })
+            // Fetch All
+            .addCase(fetchProducts.pending, (state) => { state.status = 'loading'; })
             .addCase(fetchProducts.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.data = action.payload;
@@ -90,10 +95,8 @@ const productSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.error.message;
             })
-
-            .addCase(fetchProductById.pending, (state) => {
-                state.selectedProduct.status = 'loading';
-            })
+            // Fetch By ID
+            .addCase(fetchProductById.pending, (state) => { state.selectedProduct.status = 'loading'; })
             .addCase(fetchProductById.fulfilled, (state, action) => {
                 state.selectedProduct.status = 'succeeded';
                 state.selectedProduct.data = action.payload;
@@ -102,69 +105,48 @@ const productSlice = createSlice({
                 state.selectedProduct.status = 'failed';
                 state.selectedProduct.error = action.error.message;
             });
-        builder.addCase(addProduct.fulfilled, (state, action) => {
-            if (state.data) state.data.unshift(action.payload);
-        });
-
-        builder.addCase(updateProduct.fulfilled, (state, action) => {
-            const index = state.data?.findIndex(p => p.productId === action.payload.productId);
-            if (state.data && index !== undefined && index !== -1) {
-                state.data[index] = action.payload;
-            }
-        });
-
-        builder.addCase(deleteProduct.fulfilled, (state, action) => {
-            if (state.data) {
-                state.data = state.data.filter(p => p.productId !== action.payload);
-            }
-        });
     },
 });
 
-const selectAllProducts = (state: RootState) => state.products.data;
-const selectFilters = (state: RootState) => state.products.filters;
+export const { setServerFilters, setPage, setSort, resetProductState } = productSlice.actions;
+export default productSlice.reducer;
 
-export const selectFilteredProducts = createSelector(
-    [selectAllProducts, selectFilters],
-    (products, filters) => {
-        if (!products) return [];
+// ============================================================
+// SELECTOR: LOGIC HIỂN THỊ (Cập nhật theo tên biến mới)
+// ============================================================
 
-        const filtered = products.filter((product) => {
-            if (filters.categoryIds.length > 0) {
-                if (!filters.categoryIds.includes(product.categoryId)) return false;
-            }
+const selectAllData = (state: RootState) => state.products.data;
+const selectclientFilters = (state: RootState) => state.products.clientFilters;
 
-            if (filters.priceRange !== 'all') {
-                const p = product.listPrice;
-                switch (filters.priceRange) {
-                    case 'under-1m': if (p >= 1000000) return false; break;
-                    case '1m-5m': if (p < 1000000 || p >= 5000000) return false; break;
-                    case '5m-10m': if (p < 5000000 || p >= 10000000) return false; break;
-                    case 'above-10m': if (p < 10000000) return false; break;
-                }
-            }
+export const selectDisplayProducts = createSelector(
+    [selectAllData, selectclientFilters],
+    (products, config) => {
+        if (!Array.isArray(products) || products.length === 0) {
+            return { paginatedData: [], totalPages: 0, totalRows: 0 };
+        }
 
-            return true;
-        });
-        const sorted = [...filtered];
-
-        switch (filters.sortBy) {
-            case 'price-asc': // Giá thấp đến cao
+        // 1. SẮP XẾP (Client-side)
+        const sorted = [...products];
+        switch (config.sortBy) {
+            case 'price-asc':
+                // Dùng 'listPrice' (camelCase)
                 sorted.sort((a, b) => a.listPrice - b.listPrice);
                 break;
-            case 'price-desc': // Giá cao đến thấp
+            case 'price-desc':
                 sorted.sort((a, b) => b.listPrice - a.listPrice);
                 break;
-            default: // Mặc định (giữ nguyên thứ tự từ API hoặc theo ngày tạo)
+            default:
+                // Dùng 'productId' (camelCase)
+                sorted.sort((a, b) => b.productId - a.productId);
                 break;
         }
 
-        return sorted;
+        // 2. PHÂN TRANG (Client-side)
+        const totalRows = sorted.length;
+        const totalPages = Math.ceil(totalRows / config.limit);
+        const startIndex = (config.page - 1) * config.limit;
+        const paginatedData = sorted.slice(startIndex, startIndex + config.limit);
+
+        return { paginatedData, totalPages, totalRows };
     }
-
-
-
 );
-
-export const { setFilters, clearFilters } = productSlice.actions;
-export default productSlice.reducer;

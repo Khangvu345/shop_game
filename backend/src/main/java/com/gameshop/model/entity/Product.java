@@ -30,7 +30,8 @@ public class Product {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "list_price", nullable = false, precision = 10, scale = 0) // Mệnh giá VNĐ không có phần thập phân và tối đa 10 chữ số
+    @Column(name = "list_price", nullable = false, precision = 10, scale = 0) // Mệnh giá VNĐ không có phần thập phân và
+                                                                              // tối đa 10 chữ số
     private BigDecimal listPrice;
 
     @Transient
@@ -43,7 +44,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    private Category category; 
+    private Category category;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -62,49 +63,68 @@ public class Product {
         this.updatedAt = LocalDateTime.now();
     }
 
-
-
-
-
-
-    // 1. Fix lỗi getStockQuantity()
-    public Integer getStockQuantity() { 
-        return stockQuantity; 
+    // Fix getId() - Map to productId
+    public Long getId() {
+        return productId;
     }
 
-    public void setStockQuantity(Integer stockQuantity) { 
-        this.stockQuantity = stockQuantity; 
+    public Long getProductId() {
+        return productId;
     }
 
-    // 2. Fix lỗi getName() (Map sang productName)
-    public String getName() { 
-        return productName; 
-    }
-    
-    // Getter chuẩn cho productName
-    public String getProductName() { 
-        return productName; 
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
-    public void setProductName(String productName) { 
-        this.productName = productName; 
+    // Fix getStockQuantity()
+    public Integer getStockQuantity() {
+        return stockQuantity;
     }
 
-    // 3. Fix lỗi getPrice() (Map sang listPrice)
-    public java.math.BigDecimal getPrice() { 
-        return listPrice; 
+    public void setStockQuantity(Integer stockQuantity) {
+        this.stockQuantity = stockQuantity;
     }
 
-    // Getter chuẩn cho listPrice
-    public java.math.BigDecimal getListPrice() { 
-        return listPrice; 
+    // Fix getName() - Map to productName
+    public String getName() {
+        return productName;
     }
 
-    public void setListPrice(java.math.BigDecimal listPrice) { 
-        this.listPrice = listPrice; 
+    public String getProductName() {
+        return productName;
     }
 
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
+    // Fix getPrice() - Map to listPrice
+    public BigDecimal getPrice() {
+        return listPrice;
+    }
 
+    public BigDecimal getListPrice() {
+        return listPrice;
+    }
 
+    public void setListPrice(BigDecimal listPrice) {
+        this.listPrice = listPrice;
+    }
+
+    // Fix getCreatedAt() and getUpdatedAt() for Lombok compatibility
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
