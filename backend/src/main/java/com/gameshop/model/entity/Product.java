@@ -33,6 +33,7 @@ public class Product {
     @Column(name = "list_price", nullable = false, precision = 10, scale = 0) // Mệnh giá VNĐ không có phần thập phân và tối đa 10 chữ số
     private BigDecimal listPrice;
 
+    @Transient
     @Column(name = "stock_quantity")
     private Integer stockQuantity = 0;
 

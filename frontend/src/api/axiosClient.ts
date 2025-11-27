@@ -8,18 +8,22 @@ const axiosClient = axios.create({
 });
 
 
-/*
-axiosClient.interceptors.request.use(
-  (config) => {
-    // Lỗi đang ở dòng này vì authSlice chưa tồn tại
-    const token = store.getState().auth.token;
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+axiosClient.interceptors.response.use(
+    (response) => {
+        const res = response.data;
+
+
+        if (res.success === false) {
+            return Promise.reject(new Error(res.message || 'Lỗi nghiệp vụ'));
+        }
+
+        return response;
+    },
+    (error) => {
+        console.error("API Error:", error?.response?.data?.message || error.message);
+        return Promise.reject(error);
     }
-    return config;
-  },
-  (error) => Promise.reject(error)
 );
-*/
+
 
 export default axiosClient;
