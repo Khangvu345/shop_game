@@ -241,9 +241,9 @@ public class OrderService {
             return null;
 
         OrderAddress address = new OrderAddress();
-        address.setRecipientName(dto.recipientName());
-        address.setPhone(dto.phone());
-        address.setStreet(dto.street());
+        address.setReceiverName(dto.recipientName());
+        address.setReceiverPhone(dto.phone());
+        address.setLine1(dto.street());
         address.setCity(dto.city());
 
         return address;
@@ -263,9 +263,9 @@ public class OrderService {
         if (order.getShippingAddress() != null) {
             OrderAddress addr = order.getShippingAddress();
             addressDto = new OrderResponse.AddressDto(
-                    addr.getRecipientName(),
-                    addr.getPhone(),
-                    addr.getStreet(),
+                    addr.getReceiverName(),
+                    addr.getReceiverPhone(),
+                    addr.getLine1(),
                     null, // ward
                     null, // district
                     addr.getCity());
