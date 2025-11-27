@@ -89,6 +89,8 @@ CREATE TABLE product (
     product_name VARCHAR(200) NOT NULL,
     description TEXT,
     list_price DECIMAL(10,0) NOT NULL, -- Mệnh giá VNĐ 
+    stock_quantity INT DEFAULT 0 NOT NULL,-- Số lượng tồn kho
+    purchase_price DECIMAL(10,0) DEFAULT 0, -- Giá mua vào VNĐ
     status ENUM('Active', 'Inactive') DEFAULT 'Active',
     category_id BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -172,11 +174,18 @@ CREATE TABLE `order` (
     order_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     customer_id BIGINT NOT NULL,
     order_date DATETIME NOT NULL,
-    status ENUM('Draft', 'Confirmed', 'Paid', 'Shipped', 'Completed', 'Cancelled') NOT NULL,
+    status ENUM('PENDING','CONFIRMED','PREPARING','SHIPPED','DELIVERED','COMPLETED','CANCELLED','RETURNED') NOT NULL DEFAULT 'PENDING', -- Trạng thái đơn hàng mapping với backend
+    payment_method ENUM ('COD', 'VNPAY') NOT NULL DEFAULT 'COD', -- Giữ lại 2 phương thức thanh toán hiện có
+    payment_status ENUM('PENDING', 'PAID', 'COD_PENDING', 'COD_COLLECTED', 'FAILED', 'REFUNDED') NOT NULL DEFAULT 'PENDING', -- Trạng thái thanh toán
+-- PENDING: Chờ thanh toán (VNPay)
+-- PAID: Đã thanh toán (VNPay)
+-- COD_PENDING: Chờ thu tiền (COD)
+-- COD_COLLECTED: Đã thu tiền (COD)
+-- FAILED: Thanh toán thất bại
+-- REFUNDED: Đã hoàn tiền
     subtotal DECIMAL(12,2) NOT NULL,
     discount_amount DECIMAL(12,2) DEFAULT 0,
     tax_amount DECIMAL(12,2) DEFAULT 0,
-    shipping_fee DECIMAL(12,2) DEFAULT 0,
     grand_total DECIMAL(12,2) NOT NULL,
     notes TEXT,
     -- Thêm mới các trường sau:
@@ -194,9 +203,8 @@ CREATE TABLE order_line (
     order_id BIGINT,
     line_no INT,
     product_id BIGINT NOT NULL,
-    quantity INT NOT NULL,
+    quantity INT NOT NULL, -- kết thúc sửa
     unit_price_at_order DECIMAL(12,2) NOT NULL,
-    line_discount DECIMAL(12,2) DEFAULT 0,
     line_total DECIMAL(12,2) NOT NULL,
     PRIMARY KEY (order_id, line_no),
     FOREIGN KEY (order_id) REFERENCES `order`(order_id) ON DELETE CASCADE,
