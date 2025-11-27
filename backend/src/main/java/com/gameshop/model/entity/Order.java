@@ -32,6 +32,13 @@ public class Order {
 
     private BigDecimal subTotal;
     private BigDecimal grandTotal;
+    //- Thêm discountAmount (DECIMAL 12,2) - Giảm giá toàn đơn
+    //- Thêm taxAmount (DECIMAL 12,2) - Thuế VAT
+    @Column(name = "discount_amount", precision = 12, scale = 2)
+    private BigDecimal discountAmount = BigDecimal.ZERO;
+
+    @Column(name = "tax_amount", precision = 12, scale = 2)
+    private BigDecimal taxAmount = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
