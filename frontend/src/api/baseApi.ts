@@ -10,7 +10,6 @@ export class BaseApi<T, P = unknown> {
 
     async getAll(params?: P): Promise<T[]> {
         const response = await axiosClient.get<IServerResponse<T[]>>(`/${this.resource}`, { params });
-        console.log(response.data.data)
         return response.data.data;
     }
 

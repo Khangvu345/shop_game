@@ -30,7 +30,7 @@ export function AdminLayout(){
     return (
         <div className={'admin-container'}>
             <header className={'admin-header'}>
-                <h1>Quản li cơ sở dữ liệy</h1>
+                <h1>Quản li cơ sở dữ liệu</h1>
             </header>
             <aside className={'admin-sidebar'}>
                 <Navbar styleNav={"-vertical"} links={<AdminNavLinks />} actions={<AdminActionBar/>}></Navbar>
