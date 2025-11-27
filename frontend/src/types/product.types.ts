@@ -24,9 +24,17 @@ export interface IProduct {
 
 
 
+export interface IServerProductFilters {
+    keyword?: string;
+    categoryId?: number;
+    minPrice?: number;
+    maxPrice?: number;
+}
+
+
+
 export interface IProductFilters {
-    categoryIds: number[];
-    priceRange: 'all' | 'under-1m' | '1m-5m' | '5m-10m' | 'above-10m';
-    status: 'all' | 'new' | 'used';
+    page: number;
+    limit: number;
     sortBy: 'default' | 'price-asc' | 'price-desc';
 }
