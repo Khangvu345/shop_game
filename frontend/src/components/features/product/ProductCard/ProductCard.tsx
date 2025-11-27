@@ -48,7 +48,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
 
                 <Button
                     onClick={handleAddToCartClick}
-                    style={{ width: '100%' }}
+                    
                 >
                     Thêm vào giỏ
                 </Button>

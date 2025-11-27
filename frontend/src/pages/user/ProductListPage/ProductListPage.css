@@ -36,7 +36,8 @@
     display: grid;
     grid-template-areas: "product-sidebar product-list";
     grid-template-columns: 280px 1fr; 
-    gap: var(--spacing-md); 
+    gap: var(--spacing-md);
+    overflow: visible; 
 }
 
 /* DANH SÁCH SẢN PHẨM (Nơi hiển thị Spinner/ProductList) */
@@ -49,6 +50,7 @@
     align-items: center;
     justify-content: center;
     min-height: 600px;
+    overflow: visible;
 }
 
 .product-page-content > div,

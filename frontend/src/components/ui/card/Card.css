@@ -1,15 +1,13 @@
 
 .card {
     position: relative; 
-    background: var(--color-primary-0); 
-    overflow: hidden;
-    border-radius: 12px; 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    background: var(--color-primary-0) !important; 
+    overflow: hidden !important; 
+    border-radius: 14px; 
 
 }
 
-.product-card {
-    padding: 15px; 
+.product-card{
+    padding: 10px;
     height: 100%; 
 }
