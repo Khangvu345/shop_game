@@ -33,6 +33,12 @@ public class Order {
     private BigDecimal subTotal;
     private BigDecimal grandTotal;
 
+    @Column(name = "discount_amount", precision = 12, scale = 2)
+    private BigDecimal discountAmount = BigDecimal.ZERO;
+
+    @Column(name = "tax_amount", precision = 12, scale = 2)
+    private BigDecimal taxAmount = BigDecimal.ZERO;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
@@ -185,5 +191,21 @@ public class Order {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public BigDecimal getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(BigDecimal discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public BigDecimal getTaxAmount() {
+        return taxAmount;
+    }
+
+    public void setTaxAmount(BigDecimal taxAmount) {
+        this.taxAmount = taxAmount;
     }
 }
