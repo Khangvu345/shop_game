@@ -2,74 +2,87 @@ package com.gameshop.model.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * OrderLine Entity với Composite Primary Key (order_id, line_no)
+ */
 @Entity
 @Table(name = "order_line")
 public class OrderLine {
 
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private OrderLinePK id;
 
     @ManyToOne
+    @MapsId("orderId")
     @JoinColumn(name = "order_id")
     @JsonIgnore
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private int quantity;
-    
-    private BigDecimal price;      
-    private BigDecimal lineTotal; 
+    @Column(nullable = false)
+    private Integer quantity;
 
- 
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "unit_price_at_order", nullable = false, precision = 12, scale = 2)
+    private BigDecimal price;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "line_total", nullable = false, precision = 12, scale = 2)
+    private BigDecimal lineTotal;
 
-   
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+    // --- CONSTRUCTOR ---
+    public OrderLine() {
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
+    // --- GETTERS & SETTERS ---
+    public OrderLinePK getId() {
+        return id;
     }
 
-    
-    public OrderLine() {}
+    public void setId(OrderLinePK id) {
+        this.id = id;
+    }
 
-    
+    public Order getOrder() {
+        return order;
+    }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
-    public Order getOrder() { return order; }
-    public void setOrder(Order order) { this.order = order; }
+    public Product getProduct() {
+        return product;
+    }
 
-    public Product getProduct() { return product; }
-    public void setProduct(Product product) { this.product = product; }
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public Integer getQuantity() {
+        return quantity;
+    }
 
-    public BigDecimal getPrice() { return price; }
-    public void setPrice(BigDecimal price) { this.price = price; }
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 
-    public BigDecimal getLineTotal() { return lineTotal; }
-    public void setLineTotal(BigDecimal lineTotal) { this.lineTotal = lineTotal; }
-    
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public BigDecimal getLineTotal() {
+        return lineTotal;
+    }
+
+    public void setLineTotal(BigDecimal lineTotal) {
+        this.lineTotal = lineTotal;
+    }
 }
