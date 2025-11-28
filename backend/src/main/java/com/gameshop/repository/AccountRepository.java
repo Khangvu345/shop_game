@@ -1,26 +1,26 @@
 package com.gameshop.repository;
 
-import com.gameshop.model.entity.User;
+import com.gameshop.model.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 /**
- * Repository cho User entity
+ * Repository cho Account entity
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface AccountRepository extends JpaRepository<Account, Long> {
 
     /**
-     * Tìm user theo username
+     * Tìm account theo username
      */
-    Optional<User> findByUsername(String username);
+    Optional<Account> findByUsername(String username);
 
     /**
-     * Tìm user theo email
+     * Tìm account theo email
      */
-    Optional<User> findByEmail(String email);
+    Optional<Account> findByEmail(String email);
 
     /**
      * Kiểm tra username đã tồn tại chưa

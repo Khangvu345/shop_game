@@ -19,10 +19,10 @@ public class Customer extends Party {
     private Integer points;
 
     /**
-     * Link to User account (optional - có thể null)
-     * Customer có thể tồn tại không cần User (guest checkout)
+     * Link to Account (optional - có thể null)
+     * Customer có thể tồn tại không cần Account (guest checkout)
      */
     @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "account_id")
+    private Account account;
 }

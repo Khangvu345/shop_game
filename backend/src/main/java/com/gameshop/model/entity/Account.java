@@ -9,22 +9,22 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * Entity User - Tài khoản người dùng (Admin hoặc Customer)
+ * Entity Account - Tài khoản người dùng (Admin hoặc Customer)
  *
  * WARNING: Password được lưu plain text - CHỈ ĐỂ TEST!
  * Production cần sử dụng BCrypt để hash password
  */
 @Entity
-@Table(name = "user")
+@Table(name = "account")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "account_id")
+    private Long accountId;
 
     @Column(unique = true, nullable = false, length = 50)
     private String username;
@@ -59,7 +59,7 @@ public class User {
      * Link to Customer entity (chỉ có khi role = CUSTOMER)
      * OneToOne bi-directional relationship
      */
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "account")
     private Customer customer;
 
     @PrePersist
