@@ -1,52 +1,47 @@
 package com.gameshop.model.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity 
+/**
+ * OrderAddress Entity với Shared Primary Key (order_id)
+ * PK = FK đến bảng order (1-1 relationship)
+ */
+@Entity
 @Table(name = "order_address")
+@Data
+@NoArgsConstructor
 public class OrderAddress {
-    
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    private String recipientName;
-    private String phone;
-    
-    private String street;
-    private String city;
-    private String ward;
+    @Id
+    @Column(name = "order_id")
+    private Long id; // Shared PK với Order
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    @Column(name = "receiver_name", length = 150, nullable = false)
+    private String receiverName;
+
+    @Column(name = "receiver_phone", length = 30, nullable = false)
+    private String receiverPhone;
+
+    @Column(name = "line1", length = 200, nullable = false)
+    private String line1; // Địa chỉ chi tiết
+
+    @Column(name = "line2", length = 200)
+    private String line2; // Địa chỉ bổ sung (optional)
+
+    @Column(length = 100)
     private String district;
 
-   
-    public OrderAddress() {}
+    @Column(length = 100, nullable = false)
+    private String city;
 
-    public OrderAddress(String recipientName, String phone, String street, String city) {
-        this.recipientName = recipientName;
-        this.phone = phone;
-        this.street = street;
-        this.city = city;
-    }
+    @Column(name = "postal_code", length = 20)
+    private String postalCode;
 
-    // --- GETTER & SETTER ---
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getRecipientName() { return recipientName; }
-    public void setRecipientName(String recipientName) { this.recipientName = recipientName; }
-
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
-
-    public String getStreet() { return street; }
-    public void setStreet(String street) { this.street = street; }
-
-    public String getCity() { return city; }
-    public void setCity(String city) { this.city = city; }
-
-    public String getWard() { return ward; }
-    public void setWard(String ward) { this.ward = ward; }
-
-    public String getDistrict() { return district; }
-    public void setDistrict(String district) { this.district = district; }
 }

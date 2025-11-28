@@ -1,8 +1,8 @@
 package com.gameshop.model.enums;
 
 public enum ShipmentStatus {
-    READY,
-    SHIPPED,
-    DELIVERED,
-    RETURNED
+    Ready,
+    Shipped,
+    Delivered,
+    Returned
 }

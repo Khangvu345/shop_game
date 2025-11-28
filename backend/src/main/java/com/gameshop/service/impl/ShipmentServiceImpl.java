@@ -1,8 +1,6 @@
 package com.gameshop.service.impl;
 
-import com.gameshop.model.dto.CreateShipmentRequest;
-import com.gameshop.model.dto.ShipmentResponse;
-import com.gameshop.model.dto.UpdateShipmentStatusRequest;
+import com.gameshop.model.dto.*;
 import com.gameshop.model.entity.Order;
 import com.gameshop.model.entity.Shipment;
 import com.gameshop.model.enums.OrderStatus;
@@ -35,16 +33,16 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Transactional
     public ShipmentResponse createShipment(CreateShipmentRequest req) {
         Order order = orderRepository.findById(req.orderId())
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + req.orderId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn hàng ID: " + req.orderId()));
 
-        // Chỉ cho tạo vận đơn khi đơn đã Confirmed hoặc Paid
-        // (Hiện tại hệ thống chưa phân biệt COD/online → chấp nhận cả 2)
-        if (order.getStatus() != OrderStatus.Paid && order.getStatus() != OrderStatus.Confirmed) {
-            throw new BusinessException("Chỉ có thể tạo vận đơn cho đơn hàng đã Confirmed hoặc Paid");
+        // Chỉ tạo vận đơn khi đơn đã CONFIRMED hoặc PREPARING
+        if (order.getStatus() != OrderStatus.CONFIRMED && order.getStatus() != OrderStatus.PREPARING) {
+            throw new BusinessException("Không thể tạo vận đơn. Đơn hàng phải ở trạng thái CONFIRMED hoặc PREPARING");
         }
 
-        if (shipmentRepository.findByOrder(order).isPresent()) {
-            throw new BusinessException("Đơn hàng này đã có vận đơn rồi");
+        // Không cho tạo 2 vận đơn
+        if (shipmentRepository.findByOrderId(order.getId()).isPresent()) {
+            throw new BusinessException("Đơn hàng này đã có vận đơn rồi!");
         }
 
         Shipment shipment = new Shipment();
@@ -54,13 +52,13 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.setEstimatedDelivery(req.estimatedDelivery() != null
                 ? req.estimatedDelivery().atTime(23, 59, 59)
                 : null);
-        shipment.setNotes(req.notes());
-        shipment.setStatus(ShipmentStatus.READY);
+        shipment.setStatus(ShipmentStatus.Ready);
+        shipment.setShippedAt(LocalDateTime.now()); // Bắt đầu giao ngay khi tạo vận đơn
 
         shipment = shipmentRepository.save(shipment);
 
-        // Khi tạo vận đơn → chuyển đơn hàng thành Shipped
-        order.setStatus(OrderStatus.Shipped);
+        // Tạo vận đơn → chuyển đơn hàng sang SHIPPED
+        order.setStatus(OrderStatus.SHIPPED);
         orderRepository.save(order);
 
         return toResponse(shipment);
@@ -70,35 +68,35 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Transactional
     public ShipmentResponse updateShipmentStatus(Long shipmentId, UpdateShipmentStatusRequest req) {
         Shipment shipment = shipmentRepository.findById(shipmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Shipment not found: " + shipmentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy vận đơn ID: " + shipmentId));
 
         Order order = shipment.getOrder();
 
-        // Cập nhật thời gian
-        if (req.status() == ShipmentStatus.DELIVERED) {
+        // Cập nhật thời gian thực tế
+        if (req.status() == ShipmentStatus.Shipped) {
+            shipment.setShippedAt(LocalDateTime.now());
+        }
+
+        if (req.status() == ShipmentStatus.Delivered) {
             shipment.setDeliveredAt(req.deliveredAt() != null ? req.deliveredAt() : LocalDateTime.now());
         } else {
             shipment.setDeliveredAt(null);
         }
 
-        if (req.status() == ShipmentStatus.SHIPPED) {
-            shipment.setShippedAt(LocalDateTime.now());
-        }
-
+        // Ghi chú thêm
+        // Cập nhật trạng thái vận đơn
         shipment.setStatus(req.status());
-        if (req.note() != null && !req.note().isBlank()) {
-            shipment.setNotes(req.note());
-        }
 
-        // Đồng bộ trạng thái đơn hàng
+        // === ĐỒNG BỘ TRẠNG THÁI ĐƠN HÀNG ===
         switch (req.status()) {
-            case SHIPPED -> order.setStatus(OrderStatus.SHIPPED);
-            case DELIVERED -> order.setStatus(OrderStatus.DELIVERED);
-            case RETURNED -> {
+            case Shipped -> order.setStatus(OrderStatus.SHIPPED);
+            case Delivered -> order.setStatus(OrderStatus.DELIVERED);
+            case Returned -> {
                 order.setStatus(OrderStatus.RETURNED);
-                restoreStock(order);
+                // TODO: restore stock nếu cần
             }
-            default -> {}
+            case Ready -> order.setStatus(OrderStatus.PREPARING); // nếu quay lại
+            // Không có CANCELLED cho shipment → hợp lý
         }
 
         shipmentRepository.save(shipment);
@@ -111,14 +109,14 @@ public class ShipmentServiceImpl implements ShipmentService {
     public ShipmentResponse getShipmentById(Long shipmentId) {
         return shipmentRepository.findById(shipmentId)
                 .map(this::toResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("Shipment not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Vận đơn không tồn tại"));
     }
 
     @Override
     public ShipmentResponse getShipmentByOrderId(Long orderId) {
         return shipmentRepository.findByOrderId(orderId)
                 .map(this::toResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("Shipment not found for order: " + orderId));
+                .orElseThrow(() -> new ResourceNotFoundException("Đơn hàng chưa có vận đơn"));
     }
 
     @Override
@@ -127,12 +125,16 @@ public class ShipmentServiceImpl implements ShipmentService {
 
         if (orderId != null) {
             Shipment shipment = shipmentRepository.findByOrderId(orderId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Shipment not found for order: " + orderId));
+                    .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy vận đơn cho đơn hàng: " + orderId));
             List<Shipment> list = Collections.singletonList(shipment);
-            page = new PageImpl<>(list, pageable, list.size());
+            page = new PageImpl<>(list, pageable, 1);
         } else if (status != null && !status.isBlank()) {
-            ShipmentStatus s = ShipmentStatus.valueOf(status.toUpperCase());
-            page = shipmentRepository.findByStatus(s, pageable);
+            try {
+                ShipmentStatus s = ShipmentStatus.valueOf(status.toUpperCase());
+                page = shipmentRepository.findByStatus(s, pageable);
+            } catch (IllegalArgumentException e) {
+                throw new BusinessException("Trạng thái vận đơn không hợp lệ: " + status);
+            }
         } else {
             page = shipmentRepository.findAll(pageable);
         }
@@ -140,25 +142,20 @@ public class ShipmentServiceImpl implements ShipmentService {
         return page.map(this::toResponse);
     }
 
-    private void restoreStock(Order order) {
-        // TODO: implement khi có OrderItem + ProductVariant
-    }
-
     private ShipmentResponse toResponse(Shipment s) {
-        LocalDate estimatedDeliveryDate = s.getEstimatedDelivery() != null
+        LocalDate estDate = s.getEstimatedDelivery() != null
                 ? s.getEstimatedDelivery().toLocalDate()
                 : null;
 
         return new ShipmentResponse(
                 s.getShipmentId(),
-                s.getOrder().getOrderId(),
+                s.getOrder().getId(),
                 s.getCarrier(),
                 s.getTrackingNo(),
-                estimatedDeliveryDate,
+                estDate,
                 s.getShippedAt(),
                 s.getDeliveredAt(),
-                s.getStatus(),
-                s.getNotes()
+                s.getStatus()
         );
     }
 }

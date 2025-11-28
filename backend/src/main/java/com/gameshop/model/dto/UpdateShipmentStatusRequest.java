@@ -6,6 +6,5 @@ import java.time.LocalDateTime;
 public record UpdateShipmentStatusRequest(
         ShipmentStatus status,
         LocalDateTime deliveredAt,
-        String recipientName,  // vẫn giữ optional
-        String note
+        String recipientName // vẫn giữ optional
 ) {}

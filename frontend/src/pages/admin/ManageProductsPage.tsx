@@ -1,28 +1,37 @@
-import {AdminTable} from "../../components/features/AdminTable/AdminTable.tsx";
-import {useEffect} from "react";
-import {useAppDispatch, useAppSelector} from "../../store/hooks.ts";
-import { fetchProducts, deleteProduct} from "../../store/slices/productSlice.ts";
+import React from 'react';
+import { AdminManager} from "../../components/features/admin/AdminManager/AdminManage.tsx";
+import {
+    fetchProducts, addProduct, editProduct, deleteProduct
+} from '../../store/slices/productSlice';
+import type { IProduct } from '../../types';
 
-export function ManageProductsPage(){
-    const dispatch = useAppDispatch();
-    const { data: products, status } = useAppSelector((state) => state.products);
+export const ManageProductsPage: React.FC = () => {
 
-    useEffect(() => {
-        if (status === 'idle') dispatch(fetchProducts());
-    }, [status, dispatch]);
-
-
-
+    // 1. Tạo một object mẫu rỗng (để Form biết cần vẽ những ô input nào)
+    const productTemplate: IProduct = {
+        productId: 0,
+        sku: '',
+        productName: '',
+        listPrice: 0,
+        categoryId: 0,
+        status: 'Active',
+        thumbnailUrl: '',
+        description: '',
+        // Các trường optional khác...
+    };
 
     return (
-        <div>
-
-            <AdminTable
-                data={products || []}
-                isLoading={status === 'loading'}
-                onEdit={(item) => alert(`Chức năng sửa sản phẩm ${item.productId} đang được phát triển.`)}
-                onDelete={(item) => dispatch(deleteProduct(item.productId))}
-            />
-        </div>
+        <AdminManager<IProduct>
+            title="Quản lý Sản phẩm (Auto)"
+            template={productTemplate} // Truyền mẫu vào
+            idKey="productId"
+            stateSelector={(state) => state.products}
+            actions={{
+                fetchAll: fetchProducts,
+                create: addProduct,
+                update: editProduct,
+                delete: deleteProduct
+            }}
+        />
     );
-}
+};

@@ -91,32 +91,4 @@ public class Order {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    // Thêm vào class Order (cuối file, trước đóng class)
-
-    public Long getOrderId() {
-        return this.id; // vì @Column(name = "order_id") là id
-    }
-
-
-    // Kiểm tra đơn hàng đã thanh toán hoặc COD được xác nhận
-    public boolean isPaidOrConfirmedCOD() {
-        return this.paymentStatus == PaymentStatus.PAID || 
-            (this.paymentStatus == PaymentStatus.PENDING && 
-                this.status == OrderStatus.CONFIRMED); // tùy logic COD của bạn
-    }
-
-    // Khôi phục tồn kho khi trả hàng
-    public void restoreStock() {
-        if (this.orderLines == null || this.orderLines.isEmpty()) {
-            return;
-        }
-
-        this.orderLines.forEach(orderLine -> {
-            // Giả sử OrderLine có method increaseStock(int quantity)
-            // hoặc bạn có ProductRepository để tăng stock
-            orderLine.getProduct().increaseStock(orderLine.getQuantity());
-        });
-    }
-    // Cập nhật trạng thái đơn hàng (nếu cần method riêng)
-    // public void setStatus(OrderStatus status) { ... } → đã có rồi
 }

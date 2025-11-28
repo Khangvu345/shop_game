@@ -6,6 +6,5 @@ public record CreateShipmentRequest(
         Long orderId,
         String carrier,
         String trackingNo,
-        LocalDate estimatedDelivery,
-        String notes
+        LocalDate estimatedDelivery
 ) {}

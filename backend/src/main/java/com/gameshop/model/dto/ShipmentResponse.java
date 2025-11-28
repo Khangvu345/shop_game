@@ -12,6 +12,5 @@ public record ShipmentResponse(
         LocalDate estimatedDelivery,
         LocalDateTime shippedAt,
         LocalDateTime deliveredAt,
-        ShipmentStatus status,
-        String notes
+        ShipmentStatus status
 ) {}

@@ -1,75 +1,17 @@
-
-.product-page-container {
-    width: 90%;
-    max-width: var(--max-width-container);
-    margin: 0 auto; 
-    padding-bottom: var(--spacing-lg); 
-}
-
-/* 1. HEADER CỦA TRANG */
-.product-page-header {
-    padding-left: -10rem;
-    padding-top: var(--spacing-lg); 
-    margin-bottom: var(--spacing-lg);
-    text-align: left;
-    transform: translateX(-5rem);
-}
-
-.product-page-header h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem; 
-    color: var(--color-primary-1); 
-}
-
-/* mô tả  */
-.product-page-header p {
-    font-size: 1rem;
-    color: var(--color-primary-3); 
-    max-width: 100%;
-    transform: translateX(0.1rem);
-}
-
-/*  BODY LAYOUT  */
-.product-page-body {
-    width: 100%;
+.products-list-page-container{
     display: grid;
-    grid-template-areas: "product-sidebar product-list";
-    grid-template-columns: 280px 1fr; 
-    gap: var(--spacing-md); 
+    grid-template-areas:
+        "products-list-sidebar products-list-content";
+    grid-template-columns: 1fr 8fr;
 }
 
-/* DANH SÁCH SẢN PHẨM (Nơi hiển thị Spinner/ProductList) */
-.product-page-content {
-    grid-area: product-list;
-    min-height: 80vh; 
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 600px;
+.page-sidebar{
+    grid-area: products-list-sidebar;
+    padding: var(--spacing-lg);
 }
 
-.product-page-content > div,
-.product-page-content > p {
-    text-align: center;
-    width: 100%;
-}
-
-.product-page-body > aside { 
-    transform: translateX(-5rem); 
-}
-
-.product-list-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-}
-
-.product-page-content p {
-    text-align: center; 
-    width: 100%;
+.product-page-content{
+    grid-area: products-list-content;
+    padding: var(--spacing-lg);
+    margin: 0 200px;
 }

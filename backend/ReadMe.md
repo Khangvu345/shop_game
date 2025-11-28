@@ -88,7 +88,7 @@ cd shop_game/backend
 
 2. Copy file `application-local.properties.example` thành `application-local.properties`:
    ```bash
-   cp application-local.properties.example application-local.properties
+   cp application-local.properties application-local.properties
    ```
    *(File này đã được thêm vào `.gitignore` nên sẽ không bị lộ mật khẩu lên Git.)*
 
