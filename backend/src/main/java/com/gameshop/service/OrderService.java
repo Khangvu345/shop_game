@@ -13,6 +13,7 @@ import com.gameshop.model.entity.*;
 import com.gameshop.model.enums.OrderStatus;
 import com.gameshop.model.enums.PaymentMethod;
 import com.gameshop.model.enums.PaymentStatus;
+import com.gameshop.model.enums.StockMovementReason;
 import com.gameshop.repository.CustomerRepository;
 import com.gameshop.repository.OrderRepository;
 import com.gameshop.repository.ProductRepository;
@@ -39,11 +40,18 @@ public class OrderService {
     private final CustomerRepository customerRepo;
     private final ProductRepository productRepo;
     private final OrderRepository orderRepo;
+    private final StockMovementService stockMovementService;
 
     @Autowired
     public OrderService(CustomerRepository customerRepo,
             ProductRepository productRepo,
-            OrderRepository orderRepo) {
+            OrderRepository orderRepo,
+            StockMovementService stockMovementService) {
+        this.customerRepo = customerRepo;
+        this.productRepo = productRepo;
+        this.orderRepo = orderRepo;
+        this.stockMovementService = stockMovementService;
+    }
         this.customerRepo = customerRepo;
         this.productRepo = productRepo;
         this.orderRepo = orderRepo;
@@ -83,9 +91,7 @@ public class OrderService {
                 throw new RuntimeException("Sản phẩm " + product.getName() + " không đủ hàng!");
             }
 
-            // Reduce stock
-            product.setStockQuantity(product.getStockQuantity() - itemDto.quantity());
-            productRepo.save(product);
+    
 
             OrderLine line = new OrderLine();
             line.setOrder(order);
@@ -104,6 +110,15 @@ public class OrderService {
         order.setGrandTotal(grandTotal);
 
         Order saved = orderRepo.save(order);
+        // 5. Create stock movements for tracking (after order is saved to get orderId)
+        for (OrderLine line : saved.getOrderLines()) {
+            stockMovementService.createMovement(
+                    line.getProduct().getProductId(),
+                    -line.getQuantity(), // Negative = reduce stock
+                    StockMovementReason.Sale,
+                    "ORDER-" + saved.getId(),
+                    saved.getId());
+        }
         return new CreateOrderResponse(saved.getId(), "Đặt hàng thành công!");
     }
 
@@ -217,11 +232,14 @@ public class OrderService {
             throw new RuntimeException("Đơn hàng đã bị hủy trước đó!");
         }
 
-        // Restore stock
+        // Restore stock using StockMovementService for tracking
         for (OrderLine line : order.getOrderLines()) {
-            Product product = line.getProduct();
-            product.setStockQuantity(product.getStockQuantity() + line.getQuantity());
-            productRepo.save(product);
+            stockMovementService.createMovement(
+                    line.getProduct().getProductId(),
+                    line.getQuantity(), // Positive = restore stock
+                    StockMovementReason.Return,
+                    "CANCEL-ORDER-" + orderId,
+                    orderId);
         }
 
         // Update order
