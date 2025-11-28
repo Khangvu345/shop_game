@@ -2,6 +2,7 @@ package com.gameshop.controller;
 
 import com.gameshop.model.dto.common.ApiResponse;
 import com.gameshop.model.dto.request.CreateGoodsReceiptRequest;
+import com.gameshop.model.dto.request.UpdateGoodsReceiptRequest;
 import com.gameshop.model.dto.response.GoodsReceiptListResponse;
 import com.gameshop.model.dto.response.GoodsReceiptResponse;
 import com.gameshop.service.GoodsReceiptService;
@@ -72,7 +73,21 @@ public class GoodsReceiptController {
                 ApiResponse.success("Lấy danh sách phiếu nhập hàng thành công", receipts)
         );
     }
-
+    @PutMapping("/{id}")
+    @Operation(summary = "Cập nhật phiếu nhập hàng (chỉ metadata)",
+               description = "Cập nhật thông tin phiếu nhập hàng. CHỈ cho phép sửa metadata (notes, invoiceNumber). " +
+                       "KHÔNG cho phép sửa items/supplier để tránh chaos với stock tracking. " +
+                       "BẮT BUỘC phải ghi lý do cập nhật (updateReason) để audit trail.")
+    public ResponseEntity<ApiResponse<GoodsReceiptResponse>> updateGoodsReceipt(
+            @Parameter(description = "ID của phiếu nhập hàng")
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateGoodsReceiptRequest request
+    ) {
+        GoodsReceiptResponse receipt = goodsReceiptService.updateGoodsReceipt(id, request);
+        return ResponseEntity.ok(
+                ApiResponse.success("Cập nhật phiếu nhập hàng thành công", receipt)
+        );
+    }
     @DeleteMapping("/{id}")
     @Operation(summary = "Xóa phiếu nhập hàng",
                description = "Xóa phiếu nhập hàng (Cẩn thận! Chức năng này nên được kiểm soát chặt chẽ)")

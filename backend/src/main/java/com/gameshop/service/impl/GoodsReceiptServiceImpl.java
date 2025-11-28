@@ -3,6 +3,7 @@ package com.gameshop.service.impl;
 import com.gameshop.exception.BadRequestException;
 import com.gameshop.exception.ResourceNotFoundException;
 import com.gameshop.model.dto.request.CreateGoodsReceiptRequest;
+import com.gameshop.model.dto.request.UpdateGoodsReceiptRequest;
 import com.gameshop.model.dto.response.GoodsReceiptListResponse;
 import com.gameshop.model.dto.response.GoodsReceiptResponse;
 import com.gameshop.model.dto.response.SupplierResponse;
@@ -180,6 +181,42 @@ public class GoodsReceiptServiceImpl implements GoodsReceiptService {
                 receiptPage.getNumber(),
                 receiptPage.getSize()
         );
+    }
+    @Override
+    @Transactional
+    public GoodsReceiptResponse updateGoodsReceipt(Long id, UpdateGoodsReceiptRequest request) {
+        log.info("Updating goods receipt: id={}, reason={}", id, request.updateReason());
+
+        // 1. Validate goods receipt exists
+        GoodsReceipt receipt = goodsReceiptRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phiếu nhập hàng ID: " + id));
+
+        // 2. Update metadata only (NOT items/supplier to avoid stock tracking chaos)
+        if (request.invoiceNumber() != null && !request.invoiceNumber().isBlank()) {
+            // Check if new invoice number is already used by another receipt
+            goodsReceiptRepository.findByInvoiceNumber(request.invoiceNumber())
+                    .ifPresent(existing -> {
+                        if (!existing.getReceiptId().equals(id)) {
+                            throw new BadRequestException(
+                                    "Số hóa đơn '" + request.invoiceNumber() + "' đã tồn tại trong phiếu nhập khác");
+                        }
+                    });
+            receipt.setInvoiceNumber(request.invoiceNumber());
+        }
+
+        if (request.notes() != null) {
+            // Append update reason to notes for audit trail
+            String updatedNotes = request.notes() + "\n[Cập nhật lúc " + LocalDateTime.now() +
+                    " - Lý do: " + request.updateReason() + "]";
+            receipt.setNotes(updatedNotes);
+        }
+
+        // 3. Save
+        GoodsReceipt updated = goodsReceiptRepository.save(receipt);
+        log.info("Goods receipt updated successfully: id={}", id);
+
+        // 4. Return response (fetch with lines for complete data)
+        return getGoodsReceiptById(id);
     }
 
     @Override

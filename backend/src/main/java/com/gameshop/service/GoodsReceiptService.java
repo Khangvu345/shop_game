@@ -1,6 +1,7 @@
 package com.gameshop.service;
 
 import com.gameshop.model.dto.request.CreateGoodsReceiptRequest;
+import com.gameshop.model.dto.request.UpdateGoodsReceiptRequest;
 import com.gameshop.model.dto.response.GoodsReceiptListResponse;
 import com.gameshop.model.dto.response.GoodsReceiptResponse;
 
@@ -35,6 +36,17 @@ public interface GoodsReceiptService {
             int page,
             int size
     );
+        /**
+     * Cập nhật phiếu nhập hàng (chỉ metadata: notes, invoiceNumber)
+     * KHÔNG cho phép sửa items/supplier để tránh chaos với stock tracking
+     *
+     * Lý do giới hạn:
+     * - Stock đã được tracked, weighted average đã tính
+     * - Rollback và recalculate rất phức tạp, dễ lỗi
+     * - Nếu cần sửa items → xóa và tạo lại
+     */
+    GoodsReceiptResponse updateGoodsReceipt(Long id, UpdateGoodsReceiptRequest request);
+
 
     /**
      * Xóa phiếu nhập hàng
