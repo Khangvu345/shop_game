@@ -40,6 +40,30 @@ export const fetchProductById = createAsyncThunk(
     }
 );
 
+export const addProduct = createAsyncThunk(
+    'products/add',
+    async (product: Partial<IProduct>) => {
+        const response = await productApi.addNew(product);
+        return response;
+    }
+);
+
+export const updateProduct = createAsyncThunk(
+    'products/update',
+    async ({ id, data }: { id: number | string, data: Partial<IProduct> }) => {
+        const response = await productApi.update(id, data);
+        return response;
+    }
+);
+
+export const deleteProduct = createAsyncThunk(
+    'products/delete',
+    async (id: number | string) => {
+        await productApi.delete(id);
+        return id;
+    }
+);
+
 
 
 const productSlice = createSlice({
@@ -78,9 +102,24 @@ const productSlice = createSlice({
                 state.selectedProduct.status = 'failed';
                 state.selectedProduct.error = action.error.message;
             });
+        builder.addCase(addProduct.fulfilled, (state, action) => {
+            if (state.data) state.data.unshift(action.payload);
+        });
+
+        builder.addCase(updateProduct.fulfilled, (state, action) => {
+            const index = state.data?.findIndex(p => p.productId === action.payload.productId);
+            if (state.data && index !== undefined && index !== -1) {
+                state.data[index] = action.payload;
+            }
+        });
+
+        builder.addCase(deleteProduct.fulfilled, (state, action) => {
+            if (state.data) {
+                state.data = state.data.filter(p => p.productId !== action.payload);
+            }
+        });
     },
 });
-
 
 const selectAllProducts = (state: RootState) => state.products.data;
 const selectFilters = (state: RootState) => state.products.filters;
@@ -92,11 +131,11 @@ export const selectFilteredProducts = createSelector(
 
         const filtered = products.filter((product) => {
             if (filters.categoryIds.length > 0) {
-                if (!filters.categoryIds.includes(product.category_id)) return false;
+                if (!filters.categoryIds.includes(product.categoryId)) return false;
             }
 
             if (filters.priceRange !== 'all') {
-                const p = product.list_price;
+                const p = product.listPrice;
                 switch (filters.priceRange) {
                     case 'under-1m': if (p >= 1000000) return false; break;
                     case '1m-5m': if (p < 1000000 || p >= 5000000) return false; break;
@@ -111,10 +150,10 @@ export const selectFilteredProducts = createSelector(
 
         switch (filters.sortBy) {
             case 'price-asc': // Giá thấp đến cao
-                sorted.sort((a, b) => a.list_price - b.list_price);
+                sorted.sort((a, b) => a.listPrice - b.listPrice);
                 break;
             case 'price-desc': // Giá cao đến thấp
-                sorted.sort((a, b) => b.list_price - a.list_price);
+                sorted.sort((a, b) => b.listPrice - a.listPrice);
                 break;
             default: // Mặc định (giữ nguyên thứ tự từ API hoặc theo ngày tạo)
                 break;

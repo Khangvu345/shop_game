@@ -48,7 +48,7 @@ public class OpenApiConfig {
         return new Contact()
                 .name("GameShop Team")
                 .email("team@gameshop.com")
-                .url("https://github.com/your-repo");
+                .url("https://github.com/Khangvu345/shop_game");
     }
 
     private License apiLicense() {

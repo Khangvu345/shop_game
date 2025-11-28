@@ -33,6 +33,10 @@ public class Product {
     @Column(name = "list_price", nullable = false, precision = 10, scale = 0) // Mệnh giá VNĐ không có phần thập phân và tối đa 10 chữ số
     private BigDecimal listPrice;
 
+    @Transient
+    @Column(name = "stock_quantity")
+    private Integer stockQuantity = 0;
+
     @Column(name = "status", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private ProductStatus status = ProductStatus.Active; // Viết thường để đồng bộ với cơ sở dữ liệu
@@ -57,5 +61,50 @@ public class Product {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+
+
+
+
+
+    // 1. Fix lỗi getStockQuantity()
+    public Integer getStockQuantity() { 
+        return stockQuantity; 
+    }
+
+    public void setStockQuantity(Integer stockQuantity) { 
+        this.stockQuantity = stockQuantity; 
+    }
+
+    // 2. Fix lỗi getName() (Map sang productName)
+    public String getName() { 
+        return productName; 
+    }
+    
+    // Getter chuẩn cho productName
+    public String getProductName() { 
+        return productName; 
+    }
+
+    public void setProductName(String productName) { 
+        this.productName = productName; 
+    }
+
+    // 3. Fix lỗi getPrice() (Map sang listPrice)
+    public java.math.BigDecimal getPrice() { 
+        return listPrice; 
+    }
+
+    // Getter chuẩn cho listPrice
+    public java.math.BigDecimal getListPrice() { 
+        return listPrice; 
+    }
+
+    public void setListPrice(java.math.BigDecimal listPrice) { 
+        this.listPrice = listPrice; 
+    }
+
+
+
 
 }

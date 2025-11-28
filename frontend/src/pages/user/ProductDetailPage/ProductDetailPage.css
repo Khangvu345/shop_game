@@ -1,0 +1,120 @@
+/* ===== PRODUCT DETAIL PAGE ===== */
+.product-detail-page {
+    max-width: var(--max-width-container);
+    margin: 0 auto;
+    padding: var(--spacing-md);
+}
+
+/* ===== HERO SECTION (Main Product Display) ===== */
+.product-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg) 0;
+}
+
+@media (max-width: 900px) {
+    .product-hero {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== MORE DETAILS SECTION ===== */
+.more-details-section {
+    padding: var(--spacing-lg) 0;
+    border-top: 1px solid var(--color-primary-2);
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary-1);
+    text-transform: uppercase;
+    margin-bottom: var(--spacing-md);
+}
+
+/* Specifications Grid */
+.specifications-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+}
+
+@media (max-width: 600px) {
+    .specifications-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.spec-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.spec-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-primary-3);
+    text-transform: uppercase;
+}
+
+.spec-value {
+    font-size: 1rem;
+    color: var(--color-primary-1);
+}
+
+.product-detail-loading,
+.product-detail-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    gap: var(--spacing-md);
+}
+
+.product-detail-error {
+    color: var(--color-accent-1);
+}
+
+.back-link {
+    color: var(--color-secondary-0);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.back-link:hover {
+    color: var(--color-secondary-1);
+    text-decoration: underline;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) 0;
+    font-size: 0.9rem;
+}
+
+.breadcrumb a {
+    color: var(--color-primary-3);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb a:hover {
+    color: var(--color-secondary-0);
+}
+
+.breadcrumb-separator {
+    color: var(--color-primary-3);
+}
+
+.breadcrumb-current {
+    color: var(--color-primary-1);
+    font-weight: 500;
+}
+/* Khong sua gi ca  */

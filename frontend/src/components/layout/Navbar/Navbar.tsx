@@ -4,25 +4,25 @@ import './Navbar.css';
 interface NavbarProps {
     logo?: React.ReactNode;
     links: React.ReactNode;
-    search?: React.ReactNode;
     actions?: React.ReactNode;
+    styleNav?: '-horizontal' | '-vertical';
 }
 
 
-export function Navbar({ logo, links, actions }: NavbarProps) {
+export function Navbar({ logo, links, actions, styleNav = "-horizontal" }: NavbarProps) {
     return (
-        <div className="navbar">
-            <div className="navbar-logo">
+        <div className={"navbar" + styleNav}>
+            <div className={"navbar-logo" + styleNav}>
                 {logo}
             </div>
 
             {links && (
-                <nav className="navbar-nav">
+                <nav className={"navbar-nav"+ styleNav}>
                     {links}
                 </nav>
             )}
 
-            <div className="navbar-actions">
+            <div className={"navbar-actions"+ styleNav}>
                 {actions}
             </div>
 
