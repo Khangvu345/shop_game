@@ -3,7 +3,7 @@
     height: auto;
 }
 .logo-size-small{
-    width: 3rem;
+    width: 2rem;
 }
 .logo-size-medium{
     width: 4rem;
@@ -12,3 +12,8 @@
     width: 6rem;
 }
 
+.navbar-logo img,
+.navbar-logo svg {
+    height: 55px; 
+    width: auto; 
+}

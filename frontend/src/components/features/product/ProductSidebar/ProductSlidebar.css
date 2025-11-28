@@ -1,13 +1,13 @@
 
 /* Sidebar ngoài cùng */
 .page-sidebar {
-    margin: 1rem 15px 0 15px;
-    padding: 20px 12px 20px var(--spacing-md);
+    margin-top: 1rem;
+    padding: 20px 10px 10px var(--spacing-md);
     background-color: var(--color-primary-0); 
     max-width: 300px;
     border-right: none;
-    box-shadow: 2px 6px 14px rgba(0, 0, 0, 0.15);
-    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius-sm);
     min-height: 80vh;
     height: auto; 
 }
@@ -17,7 +17,6 @@
     color: var(--color-primary-1); 
     font-size: 1.4rem;
     font-weight: 700;
-    margin-top: 0;
     margin-bottom: 5px;
     border-bottom: 1px solid var(--color-primary-2);
     padding-bottom: 5px;
