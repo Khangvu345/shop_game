@@ -1,9 +1,14 @@
 
 .product-card {
     display: flex;
-    flex-direction: column;
-    height: 100%; 
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex-direction: column; 
+    padding: 14px;
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); 
+    position: relative;
+    z-index: 2; 
+    border-radius: 14px; 
 }
 
 .product-card:hover {
@@ -14,15 +19,17 @@
 
 /*  KHU VỰC ẢNH SẢN PHẨM */
 .product-card-image {
-    width: 100%;
-    height: 180px; 
+    width: auto;
+    max-width: 100%; 
     object-fit: contain; 
-    margin-bottom: 0;
+    margin: 0 auto;
+    height: 250px;
     transition: transform 0.3s ease;
+    border-radius: 7px;  
 }
 
 .product-card-image:hover {
-    transform: scale(1.02);
+    transform: none; 
 }
 
 /* NỘI DUNG CARD  */
@@ -31,7 +38,10 @@
     flex-direction: column;
     flex-grow: 1; 
     text-align: center;
-    padding: 0 15px 15px 15px;
+    width: 100%;
+    max-width: 220px;
+    padding: 0;
+    margin: 0 auto;
 
 }
 
@@ -63,7 +73,7 @@
 /* NÚT "THÊM VÀO GIỎ"  */
 .product-card-content .btn {
     width: 95%; 
-    max-width: 220px;
+    max-width: 230px;
     padding: 10px 0;
     margin: 0 auto;
     margin-top: 0; 
