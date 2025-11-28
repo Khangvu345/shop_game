@@ -17,4 +17,12 @@ public class Customer extends Party {
 
     @Column(name = "points")
     private Integer points;
+
+    /**
+     * Link to User account (optional - có thể null)
+     * Customer có thể tồn tại không cần User (guest checkout)
+     */
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
