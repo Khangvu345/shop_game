@@ -52,10 +52,7 @@ public class OrderService {
         this.orderRepo = orderRepo;
         this.stockMovementService = stockMovementService;
     }
-        this.customerRepo = customerRepo;
-        this.productRepo = productRepo;
-        this.orderRepo = orderRepo;
-    }
+        
 
     public CreateOrderResponse createOrder(CreateOrderRequest request) {
         // 1. Get customer
