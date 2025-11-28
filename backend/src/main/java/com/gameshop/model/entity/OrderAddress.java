@@ -43,6 +43,4 @@ public class OrderAddress {
 
     @Column(name = "postal_code", length = 20)
     private String postalCode;
-
-    @Column(name = "postal_code", length = 20)
-    private String postalCode;
+}
