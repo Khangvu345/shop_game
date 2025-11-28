@@ -1,79 +1,100 @@
+// src/components/ui/AdminGenericForm.tsx
 import React, { useEffect, useState } from 'react';
-import { Button} from "../../../ui/button/Button.tsx";
-import { Input} from "../../../ui/input/Input.tsx";
-
-import './AdminForm.css'
+import { Button} from "../../../ui/button/Button";
+import { Input} from "../../../ui/input/Input";
+import { Select} from "../../../ui/input/Select";
+import type {IFieldConfig} from "../../../../types";
 
 interface AdminFormProps<T> {
-    template: T; // Object mẫu để biết có những trường nào
-    initialData?: T; // Dữ liệu sửa (nếu có)
+    fields: IFieldConfig<T>[];
+    initialData?: Partial<T>;
     onSubmit: (data: T) => void;
     onCancel: () => void;
     isSubmitting?: boolean;
 }
 
-export const AdminForm = <T extends Record<string, unknown>>({
-                                                                 template,
-                                                                 initialData,
-                                                                 onSubmit,
-                                                                 onCancel,
-                                                                 isSubmitting
-                                                             }: AdminFormProps<T>) => {
+export const AdminForm = <T extends Record<string, any>>({
+                                                                    fields, initialData, onSubmit, onCancel, isSubmitting
+                                                                }: AdminFormProps<T>) => {
 
-    // Khởi tạo form dựa trên template (nếu thêm mới) hoặc initialData (nếu sửa)
-    const [formData, setFormData] = useState<T>(initialData || template);
+    const [formData, setFormData] = useState<Partial<T>>({});
 
     useEffect(() => {
         if (initialData) setFormData(initialData);
-        else setFormData(template);
-    }, [initialData, template]);
+        else setFormData({});
+    }, [initialData]);
 
-    const handleChange = (key: keyof T, value: unknown) => {
-        setFormData(prev => ({ ...prev, [key]: value }));
+    const handleChange = (name: keyof T, value: any) => {
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit(formData);
+        onSubmit(formData as T);
     };
 
-    // Lấy danh sách các trường từ Template
-    const fields = Object.keys(template);
+    const renderField = (field: IFieldConfig<T>) => {
+        const value = formData[field.name] ?? ''; // Tránh lỗi controlled component
+
+        if (field.type === 'select') {
+            return (
+                <Select
+                    label={field.label}
+                    value={value}
+                    options={field.options || []}
+                    onChange={(e) => handleChange(field.name, e.target.value)} // Select value luôn là string/number
+                    required={field.required}
+                    disabled={field.disabled}
+                />
+            );
+        }
+
+        if (field.type === 'textarea') {
+            return (
+                <div className="form-group">
+                    <label className="form-label">{field.label}</label>
+                    <textarea
+                        className="form-input"
+                        rows={4}
+                        value={value}
+                        onChange={(e) => handleChange(field.name, e.target.value)}
+                        disabled={field.disabled}
+                        style={{ width: '100%', resize: 'vertical' }}
+                    />
+                </div>
+            );
+        }
+
+        // Mặc định là Input (text, number...)
+        return (
+            <Input
+                label={field.label}
+                type={field.type}
+                value={value}
+                onChange={(e) => {
+                    // Nếu là number thì ép kiểu ngay lập tức
+                    const val = field.type === 'number' ? Number(e.target.value) : e.target.value;
+                    handleChange(field.name, val);
+                }}
+                required={field.required}
+                disabled={field.disabled}
+            />
+        );
+    };
 
     return (
-        <form onSubmit={handleSubmit} className="form-container">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {fields.map((key) => {
-                    // Logic đoán loại Input
-                    const value = formData[key];
-                    const isIdField = key.toLowerCase().includes('id') && key.toLowerCase().endsWith('id'); // Ví dụ: productId, ID...
-                    const isDateField = key.toLowerCase().includes('date') || key.toLowerCase().includes('at');
-                    const isNumber = typeof template[key] === 'number';
-
-                    // Không cho sửa ID chính (Primary Key)
-                    // (Logic đoán ID: chứa chữ Id và đang ở chế độ Sửa)
-                    const isReadOnly = isIdField && !!initialData;
-
-                    return (
-                        <div key={key} className="col-span-1">
-                            <Input
-                                label={key.charAt(0).toUpperCase() + key.slice(1)} // Viết hoa chữ cái đầu
-                                type={isNumber ? 'number' : (isDateField ? 'datetime-local' : 'text')}
-                                value={value !== null && value !== undefined ? String(value) : ''}
-                                onChange={(e) => {
-                                    const val = e.target.value;
-                                    handleChange(key as keyof T, isNumber ? Number(val) : val);
-                                }}
-                                disabled={isReadOnly} // Khóa ID khi sửa
-                                readOnly={isReadOnly}
-                                className={isReadOnly ? 'bg-gray-100 cursor-not-allowed' : ''}
-                            />
-                        </div>
-                    );
-                })}
+        <form onSubmit={handleSubmit} style={{ padding: '1rem' }}>
+            {/* Grid Layout 2 cột */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                {fields.map((field) => (
+                    <div key={String(field.name)} style={{ gridColumn: field.colSpan === 2 ? 'span 2' : 'span 1' }}>
+                        {renderField(field)}
+                    </div>
+                ))}
             </div>
 
-            <div className="flex justify-end gap-2 mt-6 pt-4 border-t">
+            {/* Buttons */}
+            <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end', gap: '1rem', borderTop: '1px solid #eee', paddingTop: '1rem' }}>
                 <Button type="button" onClick={onCancel} disabled={isSubmitting}>Hủy</Button>
                 <Button type="submit" disabled={isSubmitting}>
                     {initialData ? 'Lưu thay đổi' : 'Tạo mới'}

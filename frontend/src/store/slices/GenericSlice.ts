@@ -14,11 +14,11 @@ interface GenericState<T> extends IApiState<T[]> {
 // api: Instance của BaseApi (ví dụ categoryApi)
 // sliceName: Tên slice (ví dụ 'categories')
 // idKey: Tên trường ID (ví dụ 'categoryId' hay 'productId')
-export const createGenericSlice = <T>(
+export function createGenericSlice<T>(
     sliceName: string,
     api: BaseApi<T>,
     idKey: keyof T // Cần biết trường nào là ID để Update/Delete
-) => {
+){
 
     // --- A. TỰ ĐỘNG TẠO THUNKS ---
 
@@ -119,4 +119,4 @@ export const createGenericSlice = <T>(
         reducer: slice.reducer,
         actions: { ...slice.actions, fetchAll, fetchById, create, update, remove },
     };
-};
+}

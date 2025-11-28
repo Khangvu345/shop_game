@@ -5,31 +5,20 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     error?: string;
 }
 
-export const Input = ({
-                          label,
-                          id,
-                          className = '',
-                          error,
-                          ...props
-                      }: InputProps) => {
-
-    const inputId = id || props.name ;
-
+export function Input({label, className = '', error, ...props}: InputProps){
     return (
-        <div className="input-container">
+        <div className="w-full">
             {label && (
-                <label htmlFor={inputId} className="input-label">
-                    {label} {props.required && <span style={{ color: 'var(--danger-color)' }}>*</span>}
+                <label className="">
+                    {label}
                 </label>
             )}
-
             <input
-                id={inputId}
-                className={`form-input ${error ? 'input-error' : ''} ${className}`}
+                className={`${error ? 'border-red' : 'border-gray'} ${className}`}
                 {...props}
             />
-
-            {error && <span className="form-error-message">{error}</span>}
+            {error && <p>{error}</p>}
         </div>
     );
-};
+
+}

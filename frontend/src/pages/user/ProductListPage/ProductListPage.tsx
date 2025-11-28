@@ -3,11 +3,10 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 // Import các actions và selector từ productSlice
 import {
     fetchProducts,
-    selectDisplayProducts, // Selector thông minh (đã sort & cắt trang)
-    setPage                // Action đổi trang
+    selectDisplayProducts,
+    setPage
 } from '../../../store/slices/productSlice';
 
-// Import các Component UI & Feature
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import { ProductSidebar } from '../../../components/features/product/ProductSidebar/ProductSidebar';
 import { ProductList } from '../../../components/features/product/ProductList/ProductList';
@@ -15,12 +14,11 @@ import { Pagination } from '../../../components/ui/pagination/Pagination';
 
 import './ProductListPage.css'
 
-export const ProductListPage: React.FC = () => {
+export function ProductListPage(){
     const dispatch = useAppDispatch();
 
-    // 1. Lấy dữ liệu hiển thị từ Selector (Đã được xử lý Sort & Pagination)
-    // paginatedData: Chỉ chứa 12 sản phẩm của trang hiện tại
-    const { paginatedData, totalPages, totalRows } = useAppSelector(selectDisplayProducts);
+
+    const { paginatedData, totalRows } = useAppSelector(selectDisplayProducts);
 
     // 2. Lấy trạng thái API và cấu hình hiện tại
     const {
@@ -113,4 +111,4 @@ export const ProductListPage: React.FC = () => {
             </main>
         </div>
     );
-};
+}

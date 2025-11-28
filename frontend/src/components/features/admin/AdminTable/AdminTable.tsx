@@ -1,66 +1,104 @@
-import React from 'react';
+import React from "react";
 import { Button} from "../../../ui/button/Button.tsx";
+import {Spinner} from "../../../ui/loading/Spinner.tsx";
 
 import './AdminTable.css';
+import type {IColumn} from "../../../../types";
 
 interface AdminTableProps<T> {
+    columns: IColumn<T>[];
     data: T[];
     isLoading?: boolean;
-    rowKey?: keyof T; // Cho phép chỉ định trường ID
+
+
+    rowKey: (item: T) => string | number;
+
     onEdit?: (item: T) => void;
     onDelete?: (item: T) => void;
 }
 
-export const AdminTable = <T extends Record<string, never>>({
-                                                                  data, isLoading, rowKey, onEdit, onDelete
-                                                              }: AdminTableProps<T>) => {
+export function AdminTable<T extends object>({
+                                                 columns,
+                                                 data,
+                                                 isLoading,
+                                                 rowKey,
+                                                 onEdit,
+                                                 onDelete
+                                             }: AdminTableProps<T>){
 
-    if (isLoading) return <div className="text-center p-4">Đang tải...</div>;
-    if (!data || data.length === 0) return <div className="text-center p-4">Chưa có dữ liệu</div>;
-
-    // Tự động lấy danh sách cột từ phần tử đầu tiên
-    const columns = Object.keys(data[0]);
-
-    // Tự động đoán key ID nếu không truyền vào
-    const getRowKey = (item: T, index: number) => {
-        if (rowKey) return item[rowKey] as string | number;
-        // Tìm key có chứa chữ 'id'
-        const autoId = columns.find(key => key.toLowerCase().includes('id') && key.toLowerCase() !== 'categoryid'); // Tránh nhầm foreign key
-        return autoId ? item[autoId] : index;
-    };
+    if (isLoading) return <Spinner></Spinner>;
+    if (!data || data.length === 0) return <div>Chưa có dữ liệu</div>;
 
     return (
-        <div className="table-container">
-            <table className="w-full border-collapse text-sm">
-                <thead className="bg-gray-100 border-b">
-                <tr>
-                    {columns.map((col) => (
-                        <th key={col} className="p-3 text-left font-semibold border-r last:border-r-0 uppercase">
-                            {col}
+        <div className="card" style={{ overflowX: 'auto', padding: 0 }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.95rem' }}>
+
+                {/* --- HEADER --- */}
+                <thead>
+                <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #e9ecef' }}>
+                    {columns.map((col, index) => (
+                        <th
+                            key={String(col.key) + index}
+                            style={{
+                                padding: '12px 16px',
+                                textAlign: 'left',
+                                fontWeight: 600,
+                                color: '#495057',
+                                width: col.width,
+                                whiteSpace: 'nowrap'
+                            }}
+                        >
+                            {col.title.toUpperCase()}
                         </th>
                     ))}
-                    {(onEdit || onDelete) && <th className="p-3 text-center">Action</th>}
+
+                    {/* Cột thao tác (chỉ hiện nếu có truyền onEdit hoặc onDelete) */}
+                    {(onEdit || onDelete) && (
+                        <th style={{ padding: '12px 16px', textAlign: 'right', fontWeight: 600, color: '#495057', width: '120px' }}>
+                            THAO TÁC
+                        </th>
+                    )}
                 </tr>
                 </thead>
+
+                {/* --- BODY --- */}
                 <tbody>
-                {data.map((row, idx) => (
-                    <tr key={getRowKey(row, idx)} className="border-b hover:bg-gray-50">
-                        {columns.map((col) => (
-                            <td key={col} className="p-3 border-r last:border-r-0 max-w-[200px] truncate">
-                                {/* Logic hiển thị thông minh */}
-                                {(() => {
-                                    const val = row[col];
-                                    if (typeof val === 'boolean') return val ? '✅' : '❌';
-                                    if (String(val).startsWith('http')) return <img src={val} className="h-8 w-8 object-cover rounded" alt="img" />;
-                                    if (typeof val === 'object' && val !== null) return JSON.stringify(val); // Array hoặc Object
-                                    return String(val);
-                                })()}
+                {data.map((item) => (
+                    <tr
+                        key={rowKey(item)}
+                        style={{ borderBottom: '1px solid #e9ecef' }}
+                        // Hiệu ứng hover (nếu bạn có class hover trong CSS)
+                        className="table-row-hover"
+                    >
+                        {/* Lặp qua các cột để vẽ dữ liệu */}
+                        {columns.map((col, colIndex) => (
+                            <td key={colIndex} style={{ padding: '12px 16px', verticalAlign: 'middle', color: '#333' }}>
+                                {col.render
+                                    ? col.render(item) // Nếu có hàm render riêng -> dùng nó
+                                    : (item[col.key] as React.ReactNode) // Nếu không -> hiển thị giá trị thô
+                                }
                             </td>
                         ))}
+
+                        {/* Vẽ các nút thao tác */}
                         {(onEdit || onDelete) && (
-                            <td className="p-3 text-center whitespace-nowrap">
-                                {onEdit && <Button  style={{marginRight:5, padding: '2px 8px', fontSize: 12}} onClick={() => onEdit(row)}>Sửa</Button>}
-                                {onDelete && <Button  style={{padding: '2px 8px', fontSize: 12}} onClick={() => onDelete(row)}>Xóa</Button>}
+                            <td style={{ padding: '12px 16px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                                {onEdit && (
+                                    <Button
+                                        style={{ marginRight: '0.5rem', padding: '0.3rem 0.8rem', fontSize: '0.85rem' }}
+                                        onClick={() => onEdit(item)}
+                                    >
+                                        Sửa
+                                    </Button>
+                                )}
+                                {onDelete && (
+                                    <Button
+                                        style={{ padding: '0.3rem 0.8rem', fontSize: '0.85rem' }}
+                                        onClick={() => onDelete(item)}
+                                    >
+                                        Xóa
+                                    </Button>
+                                )}
                             </td>
                         )}
                     </tr>
@@ -69,4 +107,4 @@ export const AdminTable = <T extends Record<string, never>>({
             </table>
         </div>
     );
-};
+}
