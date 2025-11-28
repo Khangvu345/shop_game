@@ -7,6 +7,7 @@ import {CartPage} from "../pages/user/CartPage/CartPage.tsx";
 import { ProductDetailPage } from '../pages/user/ProductDetailPage/ProductDetailPage'; 
 import {AdminLayout} from "../components/layout/AdminLayout/AdminLayout.tsx";
 import {ManageProductsPage} from "../pages/admin/ManageProductsPage.tsx";
+import {ManageCategoriesPage} from "../pages/admin/ManageCategoriesPage.tsx";
 // import { ProductDetailPage } from '../pages/ProductDetailPage'; // Sẽ thêm sau
 
 export function AppRoutes() {
@@ -22,6 +23,7 @@ export function AppRoutes() {
             <Route path='/admin' element={<AdminLayout />}>
                 <Route index element={<ManageProductsPage/>} />
                 <Route path='products' element={<ManageProductsPage/>} />
+                <Route path='categories' element={<ManageCategoriesPage />} />
             </Route>
         </Routes>    );
-};
+}

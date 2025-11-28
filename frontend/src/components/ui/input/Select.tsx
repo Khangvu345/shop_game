@@ -23,37 +23,37 @@ export const Select: React.FC<SelectProps> = ({
                                               }) => {
 
     // Tạo ID ngẫu nhiên nếu không truyền vào (để label hoạt động)
-    const selectId = id || props.name ;
+    const selectId = id || props.name;
 
     return (
         <div className="form-group">
             {/* Label */}
-    {label && (
-        <label htmlFor={selectId} className="form-label">
-        {label} {props.required && <span style={{ color: 'var(--danger-color)' }}>*</span>}
-    </label>
-    )}
+            {label && (
+                <label htmlFor={selectId} className="form-label">
+                    {label} {props.required && <span style={{ color: 'var(--danger-color)' }}>*</span>}
+                </label>
+            )}
 
-        {/* Thẻ Select */}
-        <select
-            id={selectId}
-        className={`form-input ${error ? 'input-error' : ''} ${className}`}
-        style={{
-        backgroundColor: '#fff', // Đảm bảo nền trắng
-            cursor: 'pointer',
-            appearance: 'auto' // Giữ mũi tên mặc định của trình duyệt cho đơn giản
-    }}
-        {...props}
-    >
-        {options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-            {opt.label}
-            </option>
-        ))}
-        </select>
+            {/* Thẻ Select */}
+            <select
+                id={selectId}
+                className={`form-input ${error ? 'input-error' : ''} ${className}`}
+                style={{
+                    backgroundColor: '#fff', // Đảm bảo nền trắng
+                    cursor: 'pointer',
+                    appearance: 'auto' // Giữ mũi tên mặc định của trình duyệt cho đơn giản
+                }}
+                {...props}
+            >
+                {options.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                    </option>
+                ))}
+            </select>
 
-        {/* Thông báo lỗi */}
-        {error && <span className="form-error-message">{error}</span>}
-            </div>
-        );
-        };
+            {/* Thông báo lỗi */}
+            {error && <span className="form-error-message">{error}</span>}
+        </div>
+    );
+};
