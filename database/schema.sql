@@ -79,9 +79,9 @@ CREATE TABLE category (
     category_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     category_name VARCHAR(120) NOT NULL,
     description TEXT,
-    parent_id BIGINT,
-    FOREIGN KEY (parent_id) REFERENCES category(category_id) ON DELETE SET NULL
+    parent_id BIGINT
 ) ENGINE=InnoDB;
+
 
 CREATE TABLE product (
     product_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -292,3 +292,7 @@ CREATE TABLE goods_receipt_line (
 ) ENGINE=InnoDB;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+ALTER TABLE category
+    ADD CONSTRAINT fk_category_parent
+    FOREIGN KEY (parent_id) REFERENCES category(category_id) ON DELETE SET NULL;

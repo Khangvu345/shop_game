@@ -16,7 +16,7 @@ import java.util.List;
  * Order Entity - Đơn hàng
  */
 @Entity
-@Table(name = "`order`") // Tên bảng là order (dùng backticks để tránh từ khóa SQL)
+@Table(name = "`orders`") // Tên bảng là order (dùng backticks để tránh từ khóa SQL)
 @Data
 @NoArgsConstructor
 public class Order {
