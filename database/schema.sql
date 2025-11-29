@@ -61,16 +61,15 @@ CREATE TABLE address (
 CREATE TABLE account (
     account_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     party_id BIGINT NOT NULL,
-    provider ENUM('LOCAL', 'GOOGLE', 'FACEBOOK') NOT NULL,
-    provider_user_id VARCHAR(191),
     username VARCHAR(100) UNIQUE,
-    email_for_login VARCHAR(150) UNIQUE,
-    password_hash VARCHAR(255),
+    password VARCHAR(255) NOT NULL,
+    role ENUM('ADMIN', 'CUSTOMER') NOT NULL,
     account_status ENUM('Active', 'Locked', 'Suspended') DEFAULT 'Active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login_at TIMESTAMP,
     FOREIGN KEY (party_id) REFERENCES party(party_id) ON DELETE CASCADE,
-    UNIQUE KEY uq_provider_user (provider, provider_user_id)
+    INDEX idx_username (username)
+    INDEX idx_role (role)
 ) ENGINE=InnoDB;
 
 -- PRODUCT MANAGEMENT
