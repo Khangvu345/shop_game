@@ -1,40 +1,75 @@
 package com.gameshop.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-/**
- * OrderLine Entity với Composite Primary Key (order_id, line_no)
- */
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "order_line")
-@Data
-@NoArgsConstructor
 public class OrderLine {
 
-    @EmbeddedId
-    private OrderLinePK id;
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
-    @MapsId("orderId")
     @JoinColumn(name = "order_id")
     @JsonIgnore
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
 
-    @Column(nullable = false)
-    private Integer quantity;
+    private int quantity;
+    
+    private BigDecimal price;      
+    private BigDecimal lineTotal; 
 
-    @Column(name = "unit_price_at_order", nullable = false, precision = 12, scale = 2)
-    private BigDecimal price;
+ 
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-    @Column(name = "line_total", nullable = false, precision = 12, scale = 2)
-    private BigDecimal lineTotal;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+   
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    
+    public OrderLine() {}
+
+    
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Order getOrder() { return order; }
+    public void setOrder(Order order) { this.order = order; }
+
+    public Product getProduct() { return product; }
+    public void setProduct(Product product) { this.product = product; }
+
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
+
+    public BigDecimal getLineTotal() { return lineTotal; }
+    public void setLineTotal(BigDecimal lineTotal) { this.lineTotal = lineTotal; }
+    
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 }
