@@ -5,7 +5,7 @@ import {
     fetchProducts,
     selectDisplayProducts,
     setPage
-} from '../../../store/slices/productSlice';
+} from '../../../store/slices/ProductBlock/productSlice.ts';
 
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import { ProductSidebar } from '../../../components/features/product/ProductSidebar/ProductSidebar';

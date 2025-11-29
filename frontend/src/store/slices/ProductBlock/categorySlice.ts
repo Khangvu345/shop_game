@@ -1,6 +1,6 @@
-import { categoryApi } from '../../api/categoryApi';
-import {type ICategory } from '../../types';
-import { createGenericSlice } from './GenericSlice';
+import { categoryApi } from '../../../api/ProductBlock/categoryApi.ts';
+import {type ICategory } from '../../../types';
+import { createGenericSlice } from '../GenericSlice.ts';
 
 const CategorySlice = createGenericSlice<ICategory>(
     'categories',

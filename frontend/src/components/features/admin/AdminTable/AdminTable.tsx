@@ -44,7 +44,6 @@ export function AdminTable<T extends object>({
                                 textAlign: 'left',
                                 fontWeight: 600,
                                 color: '#495057',
-                                width: col.width,
                                 whiteSpace: 'nowrap'
                             }}
                         >

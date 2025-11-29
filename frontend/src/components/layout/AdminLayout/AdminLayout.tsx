@@ -12,6 +12,7 @@ function AdminNavLinks () {
             <NavLink to="/admin/users" className="admin-nav-link">Quản lí người dùng</NavLink>
             <NavLink to="/admin/products" className="admin-nav-link">Quản lí sản phẩm</NavLink>
             <NavLink to="/admin/categories" className="admin-nav-link">Quản lí danh mục</NavLink>
+            <NavLink to="/admin/suppliers" className="admin-nav-link">Quản lí nhà cung cấp</NavLink>
             <NavLink to="/admin/orders" className="admin-nav-link">Quản lí đơn hàng</NavLink>
         </>
     )

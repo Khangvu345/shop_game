@@ -1,5 +1,5 @@
-import { BaseApi } from './baseApi';
-import type { IProduct } from '../types';
+import { BaseApi } from '../baseApi.ts';
+import type { IProduct } from '../../types';
 
 class ProductApi extends BaseApi<IProduct> {
 

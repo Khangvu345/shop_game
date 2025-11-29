@@ -4,9 +4,9 @@ import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
 import {
     setServerFilters,
     setSort
-} from '../../../../store/slices/productSlice';
+} from '../../../../store/slices/ProductBlock/productSlice.ts';
 // Import action từ categorySlice (để lấy danh mục về hiển thị)
-import { fetchCategories } from '../../../../store/slices/categorySlice';
+import { fetchCategories } from '../../../../store/slices/ProductBlock/categorySlice.ts';
 import { Button } from '../../../ui/button/Button';
 import type { IProductFilters} from "../../../../types";
 
