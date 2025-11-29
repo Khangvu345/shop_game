@@ -1,5 +1,12 @@
 package com.gameshop.model.enums;
 
 public enum OrderStatus {
-    DRAFT, PENDING_PAYMENT, PAID, SHIPPED, DELIVERED, CANCELLED, RETURNED
+    PENDING, // Initial order state
+    CONFIRMED, // Order confirmed
+    PREPARING, // Order being prepared
+    SHIPPED, // Order shipped to customer
+    DELIVERED, // Order delivered successfully
+    COMPLETED, // Order completed (COD payment collected)
+    CANCELLED, // Order cancelled
+    RETURNED // Order returned by customer
 }
