@@ -8,6 +8,7 @@ import { ProductDetailPage } from '../pages/user/ProductDetailPage/ProductDetail
 import {AdminLayout} from "../components/layout/AdminLayout/AdminLayout.tsx";
 import {ManageProductsPage} from "../pages/admin/ManageProductsPage.tsx";
 import {ManageCategoriesPage} from "../pages/admin/ManageCategoriesPage.tsx";
+import {ManageSupplierPage} from "../pages/admin/ManageSupplierPage.tsx";
 // import { ProductDetailPage } from '../pages/ProductDetailPage'; // Sẽ thêm sau
 
 export function AppRoutes() {
@@ -24,6 +25,7 @@ export function AppRoutes() {
                 <Route index element={<ManageProductsPage/>} />
                 <Route path='products' element={<ManageProductsPage/>} />
                 <Route path='categories' element={<ManageCategoriesPage />} />
+                <Route path='suppliers' element={<ManageSupplierPage/>} />
             </Route>
         </Routes>    );
 }

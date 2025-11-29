@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { fetchProducts } from '../../../store/slices/productSlice';
+import { fetchProducts } from '../../../store/slices/ProductBlock/productSlice.ts';
 import { addItem } from '../../../store/slices/cartSlice';
 import type { IProduct } from '../../../types';
 
