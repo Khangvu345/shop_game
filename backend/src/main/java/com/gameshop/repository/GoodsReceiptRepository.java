@@ -2,6 +2,7 @@ package com.gameshop.repository;
 
 import com.gameshop.model.entity.GoodsReceipt;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,7 @@ import java.util.Optional;
  * Repository cho GoodsReceipt - Phiếu nhập hàng
  */
 @Repository
-public interface GoodsReceiptRepository extends JpaRepository<GoodsReceipt, Long> {
+public interface GoodsReceiptRepository extends JpaRepository<GoodsReceipt, Long>, JpaSpecificationExecutor<GoodsReceipt>{
 
     /**
      * Tìm goods receipt theo invoice number

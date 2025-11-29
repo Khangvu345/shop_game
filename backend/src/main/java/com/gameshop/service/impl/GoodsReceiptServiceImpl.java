@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.criteria.Predicate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +75,7 @@ public class GoodsReceiptServiceImpl implements GoodsReceiptService {
         receipt.setInvoiceNumber(request.invoiceNumber());
         receipt.setNotes(request.notes());
         receipt.setReceiptDate(LocalDateTime.now());
+        receipt.setLines(new ArrayList<>());
 
         BigDecimal totalCost = BigDecimal.ZERO;
 
@@ -84,7 +86,7 @@ public class GoodsReceiptServiceImpl implements GoodsReceiptService {
 
             // 6. Calculate weighted average cost
             int oldQty = product.getStockQuantity();
-            BigDecimal oldCost = product.getPurchasePrice();
+            BigDecimal oldCost = product.getPurchasePrice() != null ? product.getPurchasePrice() : BigDecimal.ZERO;
             int newQty = itemDto.quantity();
             BigDecimal newCost = itemDto.unitCost();
 

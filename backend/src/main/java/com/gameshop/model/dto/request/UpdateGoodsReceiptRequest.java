@@ -1,4 +1,3 @@
-@@ -0,0 +1,29 @@
 package com.gameshop.model.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
