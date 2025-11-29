@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, type PayloadAction, createSelector } from '@reduxjs/toolkit';
-import type { IApiState, IProduct, IServerProductFilters, IProductFilters } from '../../types';
-import { productApi } from '../../api/productApi'; // Instance của class ProductApi (kế thừa BaseApi)
-import { type RootState } from '../store';
+import type { IApiState, IProduct, IServerProductFilters, IProductFilters } from '../../../types';
+import { productApi } from '../../../api/ProductBlock/productApi.ts'; // Instance của class ProductApi (kế thừa BaseApi)
+import { type RootState } from '../../store.ts';
 
 // 1. Định nghĩa State
 interface ProductState extends IApiState<IProduct[]> {
