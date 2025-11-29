@@ -20,18 +20,12 @@ export default defineConfig([
       globals: globals.browser,
     },
 
-    // --- THÊM PHẦN NÀY VÀO ---
     rules: {
-      // Tắt các quy tắc React không cần thiết khi dùng JSX Transform mới
       'react/react-in-jsx-scope': 'off',
       'react/jsx-uses-react': 'off',
 
-      // Đây là quy tắc bạn hỏi:
-      // "warn" -> Chỉ báo vàng, không dừng build
-      // "error" -> Báo đỏ và dừng build
-      // "off" -> Tắt hoàn toàn
-      "@typescript-eslint/no-unused-vars": "warn"
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-explicit-any": "off",
     }
-    // -------------------------
   },
 ])
