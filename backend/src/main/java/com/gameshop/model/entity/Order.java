@@ -38,7 +38,10 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<OrderLine> orderLines = new ArrayList<>();
 
+    @Column(name = "subtotal", precision = 12, scale = 2)
     private BigDecimal subTotal;
+
+    @Column(name = "grand_total", precision = 12, scale = 2)
     private BigDecimal grandTotal;
 
     @Column(name = "discount_amount", precision = 12, scale = 2)
@@ -48,12 +51,15 @@ public class Order {
     private BigDecimal taxAmount = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private OrderStatus status;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
 
     @Column(name = "cancelled_at")
