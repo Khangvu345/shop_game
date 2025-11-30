@@ -10,6 +10,8 @@ import com.gameshop.exception.ResourceNotFoundException;
 import com.gameshop.repository.OrderRepository;
 import com.gameshop.repository.ShipmentRepository;
 import com.gameshop.service.ShipmentService;
+import com.gameshop.service.StockService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,7 +30,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     private final ShipmentRepository shipmentRepository;
     private final OrderRepository orderRepository;
-
+    private final StockService stockService;
     @Override
     @Transactional
     public ShipmentResponse createShipment(CreateShipmentRequest req) {
@@ -75,6 +77,10 @@ public class ShipmentServiceImpl implements ShipmentService {
         Shipment shipment = shipmentRepository.findById(shipmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy vận đơn ID: " + shipmentId));
 
+        ShipmentStatus oldStatus = shipment.getStatus();
+        if (oldStatus == ShipmentStatus.Delivered) {
+            throw new IllegalStateException("Đơn hàng đã Delivered, không thể thay đổi trạng thái nữa.");
+        }
         if (req.status() == ShipmentStatus.Shipped) {
             shipment.setShippedAt(LocalDateTime.now());
         }
@@ -94,7 +100,14 @@ public class ShipmentServiceImpl implements ShipmentService {
         switch (req.status()) {
             case Shipped   -> orderRepository.updateOrderStatus(orderId, OrderStatus.SHIPPED);
             case Delivered -> orderRepository.updateOrderStatus(orderId, OrderStatus.DELIVERED);
-            case Returned  -> orderRepository.updateOrderStatus(orderId, OrderStatus.RETURNED);
+            case Returned -> {
+                orderRepository.updateOrderStatus(orderId, OrderStatus.RETURNED);
+                // RESTORE STOCK KHI KHÁCH TRẢ HÀNG – SIÊU NHANH, CHỈ 1 QUERY!
+                if (oldStatus != ShipmentStatus.Returned) {
+                    stockService.restoreStockForReturnedOrder(orderId);
+                    System.out.println("ĐÃ RESTORE STOCK CHO ĐƠN HÀNG TRẢ HÀNG: " + orderId);
+                }
+            }
             case Ready     -> orderRepository.updateOrderStatus(orderId, OrderStatus.PREPARING);
         }
 
