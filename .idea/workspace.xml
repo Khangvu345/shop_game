@@ -4,20 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="53bf7c44-5821-46eb-93ab-551780fdcc73" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gameshop/controller/GoodsReceiptController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gameshop/controller/GoodsReceiptController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gameshop/model/dto/UpdateShipmentStatusRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gameshop/model/dto/UpdateShipmentStatusRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gameshop/repository/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gameshop/repository/ProductRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gameshop/service/GoodsReceiptService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gameshop/service/GoodsReceiptService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gameshop/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gameshop/service/OrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gameshop/service/StockService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gameshop/service/StockService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gameshop/service/impl/ShipmentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gameshop/service/impl/ShipmentServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/gameshop/model/dto/UpdateShipmentStatusRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/gameshop/model/dto/UpdateShipmentStatusRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/gameshop/repository/ProductRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/gameshop/repository/ProductRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/gameshop/service/impl/ShipmentServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/gameshop/service/impl/ShipmentServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/data/seed_data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/database/data/seed_data.sql" afterDir="false" />
-    </list>
+    <list default="true" id="53bf7c44-5821-46eb-93ab-551780fdcc73" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -90,7 +77,7 @@
       <workItem from="1764309361684" duration="4394000" />
       <workItem from="1764322061757" duration="12168000" />
       <workItem from="1764441432752" duration="2579000" />
-      <workItem from="1764468669897" duration="10311000" />
+      <workItem from="1764468669897" duration="10964000" />
     </task>
     <servers />
   </component>

@@ -78,9 +78,6 @@ public class ShipmentServiceImpl implements ShipmentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy vận đơn ID: " + shipmentId));
 
         ShipmentStatus oldStatus = shipment.getStatus();
-        if (oldStatus == ShipmentStatus.Delivered) {
-            throw new IllegalStateException("Đơn hàng đã Delivered, không thể thay đổi trạng thái nữa.");
-        }
         if (req.status() == ShipmentStatus.Shipped) {
             shipment.setShippedAt(LocalDateTime.now());
         }
