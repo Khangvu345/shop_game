@@ -71,6 +71,9 @@ public class Order {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(columnDefinition = "TEXT")
+    private String notes;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
