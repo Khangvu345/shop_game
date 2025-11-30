@@ -1,22 +1,17 @@
-export interface IUser {
-    id: number;
-    email: string;
+export interface IAuthUser {
+    accountId: number;
+    username: string;
+    partyId: number;
     fullName: string;
-    role: 'admin' | 'employee' | 'user';
+    role: 'ADMIN' | 'USER' ;
 }
 
-export interface IAuthResponse {
-    user: IUser;
+export interface ILoginResponse extends IAuthUser {
     token: string;
 }
 
 export interface ILoginPayload {
-    email: string;
+    username?: string;
+    email?: string;
     password: string;
-}
-
-export interface IRegisterPayload {
-    email: string;
-    password: string;
-    fullName: string;
 }

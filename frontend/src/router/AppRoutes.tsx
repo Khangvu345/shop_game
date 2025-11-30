@@ -9,6 +9,8 @@ import {AdminLayout} from "../components/layout/AdminLayout/AdminLayout.tsx";
 import {ManageProductsPage} from "../pages/admin/ManageProductsPage.tsx";
 import {ManageCategoriesPage} from "../pages/admin/ManageCategoriesPage.tsx";
 import {ManageSupplierPage} from "../pages/admin/ManageSupplierPage.tsx";
+import {LoginPage} from "../pages/auth/LoginPage.tsx";
+import {AdminRoute} from "./ProtectedRoute.tsx";
 // import { ProductDetailPage } from '../pages/ProductDetailPage'; // Sẽ thêm sau
 
 export function AppRoutes() {
@@ -17,15 +19,19 @@ export function AppRoutes() {
             <Route path="/" element={<MainLayout />}>
                 <Route index element={<HomePage />} />
                 <Route path="products" element={<ProductListPage />} />
-                <Route path="cart" element={<CartPage />} />
                 <Route path="products/:id" element={<ProductDetailPage />} />
+                <Route path="cart" element={<CartPage />} />
+                <Route path={'login'} element={<LoginPage/>} />
+                <Route path="cart" element={<CartPage />} />
+            </Route>
+            <Route element={<AdminRoute/>}>
+                <Route path='/admin' element={<AdminLayout />}>
+                        <Route index element={<ManageProductsPage/>} />
+                        <Route path='products' element={<ManageProductsPage/>} />
+                        <Route path='categories' element={<ManageCategoriesPage />} />
+                        <Route path='suppliers' element={<ManageSupplierPage/>} />
+                </Route>
             </Route>
 
-            <Route path='/admin' element={<AdminLayout />}>
-                <Route index element={<ManageProductsPage/>} />
-                <Route path='products' element={<ManageProductsPage/>} />
-                <Route path='categories' element={<ManageCategoriesPage />} />
-                <Route path='suppliers' element={<ManageSupplierPage/>} />
-            </Route>
         </Routes>    );
 }

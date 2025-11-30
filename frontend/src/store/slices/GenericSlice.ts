@@ -24,7 +24,7 @@ export function createGenericSlice<T>(
 
     const fetchAll = createAsyncThunk(
         `${sliceName}/fetchAll`,
-        async () => api.getAll()
+        async () =>  api.getAll()
     );
 
     const fetchById = createAsyncThunk(

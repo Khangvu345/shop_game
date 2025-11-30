@@ -1,11 +1,12 @@
-import { Outlet, Link, NavLink } from 'react-router-dom';
+import {Outlet, Link, NavLink, useNavigate} from 'react-router-dom';
 import { Navbar } from '../Navbar/Navbar';
 
-import { useAppSelector } from '../../../store/hooks';
+import {useAppDispatch, useAppSelector} from '../../../store/hooks';
 import {Button} from "../../ui/button/Button";
 
 import './MainLayout.css'
 import {Logo} from "../../ui/logo/Logo.tsx";
+import {logoutUser} from "../../../store/slices/Auth/authSlice.ts";
 
 
 
@@ -29,11 +30,23 @@ function PublicNavLinks (){
 }
 
 function ActionBar (){
-    const dang_nhap = false
-    if (dang_nhap){
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const { user } = useAppSelector((state) => state.auth);
+
+    const handleLogout = async () => {
+        if (user?.accountId) {
+            await dispatch(logoutUser(user.accountId));
+            navigate('/login');
+        }
+    };
+    if (user){
         return (
             <>
                 <Button>Profile</Button>
+                <Button onClick={handleLogout}>Đăng xuất</Button>
+
             </>
         )
     } else {
@@ -42,8 +55,12 @@ function ActionBar (){
                 <Link to={'/cart'}>
                     giỏ hàng
                 </Link>
-                <Button size = "small" color = "0" >Đăng nhập</Button>
-                <Button size = "small" color = "0">Đăng ký</Button>
+                <Link to={'/login'}>
+                    <Button size = "small" color = "0" >Đăng nhập</Button>
+                </Link>
+                <Link to={'/regíter'}>
+                    <Button size = "small" color = "0">Đăng ký</Button>
+                </Link>
             </>
         )
     }
@@ -68,4 +85,4 @@ export function MainLayout() {
 
         </div>
     );
-};
+}
