@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchProductById } from '../store/slices/productSlice';
+import { fetchProductById } from '../store/slices/ProductBlock/productSlice.ts';
 import { addItem } from '../store/slices/cartSlice';
 
 /**
