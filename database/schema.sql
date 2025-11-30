@@ -217,7 +217,7 @@ CREATE TABLE order_address (
     receiver_phone VARCHAR(30) NOT NULL,
     line1 VARCHAR(200) NOT NULL,
     line2 VARCHAR(200),
-    district VARCHAR(100),
+    ward VARCHAR(100),
     city VARCHAR(100) NOT NULL,
     postal_code VARCHAR(20),
     FOREIGN KEY (order_id) REFERENCES `order`(order_id) ON DELETE CASCADE
