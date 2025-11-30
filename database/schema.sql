@@ -68,7 +68,7 @@ CREATE TABLE account (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login_at TIMESTAMP,
     FOREIGN KEY (party_id) REFERENCES party(party_id) ON DELETE CASCADE,
-    INDEX idx_username (username)
+    INDEX idx_username (username),
     INDEX idx_role (role)
 ) ENGINE=InnoDB;
 
@@ -169,7 +169,7 @@ CREATE TABLE review_moderation (
 
 -- ORDER MANAGEMENT
 
-CREATE TABLE `order` (
+CREATE TABLE order (
     order_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     customer_id BIGINT NOT NULL,
     status ENUM('PENDING','CONFIRMED','PREPARING','SHIPPED','DELIVERED','COMPLETED','CANCELLED','RETURNED') NOT NULL DEFAULT 'PENDING', -- Trạng thái đơn hàng mapping với backend
@@ -194,9 +194,9 @@ CREATE TABLE `order` (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, --Bổ sung mapping với backend
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, --Bổ sung mapping với backend
     FOREIGN KEY (customer_id) REFERENCES customer(party_id) ON DELETE RESTRICT,
-    INDEX idx_order_date (order_date),
-    INDEX idx_customer_date (customer_id, order_date),  
-    INDEX idx_status_date (status, order_date)          
+    INDEX idx_order_date (created_at),
+    INDEX idx_customer_date (customer_id, created_at),  
+    INDEX idx_status_date (status, created_at)          
 ) ENGINE=InnoDB;
 
 CREATE TABLE order_line (
