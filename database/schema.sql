@@ -172,7 +172,6 @@ CREATE TABLE review_moderation (
 CREATE TABLE `order` (
     order_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     customer_id BIGINT NOT NULL,
-    order_date DATETIME NOT NULL,
     status ENUM('PENDING','CONFIRMED','PREPARING','SHIPPED','DELIVERED','COMPLETED','CANCELLED','RETURNED') NOT NULL DEFAULT 'PENDING', -- Trạng thái đơn hàng mapping với backend
     payment_method ENUM ('COD', 'VNPAY') NOT NULL DEFAULT 'COD', -- Giữ lại 2 phương thức thanh toán hiện có
     payment_status ENUM('PENDING', 'PAID', 'COD_PENDING', 'COD_COLLECTED', 'FAILED', 'REFUNDED') NOT NULL DEFAULT 'PENDING', -- Trạng thái thanh toán
