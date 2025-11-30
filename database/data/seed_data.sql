@@ -88,10 +88,31 @@ INSERT INTO stock_movement
 
 -- 9. Đơn hàng mẫu + chi tiết + payment + shipment
 INSERT INTO `order` 
+<<<<<<< HEAD
 (customer_id, order_date, status, subtotal, discount_amount, shipping_fee, grand_total, notes) VALUES
 (101, '2025-11-20 15:30:00', 'Completed', 21998000, 500000, 0, 21498000, 'Khách VIP Gold'),
 (102, '2025-11-21 10:15:00', 'Shipped',   12999000, 0,      30000, 13029000, NULL),
 (103, '2025-11-22 19:45:00', 'Paid',      1599000,  0,      0,     1599000,  'Thanh toán online');
+=======
+(customer_id, order_date, status, payment_method, payment_status,
+ sub_total, discount_amount, tax_amount, grand_total, notes,
+ cancelled_at, cancel_reason, cancelled_by)
+VALUES
+-- Đơn 1: Completed, thanh toán VNPAY
+(101, '2025-11-20 15:30:00', 'COMPLETED', 'VNPAY', 'PAID',
+ 21998000.00, 500000.00, 0.00, 21498000.00, 'Khách VIP Gold, giảm 500k',
+ NULL, NULL, NULL),
+
+-- Đơn 2: Shipped, COD
+(102, '2025-11-21 10:15:00', 'SHIPPED', 'COD', 'COD_PENDING',
+ 12999000.00, 0.00, 0.00, 12999000.00, NULL,
+ NULL, NULL, NULL),
+
+-- Đơn 3: Cancelled bởi khách
+(103, '2025-11-22 19:45:00', 'CANCELLED', 'COD', 'PENDING',
+ 1599000.00, 0.00, 0.00, 1599000.00, 'Khách hủy đơn',
+ '2025-11-22 20:15:00', 'Khách không còn nhu cầu', '103');
+>>>>>>> 1d544f0 (fix #37- fix schema order- Hoàn thiện shipmentnhung chx co restock)
 
 INSERT INTO order_line (order_id, line_no, product_id, quantity, unit_price_at_order, line_total) VALUES
 (1,1,2,1,20499000,20499000),   -- PS5 Pro Digital
