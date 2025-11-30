@@ -17,7 +17,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     List<Product> findByCategory_CategoryId(Long categoryId);
 
     List<Product> findByCategory_CategoryIdIn(List<Long> categoryIds);
-
+    
+    // Feature restore stock khi trả hàng
     @Modifying
     @Query(value = """
         UPDATE product p

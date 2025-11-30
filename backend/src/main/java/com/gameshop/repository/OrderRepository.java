@@ -19,6 +19,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
     @Query("SELECT o.status FROM Order o WHERE o.id = :id")
     
     Optional<OrderStatus> getOrderStatusById(@Param("id") Long id);
+    // CẬP NHẬT TRẠNG THÁI ĐƠN HÀNG - Dành cho ShipmentService
     @Modifying(clearAutomatically = true)
     @Transactional
     @Query("UPDATE Order o SET o.status = :status WHERE o.id = :orderId")
