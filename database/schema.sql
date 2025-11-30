@@ -191,8 +191,8 @@ CREATE TABLE `order` (
     cancel_reason VARCHAR(500),
     cancelled_by VARCHAR(50),
     -- HẾT thêm mới các trường
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, --Bổ sung mapping với backend
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, --Bổ sung mapping với backend
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Bổ sung mapping với backend
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Bổ sung mapping với backend
     FOREIGN KEY (customer_id) REFERENCES customer(party_id) ON DELETE RESTRICT,
     INDEX idx_order_date (created_at),
     INDEX idx_customer_date (customer_id, created_at),  
