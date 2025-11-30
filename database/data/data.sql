@@ -860,6 +860,27 @@ INSERT INTO shipment (order_id, carrier, tracking_no, estimated_delivery, shippe
 (1, 'Giao Hàng Nhanh',     'GHN123456789',  '2025-11-23 00:00:00', '2025-11-21 10:00:00', '2025-11-22 14:30:00', 'Delivered'),
 (2, 'Giao Hàng Tiết Kiệm', 'GHTK987654321', '2025-11-25 00:00:00', '2025-11-22 09:00:00', NULL,                  'Shipped'),
 (3, 'Ninja Van',           'NVN1122334455', '2025-11-24 00:00:00', NULL,                  NULL,                  'Returned');
+-- =====================================================================
+-- SAMPLE GOODS RECEIPTS (Phiếu nhập hàng mẫu)
+-- =====================================================================
+INSERT INTO goods_receipt (supplier_id, receipt_date, invoice_number, total_cost, notes)
+VALUES
+(1, '2025-11-01 10:00:00', 'INV-SONY-001', 329250000.00, 'Nhập lô PS5 Pro đầu tiên từ Sony VN'),
+(1, '2025-11-05 14:30:00', 'INV-SONY-002', 180000000.00, 'PS4 Slim hàng tồn kho cuối năm'),
+(2, '2025-11-10 09:15:00', 'INV-NINTENDO-001', 217000000.00, 'Đợt đầu Switch 2 về VN'),
+(4, '2025-11-15 11:20:00', 'INV-PLAYASIA-001', 59000000.00, 'Game PS5 bán chạy'),
+(3, '2025-11-20 13:45:00', 'INV-GAMEACC-001', 415040000.00, 'Phụ kiện cho Black Friday');
+
+INSERT INTO goods_receipt_line (receipt_id, line_no, product_id, warehouse_id, quantity_received, unit_cost)
+VALUES
+(1, 1, 1, 1, 5, 12350000.00),
+(1, 2, 2, 1, 15, 17800000.00),
+(1, 3, 45, 1, 50, 890000.00),
+(2, 1, 4, 1, 30, 6000000.00),
+(3, 1, 14, 1, 20, 10850000.00),
+(4, 1, 23, 1, 50, 1180000.00),
+(5, 1, 45, 1, 100, 890000.00),
+(5, 2, 50, 1, 130, 2508000.00);
 
 -- =====================================================================
 -- SAMPLE STOCK MOVEMENTS (Biến động kho mẫu)
