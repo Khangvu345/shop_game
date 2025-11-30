@@ -13,7 +13,6 @@ public record CreateOrderRequest(
             String phone,
             String street,
             String ward,
-            String district,
             String city) {
     }
 
