@@ -93,7 +93,7 @@ INSERT INTO product_supplier (product_id, supplier_id) VALUES
 -- ===================================================================
 INSERT INTO `order` 
 (customer_id, order_date, status, payment_method, payment_status,
- subtotal, discount_amount, tax_amount, grand_total, notes,
+ sub_total, discount_amount, tax_amount, grand_total, notes,
  cancelled_at, cancel_reason, cancelled_by)
 VALUES
 -- Đơn 1: Completed, thanh toán VNPAY

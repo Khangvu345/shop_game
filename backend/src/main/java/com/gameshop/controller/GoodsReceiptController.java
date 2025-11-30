@@ -24,80 +24,80 @@ import java.time.LocalDateTime;
 @Tag(name = "Goods Receipt Management", description = "APIs quản lý phiếu nhập hàng (Admin)")
 public class GoodsReceiptController {
 
-    private final GoodsReceiptService goodsReceiptService;
+   private final GoodsReceiptService goodsReceiptService;
 
-    @PostMapping
-    @Operation(summary = "Tạo phiếu nhập hàng mới",
-               description = "Tạo phiếu nhập hàng từ nhà cung cấp. Hệ thống tự động tính giá mua trung bình gia quyền và cập nhật tồn kho.")
-    public ResponseEntity<ApiResponse<GoodsReceiptResponse>> createGoodsReceipt(
-            @Valid @RequestBody CreateGoodsReceiptRequest request
-    ) {
-        GoodsReceiptResponse receipt = goodsReceiptService.createGoodsReceipt(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                ApiResponse.success("Tạo phiếu nhập hàng thành công", receipt)
-        );
-    }
+   @PostMapping
+   @Operation(summary = "Tạo phiếu nhập hàng mới",
+              description = "Tạo phiếu nhập hàng từ nhà cung cấp. Hệ thống tự động tính giá mua trung bình gia quyền và cập nhật tồn kho.")
+   public ResponseEntity<ApiResponse<GoodsReceiptResponse>> createGoodsReceipt(
+           @Valid @RequestBody CreateGoodsReceiptRequest request
+   ) {
+       GoodsReceiptResponse receipt = goodsReceiptService.createGoodsReceipt(request);
+       return ResponseEntity.status(HttpStatus.CREATED).body(
+               ApiResponse.success("Tạo phiếu nhập hàng thành công", receipt)
+       );
+   }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Lấy thông tin chi tiết phiếu nhập hàng",
-               description = "Lấy thông tin chi tiết của một phiếu nhập hàng theo ID, bao gồm thông tin nhà cung cấp và danh sách sản phẩm")
-    public ResponseEntity<ApiResponse<GoodsReceiptResponse>> getGoodsReceiptById(
-            @Parameter(description = "ID của phiếu nhập hàng")
-            @PathVariable Long id
-    ) {
-        GoodsReceiptResponse receipt = goodsReceiptService.getGoodsReceiptById(id);
-        return ResponseEntity.ok(
-                ApiResponse.success("Lấy thông tin phiếu nhập hàng thành công", receipt)
-        );
-    }
+   @GetMapping("/{id}")
+   @Operation(summary = "Lấy thông tin chi tiết phiếu nhập hàng",
+              description = "Lấy thông tin chi tiết của một phiếu nhập hàng theo ID, bao gồm thông tin nhà cung cấp và danh sách sản phẩm")
+   public ResponseEntity<ApiResponse<GoodsReceiptResponse>> getGoodsReceiptById(
+           @Parameter(description = "ID của phiếu nhập hàng")
+           @PathVariable Long id
+   ) {
+       GoodsReceiptResponse receipt = goodsReceiptService.getGoodsReceiptById(id);
+       return ResponseEntity.ok(
+               ApiResponse.success("Lấy thông tin phiếu nhập hàng thành công", receipt)
+       );
+   }
 
-    @GetMapping
-    @Operation(summary = "Lấy danh sách phiếu nhập hàng",
-               description = "Lấy danh sách phiếu nhập hàng với bộ lọc: nhà cung cấp, khoảng thời gian. Hỗ trợ phân trang.")
-    public ResponseEntity<ApiResponse<GoodsReceiptListResponse>> getAllGoodsReceipts(
-            @Parameter(description = "ID nhà cung cấp để lọc")
-            @RequestParam(required = false) Long supplierId,
-            @Parameter(description = "Thời gian bắt đầu (ISO format: yyyy-MM-dd'T'HH:mm:ss)")
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
-            @Parameter(description = "Thời gian kết thúc (ISO format: yyyy-MM-dd'T'HH:mm:ss)")
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate,
-            @Parameter(description = "Số trang (bắt đầu từ 0)")
-            @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Số lượng mỗi trang")
-            @RequestParam(defaultValue = "20") int size
-    ) {
-        GoodsReceiptListResponse receipts = goodsReceiptService.getAllGoodsReceipts(
-                supplierId, fromDate, toDate, page, size
-        );
-        return ResponseEntity.ok(
-                ApiResponse.success("Lấy danh sách phiếu nhập hàng thành công", receipts)
-        );
-    }
-    @PutMapping("/{id}")
-    @Operation(summary = "Cập nhật phiếu nhập hàng (chỉ metadata)",
-               description = "Cập nhật thông tin phiếu nhập hàng. CHỈ cho phép sửa metadata (notes, invoiceNumber). " +
-                       "KHÔNG cho phép sửa items/supplier để tránh chaos với stock tracking. " +
-                       "BẮT BUỘC phải ghi lý do cập nhật (updateReason) để audit trail.")
-    public ResponseEntity<ApiResponse<GoodsReceiptResponse>> updateGoodsReceipt(
-            @Parameter(description = "ID của phiếu nhập hàng")
-            @PathVariable Long id,
-            @Valid @RequestBody UpdateGoodsReceiptRequest request
-    ) {
-        GoodsReceiptResponse receipt = goodsReceiptService.updateGoodsReceipt(id, request);
-        return ResponseEntity.ok(
-                ApiResponse.success("Cập nhật phiếu nhập hàng thành công", receipt)
-        );
-    }
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Xóa phiếu nhập hàng",
-               description = "Xóa phiếu nhập hàng (Cẩn thận! Chức năng này nên được kiểm soát chặt chẽ)")
-    public ResponseEntity<ApiResponse<Void>> deleteGoodsReceipt(
-            @Parameter(description = "ID của phiếu nhập hàng")
-            @PathVariable Long id
-    ) {
-        goodsReceiptService.deleteGoodsReceipt(id);
-        return ResponseEntity.ok(
-                ApiResponse.success("Xóa phiếu nhập hàng thành công")
-        );
-    }
+   @GetMapping
+   @Operation(summary = "Lấy danh sách phiếu nhập hàng",
+              description = "Lấy danh sách phiếu nhập hàng với bộ lọc: nhà cung cấp, khoảng thời gian. Hỗ trợ phân trang.")
+   public ResponseEntity<ApiResponse<GoodsReceiptListResponse>> getAllGoodsReceipts(
+           @Parameter(description = "ID nhà cung cấp để lọc")
+           @RequestParam(required = false) Long supplierId,
+           @Parameter(description = "Thời gian bắt đầu (ISO format: yyyy-MM-dd'T'HH:mm:ss)")
+           @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
+           @Parameter(description = "Thời gian kết thúc (ISO format: yyyy-MM-dd'T'HH:mm:ss)")
+           @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate,
+           @Parameter(description = "Số trang (bắt đầu từ 0)")
+           @RequestParam(defaultValue = "0") int page,
+           @Parameter(description = "Số lượng mỗi trang")
+           @RequestParam(defaultValue = "20") int size
+   ) {
+       GoodsReceiptListResponse receipts = goodsReceiptService.getAllGoodsReceipts(
+               supplierId, fromDate, toDate, page, size
+       );
+       return ResponseEntity.ok(
+               ApiResponse.success("Lấy danh sách phiếu nhập hàng thành công", receipts)
+       );
+   }
+   @PutMapping("/{id}")
+   @Operation(summary = "Cập nhật phiếu nhập hàng (chỉ metadata)",
+              description = "Cập nhật thông tin phiếu nhập hàng. CHỈ cho phép sửa metadata (notes, invoiceNumber). " +
+                      "KHÔNG cho phép sửa items/supplier để tránh chaos với stock tracking. " +
+                      "BẮT BUỘC phải ghi lý do cập nhật (updateReason) để audit trail.")
+   public ResponseEntity<ApiResponse<GoodsReceiptResponse>> updateGoodsReceipt(
+           @Parameter(description = "ID của phiếu nhập hàng")
+           @PathVariable Long id,
+           @Valid @RequestBody UpdateGoodsReceiptRequest request
+   ) {
+       GoodsReceiptResponse receipt = goodsReceiptService.updateGoodsReceipt(id, request);
+       return ResponseEntity.ok(
+               ApiResponse.success("Cập nhật phiếu nhập hàng thành công", receipt)
+       );
+   }
+   @DeleteMapping("/{id}")
+   @Operation(summary = "Xóa phiếu nhập hàng",
+              description = "Xóa phiếu nhập hàng (Cẩn thận! Chức năng này nên được kiểm soát chặt chẽ)")
+   public ResponseEntity<ApiResponse<Void>> deleteGoodsReceipt(
+           @Parameter(description = "ID của phiếu nhập hàng")
+           @PathVariable Long id
+   ) {
+       goodsReceiptService.deleteGoodsReceipt(id);
+       return ResponseEntity.ok(
+               ApiResponse.success("Xóa phiếu nhập hàng thành công")
+       );
+   }
 }

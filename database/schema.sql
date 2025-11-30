@@ -183,7 +183,8 @@ CREATE TABLE `order` (
 -- COD_COLLECTED: Đã thu tiền (COD)
 -- FAILED: Thanh toán thất bại
 -- REFUNDED: Đã hoàn tiền
-    subtotal DECIMAL(12,2) NOT NULL,
+    sub_total DECIMAL(12,2) NOT NULL,
+
     discount_amount DECIMAL(12,2) DEFAULT 0,
     tax_amount DECIMAL(12,2) DEFAULT 0,
     grand_total DECIMAL(12,2) NOT NULL,
@@ -192,6 +193,8 @@ CREATE TABLE `order` (
     cancelled_at DATETIME,
     cancel_reason VARCHAR(500),
     cancelled_by VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     -- HẾT thêm mới các trường
     FOREIGN KEY (customer_id) REFERENCES customer(party_id) ON DELETE RESTRICT,
     INDEX idx_order_date (order_date),

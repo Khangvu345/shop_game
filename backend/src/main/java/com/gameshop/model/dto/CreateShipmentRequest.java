@@ -7,4 +7,5 @@ public record CreateShipmentRequest(
         String carrier,
         String trackingNo,
         LocalDate estimatedDelivery
+        
 ) {}
