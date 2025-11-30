@@ -169,7 +169,7 @@ CREATE TABLE review_moderation (
 
 -- ORDER MANAGEMENT
 
-CREATE TABLE order (
+CREATE TABLE `order` (
     order_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     customer_id BIGINT NOT NULL,
     status ENUM('PENDING','CONFIRMED','PREPARING','SHIPPED','DELIVERED','COMPLETED','CANCELLED','RETURNED') NOT NULL DEFAULT 'PENDING', -- Trạng thái đơn hàng mapping với backend
