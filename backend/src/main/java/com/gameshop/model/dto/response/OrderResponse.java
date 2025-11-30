@@ -28,7 +28,6 @@ public record OrderResponse(
             String phone,
             String street,
             String ward,
-            String district,
             String city) {
     }
 

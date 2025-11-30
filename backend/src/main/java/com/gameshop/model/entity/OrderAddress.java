@@ -36,7 +36,7 @@ public class OrderAddress {
     private String line2; // Địa chỉ bổ sung (optional)
 
     @Column(length = 100)
-    private String district;
+    private String ward;
 
     @Column(length = 100, nullable = false)
     private String city;
