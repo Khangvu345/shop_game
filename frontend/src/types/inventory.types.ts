@@ -11,7 +11,7 @@ export interface IStockMovement {
     movementId: number;
     productId: number;
     warehouseId: number;
-    quantityDelta: number; // Số âm (bán) hoặc dương (nhập)
+    quantityDelta: number;
     reason: TStockMovementReason;
     occurredAt: string;
     referenceNo?: string;
