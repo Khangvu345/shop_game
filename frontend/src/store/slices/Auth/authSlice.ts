@@ -21,6 +21,24 @@ const initialState: AuthState = {
 
 // --- THUNKS ---
 
+export const checkAuth = createAsyncThunk(
+    'auth/checkAuth',
+    async (_, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                return rejectWithValue("No token found");
+            }
+            const user = await authApi.validateToken(token);
+            return user;
+        } catch (error: any) {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('user_data');
+            return rejectWithValue(error.message || "Token invalid");
+        }
+    }
+);
+
 export const loginUser = createAsyncThunk(
     'auth/login',
     async (payload: ILoginPayload, { rejectWithValue }) => {
@@ -110,6 +128,19 @@ const authSlice = createSlice({
             state.user = null;
             state.token = null;
             state.status = 'idle';
+        });
+        builder.addCase(checkAuth.pending, (state) => {
+            state.status = 'loading';
+        });
+        builder.addCase(checkAuth.fulfilled, (state, action) => {
+            state.status = 'succeeded';
+            state.user = action.payload; // Cập nhật user mới nhất từ server
+            // (Token vẫn giữ nguyên trong localStorage)
+        });
+        builder.addCase(checkAuth.rejected, (state) => {
+            state.status = 'failed';
+            state.user = null;
+            state.token = null;
         });
     },
 });

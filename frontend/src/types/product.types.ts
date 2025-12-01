@@ -74,8 +74,7 @@ export interface IReviewModeration {
 }
 
 
-// Interface đùng ở FE
-export interface IServerProductFilters {
+    export interface IServerProductFilters {
     keyword?: string;
     categoryId?: number;
     minPrice?: number;
