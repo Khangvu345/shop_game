@@ -3,6 +3,9 @@ package com.gameshop.repository;
 import com.gameshop.model.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,4 +17,12 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     List<Product> findByCategory_CategoryId(Long categoryId);
 
     List<Product> findByCategory_CategoryIdIn(List<Long> categoryIds);
+    @Modifying
+    @Query(value = """
+        UPDATE product p
+        JOIN order_line ol ON ol.product_id = p.product_id
+        SET p.stock_quantity = p.stock_quantity + ol.quantity
+        WHERE ol.order_id = :orderId
+        """, nativeQuery = true)
+    int restoreStockByOrderId(@Param("orderId") Long orderId);
 }
