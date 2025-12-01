@@ -31,7 +31,7 @@ interface AdminManageProps<T> {
 export function AdminManage<T extends object>({title, idKey, columns, formFields, stateSelector, actions}: AdminManageProps<T>) {
 
     const dispatch = useAppDispatch();
-    const { data, status } = useAppSelector(stateSelector);
+    const { data, status, error } = useAppSelector(stateSelector);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState<T | undefined>(undefined);
@@ -40,6 +40,7 @@ export function AdminManage<T extends object>({title, idKey, columns, formFields
     useEffect(() => {
         dispatch(actions.fetchAll({}));
     }, [dispatch, actions]);
+    console.log(actions)
 
     const handleOpenAdd = () => {
         setEditingItem(undefined); // Reset về Thêm mới
@@ -66,11 +67,22 @@ export function AdminManage<T extends object>({title, idKey, columns, formFields
                 await dispatch(actions.create(formData)).unwrap();
             }
             setIsModalOpen(false); // Đóng modal
-        } catch (error) {
-            alert('Lỗi: ' + error);
+        } catch (error:any) {
+            console.log(error.message)
+            alert('Lỗi: ' + error.message);
         }
     };
+
+
+    if (error) {
+        return (
+            <div>
+                ${error.message}
+            </div>
+        );
+    }
     return (
+
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
                 <h2 style={{ margin: 0 }}>{title}</h2>

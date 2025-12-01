@@ -1,10 +1,15 @@
 import {BaseApi} from "../baseApi.ts";
-import {type IOrder } from "../../types";
+import type { IOrder, ICreateOrderPayload, IServerResponse } from "../../types";
+import axiosClient from "../axiosClient.ts";
 
 export class OrderApi extends BaseApi<IOrder> {
-    constructor() {
-        super('orders');
+
+    async placeOrder(payload: ICreateOrderPayload): Promise<IOrder> {
+        const response = await axiosClient.post<IServerResponse<IOrder>>('/orders', payload);
+        return response.data.data;
     }
+
+
 }
 
-export const orderApi = new OrderApi();
+export const orderApi = new OrderApi('order');
