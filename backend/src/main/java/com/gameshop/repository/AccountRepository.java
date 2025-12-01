@@ -28,6 +28,12 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findByUsernameWithParty(@Param("username") String username);
 
     /**
+     * Tìm account với party theo ID (eager loading)
+     */
+    @Query("SELECT a FROM Account a LEFT JOIN FETCH a.party WHERE a.accountId = :accountId")
+    Optional<Account> findByIdWithParty(@Param("accountId") Long accountId);
+
+    /**
      * Đếm số account theo role
      */
     long countByRole(Account.Role role);

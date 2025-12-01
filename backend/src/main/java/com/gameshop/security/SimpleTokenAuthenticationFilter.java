@@ -1,5 +1,6 @@
 package com.gameshop.security;
 
+import com.gameshop.model.dto.response.ValidateTokenResponse;
 import com.gameshop.service.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -38,16 +39,19 @@ public class SimpleTokenAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = extractToken(request);
 
-            if (token != null && authService.validateToken(token)) {
-                UserDetails userDetails = loadUserFromToken(token);
+            if (token != null) {
+                ValidateTokenResponse validateResponse = authService.validateToken(token);
+                if (validateResponse.isValid()) {
+                    UserDetails userDetails = loadUserFromToken(token);
 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities());
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities());
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.debug("Set authentication for user: {}", userDetails.getUsername());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    log.debug("Set authentication for user: {}", userDetails.getUsername());
+                }
             }
         } catch (Exception e) {
             log.error("Cannot set user authentication: {}", e.getMessage());

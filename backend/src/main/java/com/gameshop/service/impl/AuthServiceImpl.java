@@ -3,6 +3,7 @@ package com.gameshop.service.impl;
 import com.gameshop.exception.BadRequestException;
 import com.gameshop.model.dto.request.LoginRequest;
 import com.gameshop.model.dto.response.LoginResponse;
+import com.gameshop.model.dto.response.ValidateTokenResponse;
 import com.gameshop.model.entity.Account;
 import com.gameshop.model.entity.Party;
 import com.gameshop.repository.AccountRepository;
@@ -35,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Tài khoản đã bị khóa hoặc tạm ngưng");
         }
 
-        // 3. Kiểm tra password 
+        // 3. Kiểm tra password
         if (!account.getPassword().equals(request.password())) {
             throw new BadRequestException("Tên đăng nhập hoặc mật khẩu không đúng");
         }
@@ -50,8 +51,8 @@ public class AuthServiceImpl implements AuthService {
         // 6. Generate simple token
         String token = generateSimpleToken(account.getAccountId(), account.getRole().name());
 
-        log.info("Login successful - username: {}, role: {}", 
-                 request.username(), account.getRole());
+        log.info("Login successful - username: {}, role: {}",
+                request.username(), account.getRole());
 
         // 7. Return response
         return new LoginResponse(
@@ -60,33 +61,32 @@ public class AuthServiceImpl implements AuthService {
                 party.getId(),
                 party.getFullName(),
                 account.getRole().name(),
-                token
-        );
+                token);
     }
 
     @Override
     public void logout(Long accountId) {
         log.info("Logout for accountId: {}", accountId);
-        
+
         // Validate account exists
         accountRepository.findById(accountId)
                 .orElseThrow(() -> new BadRequestException("Account không tồn tại"));
-        
+
         // Trong simple implementation, frontend sẽ clear token
         // Production có thể invalidate JWT token ở backend
     }
 
     @Override
-    public boolean validateToken(String token) {
+    public ValidateTokenResponse validateToken(String token) {
         if (token == null || token.isBlank()) {
-            return false;
+            return new ValidateTokenResponse(false, null, null, null, null, null);
         }
 
         try {
             // Parse simple token format: "accountId:role:timestamp"
             String[] parts = token.split(":");
             if (parts.length != 3) {
-                return false;
+                return new ValidateTokenResponse(false, null, null, null, null, null);
             }
 
             // Kiểm tra timestamp (token valid trong 24h)
@@ -94,11 +94,32 @@ public class AuthServiceImpl implements AuthService {
             long now = System.currentTimeMillis();
             long dayInMillis = 24 * 60 * 60 * 1000;
 
-            return (now - timestamp) < dayInMillis;
+            if ((now - timestamp) >= dayInMillis) {
+                return new ValidateTokenResponse(false, null, null, null, null, null);
+            }
+
+            // Token hợp lệ, lấy thông tin account
+            Long accountId = Long.parseLong(parts[0]);
+            Account account = accountRepository.findByIdWithParty(accountId)
+                    .orElse(null);
+
+            if (account == null || account.getAccountStatus() != Account.AccountStatus.Active) {
+                return new ValidateTokenResponse(false, null, null, null, null, null);
+            }
+
+            Party party = account.getParty();
+
+            return new ValidateTokenResponse(
+                    true,
+                    account.getAccountId(),
+                    account.getUsername(),
+                    party.getId(),
+                    party.getFullName(),
+                    account.getRole().name());
 
         } catch (Exception e) {
             log.error("Error validating token", e);
-            return false;
+            return new ValidateTokenResponse(false, null, null, null, null, null);
         }
     }
 
@@ -108,8 +129,8 @@ public class AuthServiceImpl implements AuthService {
      * 
      */
     private String generateSimpleToken(Long accountId, String role) {
-        return String.format("%d:%s:%d", 
-                accountId, 
+        return String.format("%d:%s:%d",
+                accountId,
                 role,
                 System.currentTimeMillis());
     }
