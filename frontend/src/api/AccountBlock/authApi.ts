@@ -1,5 +1,5 @@
-import axiosClient from './axiosClient';
-import type {ILoginPayload, IServerResponse, ILoginResponse} from '../types';
+import axiosClient from '../axiosClient.ts';
+import type {ILoginPayload, IServerResponse, ILoginResponse} from '../../types';
 
 export const authApi = {
     login: async (payload: ILoginPayload) => {

@@ -13,6 +13,17 @@ export function LoggedInRoute(){
     return <Outlet />;
 }
 
+export function AuthRoute(){
+    const { user } = useAppSelector((state) => state.auth);
+
+    const location = useLocation();
+
+    if (user) {
+        return <Navigate to="/" state={{ from: location }} replace />;
+    }
+    return <Outlet />;
+}
+
 export function AdminRoute(){
     const { user } = useAppSelector((state) => state.auth);
 

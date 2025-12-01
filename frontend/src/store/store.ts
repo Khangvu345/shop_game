@@ -4,6 +4,7 @@ import productReducer from './slices/ProductBlock/productSlice.ts';
 import categoryReducer from './slices/ProductBlock/categorySlice.ts';
 import supplierReducer from './slices/ProductBlock/supplierSilce.ts';
 import authReducer from "./slices/Auth/authSlice.ts";
+import orderSlice from "./slices/OrderBlock/orderSlice.ts";
 
 
 export const store = configureStore({
@@ -12,7 +13,8 @@ export const store = configureStore({
         products: productReducer,
         categories: categoryReducer,
         suppliers: supplierReducer,
-        auth: authReducer
+        auth: authReducer,
+        orders: orderSlice
     },
 });
 

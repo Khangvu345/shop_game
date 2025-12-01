@@ -75,3 +75,27 @@ export interface IShipment {
     deliveredAt?: string;
     status: TShipmentStatus;
 }
+
+
+export interface IOrderItemPayload {
+    productId: number;
+    productName: string;
+    quantity: number;
+    price: number;
+    lineTotal: number;
+}
+
+export interface IOrderAddressPayload {
+    recipientName: string;
+    phone: string;
+    street: string;
+    ward: string;
+    city: string;
+}
+
+export interface ICreateOrderPayload {
+    customerId: number;
+    paymentMethod: string;
+    address: IOrderAddressPayload;
+    items: IOrderItemPayload[];
+}

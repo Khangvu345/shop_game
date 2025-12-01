@@ -41,9 +41,16 @@ function ActionBar (){
             navigate('/login');
         }
     };
+
+    const actionReturn = () => {
+        return(<></>)
+    }
     if (user){
         return (
             <>
+                <Link to={'/cart'}>
+                    giỏ hàng
+                </Link>
                 <Button>Profile</Button>
                 <Button onClick={handleLogout}>Đăng xuất</Button>
 
