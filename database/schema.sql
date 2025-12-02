@@ -94,6 +94,7 @@ CREATE TABLE product (
     category_id BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    product_image_url VARCHAR(500),
     FOREIGN KEY (category_id) REFERENCES category(category_id) ON DELETE RESTRICT,
     INDEX idx_product_name (product_name)
 ) ENGINE=InnoDB;

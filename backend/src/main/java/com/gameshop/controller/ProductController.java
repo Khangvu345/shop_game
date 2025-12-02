@@ -13,7 +13,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
+import com.gameshop.service.CloudinaryService;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -24,6 +28,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final CloudinaryService cloudinaryService;
 
     @GetMapping
     @Operation(summary = "Lấy danh sách sản phẩm", description = "Lấy danh sách tất cả sản phẩm với bộ lọc đa điều kiện: tìm kiếm theo tên, lọc theo danh mục, lọc theo khoảng giá")
@@ -55,15 +60,33 @@ public class ProductController {
         );
     }
 
-    @PostMapping
-    @Operation(summary = "Tạo sản phẩm mới", description = "Tạo một sản phẩm mới (Admin only - chưa chặn quyền)")
+        @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE) // 2. Bắt buộc thêm dòng này
+    @Operation(summary = "Tạo sản phẩm mới", description = "Tạo một sản phẩm mới kèm ảnh (Admin only)")
     public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
-            @Valid @RequestBody CreateProductRequest request
+            // 3. Dùng @RequestPart("data") thay cho @RequestBody để nhận JSON
+            @RequestPart("data") @Valid CreateProductRequest request,
+            // 4. Nhận file ảnh (có thể null nếu không bắt buộc)
+            @RequestPart(value = "image", required = false) MultipartFile file 
     ) {
-        ProductResponse product = productService.createProduct(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                ApiResponse.success("Tạo sản phẩm thành công", product)
-        );
+        String imageUrl = null;
+
+        try {
+            // 5. Nếu có file thì upload lên Cloudinary
+            if (file != null && !file.isEmpty()) {
+                imageUrl = cloudinaryService.uploadImage(file);
+            }
+            
+            // 6. Gọi Service và truyền thêm imageUrl vào
+            ProductResponse product = productService.createProduct(request, imageUrl);
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(
+                    ApiResponse.success("Tạo sản phẩm thành công", product)
+            );
+
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("Lỗi upload ảnh: " + e.getMessage()));
+        }
     }
 
     @PutMapping("/{id}")

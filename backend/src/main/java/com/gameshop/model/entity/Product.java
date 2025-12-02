@@ -54,6 +54,9 @@ public class Product {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "product_image_url", length = 500)
+    private String productImageUrl;
+    
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

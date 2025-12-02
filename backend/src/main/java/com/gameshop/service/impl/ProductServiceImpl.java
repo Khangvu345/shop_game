@@ -67,9 +67,10 @@ public class ProductServiceImpl implements ProductService {
         return mapToResponse(product);
     }
 
+// --- ĐÂY LÀ PHẦN CẦN SỬA ĐỂ THÊM URL ---
     @Override
     @Transactional
-    public ProductResponse createProduct(CreateProductRequest request) {
+    public ProductResponse createProduct(CreateProductRequest request, String imageUrl) { // Thêm tham số imageUrl
         log.info("Tạo sản phẩm mới: {}", request.getProductName());
 
         Category category = categoryRepository.findById(request.getCategoryId())
@@ -83,11 +84,17 @@ public class ProductServiceImpl implements ProductService {
         product.setStatus(request.getStatus());
         product.setCategory(category);
 
+        // Lưu URL ảnh vào Entity (nếu có)
+        if (imageUrl != null) {
+            product.setProductImageUrl(imageUrl);
+        }
+
         Product savedProduct = productRepository.save(product);
         log.info("Đã tạo sản phẩm với ID: {}", savedProduct.getProductId());
 
         return mapToResponse(savedProduct);
     }
+    // ---------------------------
 
     @Override
     @Transactional
