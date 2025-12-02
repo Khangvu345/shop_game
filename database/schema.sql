@@ -68,7 +68,7 @@ CREATE TABLE account (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login_at TIMESTAMP,
     FOREIGN KEY (party_id) REFERENCES party(party_id) ON DELETE CASCADE,
-    INDEX idx_username (username)
+    INDEX idx_username (username),
     INDEX idx_role (role)
 ) ENGINE=InnoDB;
 
@@ -172,7 +172,6 @@ CREATE TABLE review_moderation (
 CREATE TABLE `order` (
     order_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     customer_id BIGINT NOT NULL,
-    order_date DATETIME NOT NULL,
     status ENUM('PENDING','CONFIRMED','PREPARING','SHIPPED','DELIVERED','COMPLETED','CANCELLED','RETURNED') NOT NULL DEFAULT 'PENDING', -- Trạng thái đơn hàng mapping với backend
     payment_method ENUM ('COD', 'VNPAY') NOT NULL DEFAULT 'COD', -- Giữ lại 2 phương thức thanh toán hiện có
     payment_status ENUM('PENDING', 'PAID', 'COD_PENDING', 'COD_COLLECTED', 'FAILED', 'REFUNDED') NOT NULL DEFAULT 'PENDING', -- Trạng thái thanh toán
@@ -192,10 +191,12 @@ CREATE TABLE `order` (
     cancel_reason VARCHAR(500),
     cancelled_by VARCHAR(50),
     -- HẾT thêm mới các trường
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Bổ sung mapping với backend
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Bổ sung mapping với backend
     FOREIGN KEY (customer_id) REFERENCES customer(party_id) ON DELETE RESTRICT,
-    INDEX idx_order_date (order_date),
-    INDEX idx_customer_date (customer_id, order_date),  
-    INDEX idx_status_date (status, order_date)          
+    INDEX idx_order_date (created_at),
+    INDEX idx_customer_date (customer_id, created_at),  
+    INDEX idx_status_date (status, created_at)          
 ) ENGINE=InnoDB;
 
 CREATE TABLE order_line (
@@ -216,7 +217,7 @@ CREATE TABLE order_address (
     receiver_phone VARCHAR(30) NOT NULL,
     line1 VARCHAR(200) NOT NULL,
     line2 VARCHAR(200),
-    district VARCHAR(100),
+    ward VARCHAR(100),
     city VARCHAR(100) NOT NULL,
     postal_code VARCHAR(20),
     FOREIGN KEY (order_id) REFERENCES `order`(order_id) ON DELETE CASCADE

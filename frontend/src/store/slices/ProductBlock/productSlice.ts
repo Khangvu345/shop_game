@@ -39,9 +39,13 @@ const initialState: ProductState = {
 export const fetchProducts = createAsyncThunk(
     'products/fetchAll',
     async (filters?: IServerProductFilters) => {
-        // BaseApi.getAll đã hỗ trợ truyền params
-        const response = await productApi.getAll(filters);
-        return response;
+        try {
+            const response = await productApi.getAll(filters);
+            return response;
+        } catch (error: any) {
+            return error.message
+        }
+
     }
 );
 

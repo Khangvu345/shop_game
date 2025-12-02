@@ -24,8 +24,14 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     /**
      * Tìm account với party (eager loading)
      */
-    @Query("SELECT a FROM Account a LEFT JOIN FETCH a.party p WHERE a.username = :username")
+    @Query("SELECT a FROM Account a LEFT JOIN FETCH a.party WHERE a.username = :username")
     Optional<Account> findByUsernameWithParty(@Param("username") String username);
+
+    /**
+     * Tìm account với party theo ID (eager loading)
+     */
+    @Query("SELECT a FROM Account a LEFT JOIN FETCH a.party WHERE a.accountId = :accountId")
+    Optional<Account> findByIdWithParty(@Param("accountId") Long accountId);
 
     /**
      * Đếm số account theo role

@@ -74,7 +74,7 @@ export interface IReviewModeration {
 }
 
 
-export interface IServerProductFilters {
+    export interface IServerProductFilters {
     keyword?: string;
     categoryId?: number;
     minPrice?: number;

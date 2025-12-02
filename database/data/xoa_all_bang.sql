@@ -24,8 +24,8 @@ TRUNCATE TABLE employee;
 TRUNCATE TABLE customer;
 TRUNCATE TABLE party;
 TRUNCATE TABLE warehouse;
-TRUNCATE TABLE product;
-TRUNCATE TABLE category;
+-- TRUNCATE TABLE product;
+-- TRUNCATE TABLE category;
 
 SET FOREIGN_KEY_CHECKS = 1;  -- Bật lại kiểm tra ràng buộc
 

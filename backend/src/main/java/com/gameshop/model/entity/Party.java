@@ -3,6 +3,7 @@ package com.gameshop.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "party") // Tên bảng trong DB
@@ -27,6 +28,12 @@ public abstract class Party {
     @Column(name = "phone") // Map với cột phone
     private String phoneNumber;
 
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
+    
+    @Column(columnDefinition = "TEXT")
+    private String note;
+    
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

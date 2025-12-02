@@ -259,6 +259,7 @@ public class OrderService {
         address.setReceiverName(dto.recipientName());
         address.setReceiverPhone(dto.phone());
         address.setLine1(dto.street());
+        address.setWard(dto.ward());
         address.setCity(dto.city());
 
         return address;
@@ -281,8 +282,7 @@ public class OrderService {
                     addr.getReceiverName(),
                     addr.getReceiverPhone(),
                     addr.getLine1(),
-                    null, // ward
-                    null, // district
+                    addr.getWard(),
                     addr.getCity());
         }
 
