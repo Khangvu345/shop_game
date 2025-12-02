@@ -1,7 +1,6 @@
 package com.gameshop.service.impl;
 
 import com.gameshop.model.dto.*;
-import com.gameshop.model.entity.Order;
 import com.gameshop.model.entity.Shipment;
 import com.gameshop.model.enums.OrderStatus;
 import com.gameshop.model.enums.ShipmentStatus;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,12 +29,13 @@ public class ShipmentServiceImpl implements ShipmentService {
     private final ShipmentRepository shipmentRepository;
     private final OrderRepository orderRepository;
     private final StockService stockService;
+
     @Override
     @Transactional
     public ShipmentResponse createShipment(CreateShipmentRequest req) {
         Long orderId = req.orderId();
 
-        // 1. Kiểm tra tồn tại + lấy status bằng 1 query duy nhất (SIÊU NHẸ)
+        // 1. Kiểm tra tồn tại + lấy status bằng 1 query duy nhất
         OrderStatus currentStatus = orderRepository.getOrderStatusById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn hàng ID: " + orderId));
 
@@ -51,18 +50,12 @@ public class ShipmentServiceImpl implements ShipmentService {
         }
 
         Shipment shipment = new Shipment();
-        // shipment.setOrder(order);
         shipment.setOrderId(req.orderId());
         shipment.setCarrier(req.carrier());
         shipment.setTrackingNo(req.trackingNo());
-
-        // Sửa lỗi: LocalDate không có method toLocalDate() hay atTime(23,59,59)
-        // Dùng atStartOfDay() hoặc atEndOfDay() nếu muốn có giờ
         shipment.setEstimatedDelivery(req.estimatedDelivery());
         shipment.setShippedAt(LocalDateTime.now());
-        
         shipment.setStatus(ShipmentStatus.Ready);
-        // Không set shippedAt ở đây vì chưa thật sự giao
 
         shipment = shipmentRepository.save(shipment);
 
@@ -91,21 +84,21 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.setStatus(req.status());
         shipmentRepository.saveAndFlush(shipment);
 
-        // DÙNG @Formula ĐỂ LẤY orderId SIÊU NHANH, KHÔNG BỊ LAZY LOAD
-        Long orderId = shipment.getOrderId(); // bạn phải có @Formula như mình hướng dẫn
+        Long orderId = shipment.getOrderId();
 
         switch (req.status()) {
-            case Shipped   -> orderRepository.updateOrderStatus(orderId, OrderStatus.SHIPPED);
+            case Shipped -> orderRepository.updateOrderStatus(orderId, OrderStatus.SHIPPED);
             case Delivered -> orderRepository.updateOrderStatus(orderId, OrderStatus.DELIVERED);
             case Returned -> {
                 orderRepository.updateOrderStatus(orderId, OrderStatus.RETURNED);
-                // RESTORE STOCK KHI KHÁCH TRẢ HÀNG – SIÊU NHANH, CHỈ 1 QUERY!
+                // Hoàn trả stock khi khách trả hàng
                 if (oldStatus != ShipmentStatus.Returned) {
                     stockService.restoreStockForReturnedOrder(orderId);
-                    System.out.println("ĐÃ RESTORE STOCK CHO ĐƠN HÀNG TRẢ HÀNG: " + orderId);
+                    System.out.println("ĐÃ HOÀN TRẢ STOCK CHO ĐƠN HÀNG TRẢ: " + orderId);
                 }
             }
-            case Ready     -> orderRepository.updateOrderStatus(orderId, OrderStatus.PREPARING);
+            case Ready -> {
+                /* Do nothing for Ready status update */ }
         }
 
         return toResponse(shipment);
@@ -131,12 +124,16 @@ public class ShipmentServiceImpl implements ShipmentService {
 
         if (orderId != null) {
             Shipment shipment = shipmentRepository.findByOrderId(orderId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy vận đơn cho đơn hàng: " + orderId));
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException("Không tìm thấy vận đơn cho đơn hàng: " + orderId));
             List<Shipment> list = Collections.singletonList(shipment);
             page = new PageImpl<>(list, pageable, 1);
         } else if (status != null && !status.isBlank()) {
             try {
-                ShipmentStatus s = ShipmentStatus.valueOf(status.toUpperCase());
+                // Capitalize first letter to match enum format: Ready, Shipped, Delivered,
+                // Returned
+                String capitalizedStatus = status.substring(0, 1).toUpperCase() + status.substring(1).toLowerCase();
+                ShipmentStatus s = ShipmentStatus.valueOf(capitalizedStatus);
                 page = shipmentRepository.findByStatus(s, pageable);
             } catch (IllegalArgumentException e) {
                 throw new BusinessException("Trạng thái vận đơn không hợp lệ: " + status);
@@ -148,19 +145,17 @@ public class ShipmentServiceImpl implements ShipmentService {
         return page.map(this::toResponse);
     }
 
-    // TORESPONSE ĐÃ SỬA HOÀN HẢO – KHÔNG CÒN LỖI
     private ShipmentResponse toResponse(Shipment s) {
         LocalDate estimatedDate = s.getEstimatedDelivery();
 
         return new ShipmentResponse(
                 s.getShipmentId(),
-                s.getOrderId(),           // tạm dùng, hoặc dùng s.getOrderId() nếu có @Formula
+                s.getOrderId(),
                 s.getCarrier(),
                 s.getTrackingNo(),
                 estimatedDate,
                 s.getShippedAt(),
                 s.getDeliveredAt(),
-                s.getStatus()
-        );
+                s.getStatus());
     }
 }

@@ -1,17 +1,14 @@
 package com.gameshop.service;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import lombok.RequiredArgsConstructor;
-import com.gameshop.repository.ProductRepository;
 
-@RequiredArgsConstructor
-@Service
-public class StockService {
-private final ProductRepository productRepository;
+/**
+ * Service xử lý logic liên quan đến tồn kho
+ */
+public interface StockService {
 
-    @Transactional
-    public void restoreStockForReturnedOrder(Long orderId) {
-        int updated = productRepository.restoreStockByOrderId(orderId);
-        System.out.println("ĐÃ RESTORE STOCK CHO " + updated + " sản phẩm – Đơn hàng ID: " + orderId);
-    }
+    /**
+     * Hoàn trả stock khi khách hàng trả hàng
+     * 
+     * @param orderId ID của đơn hàng bị trả
+     */
+    void restoreStockForReturnedOrder(Long orderId);
 }

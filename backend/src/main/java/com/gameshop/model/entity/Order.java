@@ -29,16 +29,19 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
+    
+    // @JoinColumn
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private OrderAddress shippingAddress;
 
     // Quan trọng: Khởi tạo sẵn ArrayList để code Service .add() không bị lỗi
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<OrderLine> orderLines = new ArrayList<>();
 
+    @Column(name = "subtotal", precision = 12, scale = 2)
     private BigDecimal subTotal;
+
+    @Column(name = "grand_total", precision = 12, scale = 2)
     private BigDecimal grandTotal;
 
     @Column(name = "discount_amount", precision = 12, scale = 2)
@@ -48,12 +51,15 @@ public class Order {
     private BigDecimal taxAmount = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private OrderStatus status;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
 
     @Column(name = "cancelled_at")
