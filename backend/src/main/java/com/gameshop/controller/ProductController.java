@@ -27,90 +27,81 @@ import java.util.List;
 @Tag(name = "Product Management", description = "APIs quản lý sản phẩm")
 public class ProductController {
 
-    private final ProductService productService;
-    private final CloudinaryService cloudinaryService;
+        private final ProductService productService;
+        private final CloudinaryService cloudinaryService;
 
-    @GetMapping
-    @Operation(summary = "Lấy danh sách sản phẩm", description = "Lấy danh sách tất cả sản phẩm với bộ lọc đa điều kiện: tìm kiếm theo tên, lọc theo danh mục, lọc theo khoảng giá")
-    public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts(
-            @Parameter(description = "Từ khóa tìm kiếm trong tên sản phẩm")
-            @RequestParam(required = false) String keyword,
-            @Parameter(description = "ID danh mục để lọc sản phẩm (bao gồm cả danh mục con)")
-            @RequestParam(required = false) Long categoryId,
-            @Parameter(description = "Giá tối thiểu (VND)")
-            @RequestParam(required = false) BigDecimal minPrice,
-            @Parameter(description = "Giá tối đa (VND)")
-            @RequestParam(required = false) BigDecimal maxPrice    
-    ) {
-        List<ProductResponse> products = productService.getAllProducts(keyword, categoryId, minPrice, maxPrice);
-        return ResponseEntity.ok(
-                ApiResponse.success("Lấy danh sách sản phẩm thành công", products)
-        );
-    }
-
-    @GetMapping("/{id}")
-    @Operation(summary = "Lấy thông tin chi tiết sản phẩm", description = "Lấy thông tin chi tiết của một sản phẩm theo ID")
-    public ResponseEntity<ApiResponse<ProductResponse>> getProductById(
-            @Parameter(description = "ID của sản phẩm")
-            @PathVariable Long id
-    ) {
-        ProductResponse product = productService.getProductById(id);
-        return ResponseEntity.ok(
-                ApiResponse.success("Lấy thông tin sản phẩm thành công", product)
-        );
-    }
-
-        @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE) // 2. Bắt buộc thêm dòng này
-    @Operation(summary = "Tạo sản phẩm mới", description = "Tạo một sản phẩm mới kèm ảnh (Admin only)")
-    public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
-            // 3. Dùng @RequestPart("data") thay cho @RequestBody để nhận JSON
-            @RequestPart("data") @Valid CreateProductRequest request,
-            // 4. Nhận file ảnh (có thể null nếu không bắt buộc)
-            @RequestPart(value = "image", required = false) MultipartFile file 
-    ) {
-        String imageUrl = null;
-
-        try {
-            // 5. Nếu có file thì upload lên Cloudinary
-            if (file != null && !file.isEmpty()) {
-                imageUrl = cloudinaryService.uploadImage(file);
-            }
-            
-            // 6. Gọi Service và truyền thêm imageUrl vào
-            ProductResponse product = productService.createProduct(request, imageUrl);
-            
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    ApiResponse.success("Tạo sản phẩm thành công", product)
-            );
-
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResponse.error("Lỗi upload ảnh: " + e.getMessage()));
+        @GetMapping
+        @Operation(summary = "Lấy danh sách sản phẩm", description = "Lấy danh sách tất cả sản phẩm với bộ lọc đa điều kiện: tìm kiếm theo tên, lọc theo danh mục, lọc theo khoảng giá")
+        public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts(
+                        @Parameter(description = "Từ khóa tìm kiếm trong tên sản phẩm") @RequestParam(required = false) String keyword,
+                        @Parameter(description = "ID danh mục để lọc sản phẩm (bao gồm cả danh mục con)") @RequestParam(required = false) Long categoryId,
+                        @Parameter(description = "Giá tối thiểu (VND)") @RequestParam(required = false) BigDecimal minPrice,
+                        @Parameter(description = "Giá tối đa (VND)") @RequestParam(required = false) BigDecimal maxPrice) {
+                List<ProductResponse> products = productService.getAllProducts(keyword, categoryId, minPrice, maxPrice);
+                return ResponseEntity.ok(
+                                ApiResponse.success("Lấy danh sách sản phẩm thành công", products));
         }
-    }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "Cập nhật sản phẩm", description = "Cập nhật thông tin sản phẩm (Admin only - chưa chặn quyền)")
-    public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(
-            @Parameter(description = "ID của sản phẩm")
-            @PathVariable Long id,
-            @Valid @RequestBody UpdateProductRequest request
-    ) {
-        ProductResponse product = productService.updateProduct(id, request);
-        return ResponseEntity.ok(
-                ApiResponse.success("Cập nhật sản phẩm thành công", product)
-        );
-    }
+        @GetMapping("/{id}")
+        @Operation(summary = "Lấy thông tin chi tiết sản phẩm", description = "Lấy thông tin chi tiết của một sản phẩm theo ID")
+        public ResponseEntity<ApiResponse<ProductResponse>> getProductById(
+                        @Parameter(description = "ID của sản phẩm") @PathVariable Long id) {
+                ProductResponse product = productService.getProductById(id);
+                return ResponseEntity.ok(
+                                ApiResponse.success("Lấy thông tin sản phẩm thành công", product));
+        }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Xóa sản phẩm", description = "Xóa một sản phẩm (Admin only - chưa chặn quyền)")
-    public ResponseEntity<ApiResponse<Void>> deleteProduct(
-            @Parameter(description = "ID của sản phẩm")
-            @PathVariable Long id
-    ) {
-        productService.deleteProduct(id);
-        return ResponseEntity.ok(
-                ApiResponse.success("Xóa sản phẩm thành công")
-        );
-    }
+        @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+        @Operation(summary = "Tạo sản phẩm mới", description = "Tạo một sản phẩm mới kèm ảnh (Admin only). " +
+                        "Lưu ý: Trên Swagger UI có thể gặp lỗi, khuyến nghị dùng Postman để test.")
+        public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
+                        @Parameter(description = "Thông tin sản phẩm (JSON)", required = true) @RequestPart("data") @Valid CreateProductRequest request,
+                        @Parameter(description = "File ảnh sản phẩm (JPG, PNG, WEBP, tối đa 5MB)") @RequestPart(value = "image", required = false) MultipartFile file) {
+                String imageUrl = null;
+
+                try {
+                        if (file != null && !file.isEmpty()) {
+                                imageUrl = cloudinaryService.uploadImage(file);
+                        }
+
+                        ProductResponse product = productService.createProduct(request, imageUrl);
+
+                        return ResponseEntity.status(HttpStatus.CREATED).body(
+                                        ApiResponse.success("Tạo sản phẩm thành công", product));
+
+                } catch (IllegalArgumentException e) {
+                        // Validation errors (file type, size, etc.)
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                        .body(ApiResponse.error("Lỗi validation: " + e.getMessage()));
+
+                } catch (IOException e) {
+                        // Upload errors
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body(ApiResponse.error("Lỗi upload ảnh: " + e.getMessage()));
+
+                } catch (Exception e) {
+                        // Other system errors
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body(ApiResponse.error("Lỗi hệ thống: " + e.getMessage()));
+                }
+        }
+
+        @PutMapping("/{id}")
+        @Operation(summary = "Cập nhật sản phẩm", description = "Cập nhật thông tin sản phẩm (Admin only)")
+        public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(
+                        @Parameter(description = "ID của sản phẩm") @PathVariable Long id,
+                        @Valid @RequestBody UpdateProductRequest request) {
+                ProductResponse product = productService.updateProduct(id, request);
+                return ResponseEntity.ok(
+                                ApiResponse.success("Cập nhật sản phẩm thành công", product));
+        }
+
+        @DeleteMapping("/{id}")
+        @Operation(summary = "Xóa sản phẩm", description = "Xóa một sản phẩm (Admin only)")
+        public ResponseEntity<ApiResponse<Void>> deleteProduct(
+                        @Parameter(description = "ID của sản phẩm") @PathVariable Long id) {
+                productService.deleteProduct(id);
+                return ResponseEntity.ok(
+                                ApiResponse.success("Xóa sản phẩm thành công"));
+        }
 }

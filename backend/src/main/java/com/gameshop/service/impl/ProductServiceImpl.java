@@ -31,9 +31,10 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryService categoryService;
 
     @Override
-    public List<ProductResponse> getAllProducts(String keyword, Long categoryId, BigDecimal minPrice, BigDecimal maxPrice) {
+    public List<ProductResponse> getAllProducts(String keyword, Long categoryId, BigDecimal minPrice,
+            BigDecimal maxPrice) {
         log.debug("Filter params - keyword: {}, categoryId: {}, minPrice: {}, maxPrice: {}",
-                  keyword, categoryId, minPrice, maxPrice);
+                keyword, categoryId, minPrice, maxPrice);
 
         // Lấy danh sách categoryIds (bao gồm children) nếu có categoryId
         List<Long> categoryIds = null;
@@ -47,8 +48,7 @@ public class ProductServiceImpl implements ProductService {
                 keyword,
                 categoryIds,
                 minPrice,
-                maxPrice
-        );
+                maxPrice);
 
         // Thực hiện query với Specification
         List<Product> products = productRepository.findAll(spec);
@@ -67,14 +67,15 @@ public class ProductServiceImpl implements ProductService {
         return mapToResponse(product);
     }
 
-// --- ĐÂY LÀ PHẦN CẦN SỬA ĐỂ THÊM URL ---
+    // --- ĐÂY LÀ PHẦN CẦN SỬA ĐỂ THÊM URL ---
     @Override
     @Transactional
     public ProductResponse createProduct(CreateProductRequest request, String imageUrl) { // Thêm tham số imageUrl
         log.info("Tạo sản phẩm mới: {}", request.getProductName());
 
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy danh mục với ID: " + request.getCategoryId()));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Không tìm thấy danh mục với ID: " + request.getCategoryId()));
 
         Product product = new Product();
         product.setSku(request.getSku());
@@ -121,7 +122,8 @@ public class ProductServiceImpl implements ProductService {
         }
         if (request.getCategoryId() != null) {
             Category category = categoryRepository.findById(request.getCategoryId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy danh mục với ID: " + request.getCategoryId()));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Không tìm thấy danh mục với ID: " + request.getCategoryId()));
             product.setCategory(category);
         }
 
@@ -141,7 +143,7 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.delete(product);
         log.info("Đã xóa sản phẩm ID: {}", id);
-    } 
+    }
 
     private ProductResponse mapToResponse(Product product) {
         ProductResponse response = new ProductResponse();
@@ -155,6 +157,7 @@ public class ProductServiceImpl implements ProductService {
         response.setCategoryName(product.getCategory().getCategoryName());
         response.setCreatedAt(product.getCreatedAt());
         response.setUpdatedAt(product.getUpdatedAt());
+        response.setProductImageUrl(product.getProductImageUrl());
         return response;
     }
 }
