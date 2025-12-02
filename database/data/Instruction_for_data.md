@@ -14,3 +14,11 @@
 2. Map ảnh với sản phẩm theo tên/categoryID.
 3. Chạy script seed hoặc upload dữ liệu vào database theo hướng dẫn trong `seed_dev.sql` / `data.sql`.  
 4. Dữ liệu bị lỗi cần xoá hết copy/paste file xoa_all_bang.sql.
+
+## 4. Lưu ý
+- Để test nhanh quy trình làm với database như sau: 
+1. Vào csdl tạo database `shop_game`.
+2. Copy file schema.sql vào csdl để tạo các bảng
+3. Chạy file seed_dev.sql để tạo dữ liệu master data
+4. Chạy file data.sql để tạo dữ liệu sản phẩm
+5. Vào test với dữ liệu thực tế

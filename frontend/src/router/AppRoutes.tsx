@@ -8,6 +8,10 @@ import { ProductDetailPage } from '../pages/user/ProductDetailPage/ProductDetail
 import {AdminLayout} from "../components/layout/AdminLayout/AdminLayout.tsx";
 import {ManageProductsPage} from "../pages/admin/ManageProductsPage.tsx";
 import {ManageCategoriesPage} from "../pages/admin/ManageCategoriesPage.tsx";
+import {ManageSupplierPage} from "../pages/admin/ManageSupplierPage.tsx";
+import {LoginPage} from "../pages/auth/LoginPage.tsx";
+import {AdminRoute, AuthRoute, LoggedInRoute} from "./ProtectedRoute.tsx";
+import {CheckoutPage} from "../pages/user/CheckOut/CheckOut.tsx";
 // import { ProductDetailPage } from '../pages/ProductDetailPage'; // Sẽ thêm sau
 
 export function AppRoutes() {
@@ -16,14 +20,25 @@ export function AppRoutes() {
             <Route path="/" element={<MainLayout />}>
                 <Route index element={<HomePage />} />
                 <Route path="products" element={<ProductListPage />} />
-                <Route path="cart" element={<CartPage />} />
                 <Route path="products/:id" element={<ProductDetailPage />} />
+                <Route element={<LoggedInRoute/>}>
+                    <Route path="cart" element={<CartPage />} />
+                    <Route path="cart" element={<CartPage />} />
+                    <Route path='checkout' element={<CheckoutPage/>}/>
+                </Route>
+
+                <Route element={<AuthRoute/>}>
+                    <Route path={'login'} element={<LoginPage/>} />
+                </Route>
+            </Route>
+            <Route element={<AdminRoute/>}>
+                <Route path='/admin' element={<AdminLayout />}>
+                        <Route index element={<ManageProductsPage/>} />
+                        <Route path='products' element={<ManageProductsPage/>} />
+                        <Route path='categories' element={<ManageCategoriesPage />} />
+                        <Route path='suppliers' element={<ManageSupplierPage/>} />
+                </Route>
             </Route>
 
-            <Route path='/admin' element={<AdminLayout />}>
-                <Route index element={<ManageProductsPage/>} />
-                <Route path='products' element={<ManageProductsPage/>} />
-                <Route path='categories' element={<ManageCategoriesPage />} />
-            </Route>
         </Routes>    );
 }

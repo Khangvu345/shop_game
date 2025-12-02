@@ -1,9 +1,22 @@
-import React from 'react';
-import {addProduct, deleteProduct, editProduct, fetchProducts} from "../../store/slices/productSlice.ts";
+import React, {useEffect, useState} from 'react';
+import {addProduct, deleteProduct, editProduct, fetchProducts} from "../../store/slices/ProductBlock/productSlice.ts";
 import {AdminManage} from "../../components/features/admin/AdminManager/AdminManage.tsx";
 import type {IProduct ,IFieldConfig, IColumn} from "../../types";
+import {useAppSelector,useAppDispatch} from "../../store/hooks.ts";
+import {fetchCategories} from "../../store/slices/ProductBlock/categorySlice.ts";
 
 export function ManageProductsPage() {
+
+    const dispatch = useAppDispatch();
+
+    const { data: categories } = useAppSelector((state) => state.categories);
+
+    useEffect(() => {
+        if (!categories || categories.length === 0) {
+            dispatch(fetchCategories());
+        }
+    }, [dispatch, categories]);
+
 
     const columns: IColumn<IProduct>[] = [
         {title: 'Mã Sản Phẩm', key: 'productId' },
@@ -19,36 +32,37 @@ export function ManageProductsPage() {
 
     const formFields: IFieldConfig<IProduct>[] = [
         {
-            label: 'Tên Sản Phẩm',
+            label: 'Tên Sản Phẩm:',
             name: 'productName', type: 'text',
             required: true },
         {
-            label: 'Sku',
+            label: 'Sku:',
             name: 'sku',
             type: 'text',
             required: true },
         {
-            label: 'Giá',
+            label: 'Giá:',
             name: 'listPrice',
             type: 'number',
             required: true
         },
         {
-            label: 'Mô tả',
+            label: 'Mô tả:',
             name: 'description',
             type: 'textarea',
             required: false
         },
         {
-            label: 'Danh Mục',
+            label: 'Danh Mục:',
             name: 'categoryId',
             type: 'select',
             required: true,
             options:[
+                ...(categories ? categories.map(cat => ({ label: cat.categoryName, value: cat.categoryId })) : [])
             ]
         },
         {
-            label: "Trạng thái",
+            label: "Trạng thái:",
             name: 'status',
             type: 'select',
             required: true,

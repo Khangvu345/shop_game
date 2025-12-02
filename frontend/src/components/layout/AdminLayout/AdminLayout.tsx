@@ -1,27 +1,45 @@
 import React from 'react';
-import { Outlet, Link, NavLink } from 'react-router-dom';
+import {Outlet, NavLink, useNavigate} from 'react-router-dom';
 
 import './AdminLayout.css'
 import {Navbar} from "../Navbar/Navbar.tsx";
 import {Button} from "../../ui/button/Button.tsx";
+import {useAppDispatch, useAppSelector} from "../../../store/hooks.ts";
+import {logoutUser} from "../../../store/slices/Auth/authSlice.ts";
 
 function AdminNavLinks () {
+
+
+
+
     return (
         <>
             <NavLink to="/admin/dashboard" className="admin-nav-link">Bảng điều khiển</NavLink>
             <NavLink to="/admin/users" className="admin-nav-link">Quản lí người dùng</NavLink>
             <NavLink to="/admin/products" className="admin-nav-link">Quản lí sản phẩm</NavLink>
             <NavLink to="/admin/categories" className="admin-nav-link">Quản lí danh mục</NavLink>
+            <NavLink to="/admin/suppliers" className="admin-nav-link">Quản lí nhà cung cấp</NavLink>
             <NavLink to="/admin/orders" className="admin-nav-link">Quản lí đơn hàng</NavLink>
         </>
     )
 }
 
 function AdminActionBar (){
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const { user } = useAppSelector((state) => state.auth);
+
+    const handleLogout = async () => {
+        if (user?.accountId) {
+            await dispatch(logoutUser(user.accountId));
+            navigate('/login');
+        }
+    };
     return (
         <>
             <Button>Cài đặt</Button>
-            <Button>Đăng xuất</Button>
+            <Button onClick={handleLogout}>Đăng xuất</Button>
         </>
     )
 }

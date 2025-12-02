@@ -35,4 +35,12 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Query("SELECT COUNT(p) FROM Product p " +
             "WHERE p.stockQuantity < :threshold AND p.status = 'Active'")
     Integer countLowStockProducts(@Param("threshold") Integer threshold);
+    @Modifying
+    @Query(value = """
+        UPDATE product p
+        JOIN order_line ol ON ol.product_id = p.product_id
+        SET p.stock_quantity = p.stock_quantity + ol.quantity
+        WHERE ol.order_id = :orderId
+        """, nativeQuery = true)
+    int restoreStockByOrderId(@Param("orderId") Long orderId);
 }

@@ -29,9 +29,9 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
+    
+    // @JoinColumn
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private OrderAddress shippingAddress;
 
     // Quan trọng: Khởi tạo sẵn ArrayList để code Service .add() không bị lỗi
@@ -76,6 +76,9 @@ public class Order {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @Column(columnDefinition = "TEXT")
+    private String notes;
 
     @PrePersist
     protected void onCreate() {

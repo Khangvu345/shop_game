@@ -5,6 +5,8 @@ import { Input} from "../../../ui/input/Input";
 import { Select} from "../../../ui/input/Select";
 import type {IFieldConfig} from "../../../../types";
 
+import './AdminForm.css'
+
 interface AdminFormProps<T> {
     fields: IFieldConfig<T>[];
     initialData?: Partial<T>;
@@ -83,9 +85,9 @@ export const AdminForm = <T extends Record<string, any>>({
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ padding: '1rem' }}>
+        <form className={"form-container"} onSubmit={handleSubmit}>
             {/* Grid Layout 2 cột */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div className={'form-colum-container'}>
                 {fields.map((field) => (
                     <div key={String(field.name)} style={{ gridColumn: field.colSpan === 2 ? 'span 2' : 'span 1' }}>
                         {renderField(field)}

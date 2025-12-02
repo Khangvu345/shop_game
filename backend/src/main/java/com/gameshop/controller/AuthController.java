@@ -3,6 +3,7 @@ package com.gameshop.controller;
 import com.gameshop.model.dto.common.ApiResponse;
 import com.gameshop.model.dto.request.LoginRequest;
 import com.gameshop.model.dto.response.LoginResponse;
+import com.gameshop.model.dto.response.ValidateTokenResponse;
 import com.gameshop.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,50 +22,32 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    @Operation(
-        summary = "Đăng nhập", 
-        description = "Đăng nhập với username và password. Role: ADMIN hoặc CUSTOMER"
-    )
+    @Operation(summary = "Đăng nhập", description = "Đăng nhập với username và password. Role: ADMIN hoặc CUSTOMER")
     public ResponseEntity<ApiResponse<LoginResponse>> login(
-            @Valid @RequestBody LoginRequest request
-    ) {
+            @Valid @RequestBody LoginRequest request) {
         LoginResponse response = authService.login(request);
         return ResponseEntity.ok(
-                ApiResponse.success("Đăng nhập thành công", response)
-        );
+                ApiResponse.success("Đăng nhập thành công", response));
     }
 
     @PostMapping("/logout")
-    @Operation(
-        summary = "Đăng xuất", 
-        description = "Đăng xuất khỏi hệ thống"
-    )
+    @Operation(summary = "Đăng xuất", description = "Đăng xuất khỏi hệ thống")
     public ResponseEntity<ApiResponse<Void>> logout(
-            @Parameter(description = "ID của account")
-            @RequestParam Long accountId
-    ) {
+            @Parameter(description = "ID của account") @RequestParam Long accountId) {
         authService.logout(accountId);
         return ResponseEntity.ok(
-                ApiResponse.success("Đăng xuất thành công")
-        );
+                ApiResponse.success("Đăng xuất thành công"));
     }
 
     @GetMapping("/validate")
-    @Operation(
-        summary = "Validate token",
-        description = "Kiểm tra token có hợp lệ không"
-    )
-    public ResponseEntity<ApiResponse<Boolean>> validateToken(
-            @Parameter(description = "Token cần validate")
-            @RequestParam String token
-    ) {
-        boolean isValid = authService.validateToken(token);
+    @Operation(summary = "Validate token", description = "Kiểm tra token có hợp lệ không và trả về thông tin người dùng")
+    public ResponseEntity<ApiResponse<ValidateTokenResponse>> validateToken(
+            @Parameter(description = "Token cần validate") @RequestParam String token) {
+        ValidateTokenResponse response = authService.validateToken(token);
         return ResponseEntity.ok(
                 ApiResponse.success(
-                    isValid ? "Token hợp lệ" : "Token không hợp lệ", 
-                    isValid
-                )
-        );
+                        response.isValid() ? "Token hợp lệ" : "Token không hợp lệ",
+                        response));
     }
 }
 // commit

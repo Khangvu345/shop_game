@@ -1,5 +1,5 @@
-import {BaseApi} from "./baseApi.ts";
-import {type ICategory } from "../types";
+import {BaseApi} from "../baseApi.ts";
+import {type ICategory } from "../../types";
 
 export class CategoryApi extends BaseApi<ICategory> {
     constructor() {
