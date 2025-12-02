@@ -13,7 +13,7 @@ public interface ProductService {
 
     ProductResponse getProductById(Long id);
 
-    ProductResponse createProduct(CreateProductRequest request);
+    ProductResponse createProduct(CreateProductRequest request, String imageUrl);
 
     ProductResponse updateProduct(Long id, UpdateProductRequest request);
 
