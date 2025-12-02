@@ -18,7 +18,7 @@ export class BaseApi<T, P = unknown> {
         return response.data.data;
     }
 
-            async create(data: Partial<T>): Promise<T> {
+    async create(data: Partial<T>): Promise<T> {
         const response = await axiosClient.post<IServerResponse<T>>(`/${this.resource}`, data);
         return response.data.data;
     }
