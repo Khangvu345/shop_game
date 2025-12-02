@@ -190,8 +190,6 @@ CREATE TABLE `order` (
     cancelled_at DATETIME,
     cancel_reason VARCHAR(500),
     cancelled_by VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     -- HẾT thêm mới các trường
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Bổ sung mapping với backend
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Bổ sung mapping với backend
