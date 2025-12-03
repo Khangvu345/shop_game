@@ -1,23 +1,26 @@
 package com.gameshop.repository;
 
 import com.gameshop.model.entity.Customer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
+
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     /**
-     * Count new customers registered within a date range
+     * Tìm kiếm khách hàng theo tên, email hoặc số điện thoại
      * 
-     * @param startDate Start of the date range
-     * @param endDate   End of the date range
-     * @return Count of new customer registrations
+     * @param keyword  Từ khóa tìm kiếm
+     * @param pageable Phân trang
+     * @return Danh sách khách hàng phân trang
      */
-    @Query("SELECT COUNT(c) FROM Customer c " +
-            "WHERE c.createdAt BETWEEN :startDate AND :endDate")
-    Integer countNewCustomersByDateRange(@Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate);
+    @Query("SELECT c FROM Customer c WHERE " +
+            "LOWER(c.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(c.email) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(c.phoneNumber) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<Customer> searchCustomers(@Param("keyword") String keyword, Pageable pageable);
 }
