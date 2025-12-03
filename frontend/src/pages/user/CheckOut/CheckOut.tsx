@@ -49,7 +49,7 @@ export function CheckoutPage() {
 
     useEffect(() => {
         if (cartItems.length === 0) {
-            navigate('/products');
+            navigate('/my-orders');
         }
     }, [cartItems, navigate]);
 
@@ -90,7 +90,6 @@ export function CheckoutPage() {
 
         if (placeOrder.fulfilled.match(resultAction)) {
             dispatch(clearCart());
-            navigate('/order-success');
         } else {
             alert("Đặt hàng thất bại: " + resultAction.payload);
         }
