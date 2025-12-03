@@ -1,112 +1,93 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-// Import các actions và selector từ productSlice
-import {
-    fetchProducts,
-    selectDisplayProducts,
-    setPage
-} from '../../../store/slices/ProductBlock/productSlice.ts';
-
+import { fetchProducts } from '../../../store/slices/ProductBlock/productSlice.ts';
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import { ProductSidebar } from '../../../components/features/product/ProductSidebar/ProductSidebar';
 import { ProductList } from '../../../components/features/product/ProductList/ProductList';
 import { Pagination } from '../../../components/ui/pagination/Pagination';
+import type { IServerProductFilters } from '../../../types';
+import './ProductListPage.css';
 
-import './ProductListPage.css'
-
-export function ProductListPage(){
+export function ProductListPage() {
     const dispatch = useAppDispatch();
 
+    // 1. Lấy data và pagination từ GenericSlice
+    // (Lưu ý: state.products giờ có cấu trúc của GenericState)
+    const { data: products, status, error, pagination } = useAppSelector((state: any) => state.products);
 
-    const { paginatedData, totalRows } = useAppSelector(selectDisplayProducts);
+    // 2. Quản lý bộ lọc tại Component (Local State)
+    const [filters, setFilters] = useState<IServerProductFilters>({});
+    const [currentPage, setCurrentPage] = useState(1);
+    const limit = 9; // Số sản phẩm mỗi trang
 
-    // 2. Lấy trạng thái API và cấu hình hiện tại
-    const {
-        status,
-        error,
-        serverFilters, // Bộ lọc gửi lên server
-        clientFilters
-   // Cấu hình trang hiện tại (page, limit)
-    } = useAppSelector((state) => state.products);
-
-    // 3. Gọi API mỗi khi bộ lọc Server thay đổi (Category, Price)
+    // 3. Gọi API mỗi khi filters hoặc page thay đổi
     useEffect(() => {
-        // Luôn gọi lại API khi filters thay đổi để lấy dữ liệu mới nhất
-        dispatch(fetchProducts(serverFilters));
-    }, [dispatch, serverFilters]);
+        const params = {
+            ...filters,
+            page: currentPage - 1, // Backend bắt đầu từ 0
+            size: limit
+        };
 
-    // 4. Xử lý khi người dùng chuyển trang
-    const handlePageChange = (newPage: number) => {
-        dispatch(setPage(newPage));
-        // Cuộn lên đầu trang cho mượt
+        // fetchProducts giờ là thunk của GenericSlice, nhận params
+        dispatch(fetchProducts(params));
+
+        // Scroll lên đầu
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [dispatch, filters, currentPage]);
+
+    // Hàm xử lý thay đổi bộ lọc (truyền xuống Sidebar)
+    const handleFilterChange = (newFilters: IServerProductFilters) => {
+        setFilters(prev => ({ ...prev, ...newFilters }));
+        setCurrentPage(1); // Reset về trang 1 khi lọc
     };
 
-    // Hàm render nội dung chính
+    const handlePageChange = (newPage: number) => {
+        setCurrentPage(newPage);
+    };
+
+    const handleClearFilters = () => {
+        setFilters({});
+        setCurrentPage(1);
+    };
+
+    // Render nội dung
     const renderContent = () => {
-        // Trường hợp đang tải
-        if (status === 'loading') {
-            return (
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '3rem' }}>
-                    <Spinner/>
-                </div>
-            );
+        if (status === 'loading') return <div style={{display:'flex', justifyContent:'center', padding:'50px'}}><Spinner /></div>;
+        if (status === 'failed') return <div style={{color:'red'}}>Lỗi: {error}</div>;
+
+        if (!products || products.length === 0) {
+            return <div style={{textAlign:'center', marginTop:'2rem'}}>Không tìm thấy sản phẩm nào.</div>;
         }
 
-        // Trường hợp lỗi
-        if (status === 'failed') {
-            return (
-                <div style={{ color: 'red', padding: '1rem', border: '1px solid red', borderRadius: '8px' }}>
-                    Lỗi tải dữ liệu: {error}
-                </div>
-            );
-        }
+        return (
+            <div>
+                <ProductList products={products} />
 
-        // Trường hợp thành công
-        if (status === 'succeeded') {
-            if (paginatedData.length === 0) {
-                return (
-                    <div style={{ textAlign: 'center', marginTop: '2rem', color: '#666' }}>
-                        <p>Không tìm thấy sản phẩm nào phù hợp với tiêu chí lọc.</p>
-                    </div>
-                );
-            }
-
-            return (
-                <div>
-                    {/* Hiển thị danh sách sản phẩm (đã cắt trang) */}
-                    <ProductList products={paginatedData} />
-
-                    {/* Hiển thị thanh phân trang */}
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', maxWidth: '100%' }}>
+                {/* Pagination component */}
+                {pagination && pagination.totalPages > 1 && (
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
                         <Pagination
-                            totalRows={totalRows}
-                            limit={clientFilters.limit}
-                            currentPage={clientFilters.page}
+                            totalRows={pagination.total}
+                            limit={limit}
+                            currentPage={currentPage}
                             onPageChange={handlePageChange}
                         />
                     </div>
-
-                </div>
-            );
-        }
-
-        return null;
+                )}
+            </div>
+        );
     };
 
     return (
         <div className="products-list-page-container">
-            {/* CỘT 1: SIDEBAR (Bộ lọc) */}
-            <ProductSidebar />
-
-            {/* CỘT 2: NỘI DUNG CHÍNH */}
+            {/* Truyền hàm update filters xuống Sidebar */}
+            <ProductSidebar
+                currentFilters={filters}
+                onFilterChange={handleFilterChange}
+                onClearFilters={handleClearFilters} // Truyền prop này vào
+            />
             <main className="product-page-content">
                 <h2>Danh sách sản phẩm</h2>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                {/* Nội dung thay đổi (Loading / Error / List) */}
                 {renderContent()}
             </main>
         </div>

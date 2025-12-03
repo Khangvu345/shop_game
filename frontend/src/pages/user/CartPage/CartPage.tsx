@@ -74,7 +74,7 @@ export const CartPage: React.FC = () => {
                         <td>
                             <div className="cart-item-info">
                                 <img
-                                    src={item.product.thumbnailUrl || 'https://placehold.co/80'}
+                                    src={item.product.productImageUrl || 'https://placehold.co/80'}
                                     alt={item.product.productName}
                                     className="cart-item-image"
                                 />

@@ -6,6 +6,7 @@ import { Select} from "../../../ui/input/Select";
 import type {IFieldConfig} from "../../../../types";
 
 import './AdminForm.css'
+import {ImageUpload} from "../../../ui/input/ImageUpload.tsx";
 
 interface AdminFormProps<T> {
     fields: IFieldConfig<T>[];
@@ -25,6 +26,7 @@ export const AdminForm = <T extends Record<string, any>>({
         if (initialData) setFormData(initialData);
         else setFormData({});
     }, [initialData]);
+
 
     const handleChange = (name: keyof T, value: any) => {
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -64,6 +66,18 @@ export const AdminForm = <T extends Record<string, any>>({
                         style={{ width: '100%', resize: 'vertical' }}
                     />
                 </div>
+            );
+        }
+
+        if (field.type === 'image') {
+            // Giả sử field chứa URL ảnh là field.name (ví dụ: productImageUrl)
+            // Khi chọn file mới, ta lưu object File vào state tạm để gửi đi
+            return (
+                <ImageUpload
+                    label={field.label}
+                    initialPreview={value as string} // URL ảnh cũ
+                    onChange={(file) => handleChange(field.name, file)} // Lưu File object
+                />
             );
         }
 

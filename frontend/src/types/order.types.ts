@@ -66,14 +66,14 @@ export interface IPayment {
 }
 
 export interface IShipment {
-    shipmentId: number;
-    orderId: number;
-    carrier?: string;
-    trackingNo?: string;
-    estimatedDelivery?: string;
-    shippedAt?: string;
-    deliveredAt?: string;
-    status: TShipmentStatus;
+    shipmentId: number,
+    orderId: number,
+    carrier: string,
+    trackingNo: string,
+    estimatedDelivery: string,
+    shippedAt: string,
+    deliveredAt: string,
+    "status": TShipmentStatus
 }
 
 
@@ -94,7 +94,6 @@ export interface IOrderAddressPayload {
 }
 
 export interface ICreateOrderPayload {
-    customerId: number;
     paymentMethod: string;
     address: IOrderAddressPayload;
     items: IOrderItemPayload[];
