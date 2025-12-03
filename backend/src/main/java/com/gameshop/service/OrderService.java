@@ -63,11 +63,9 @@ public class OrderService {
         Account account = accountRepo.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Tài khoản không tồn tại"));
 
-        if (!(account.getParty() instanceof Customer)) {
-            throw new RuntimeException("Chỉ khách hàng mới có thể thực hiện thao tác này");
-        }
-
-        return (Customer) account.getParty();
+        // Use customerRepo to avoid Hibernate proxy instanceof issues
+        return customerRepo.findById(account.getParty().getId())
+                .orElseThrow(() -> new RuntimeException("Chỉ khách hàng mới có thể thực hiện thao tác này"));
     }
 
     // Helper method: Validate order ownership
