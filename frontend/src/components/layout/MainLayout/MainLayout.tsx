@@ -43,9 +43,7 @@ function ActionBar (){
         }
     };
 
-    const actionReturn = () => {
-        return(<></>)
-    }
+
     if (user){
         return (
             <>
