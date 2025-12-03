@@ -63,6 +63,9 @@ public class SecurityConfig {
                         // Public endpoints - Category (READ only)
                         .requestMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
 
+                        // Admin-only - SKU validation endpoint (must be before public GET products/**)
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products/check-sku").hasRole("ADMIN")
+
                         // Public endpoints - Product (READ only)
                         .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
 

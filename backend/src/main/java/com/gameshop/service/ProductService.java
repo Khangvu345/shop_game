@@ -21,4 +21,14 @@ public interface ProductService {
     ProductResponse updateProduct(Long id, UpdateProductRequest request, String imageUrl);
 
     void deleteProduct(Long id);
+
+    /**
+     * Check if a product with the given SKU already exists
+     * 
+     * @param sku              Product SKU to check
+     * @param excludeProductId Optional product ID to exclude from check (for edit
+     *                         mode)
+     * @return true if SKU exists, false otherwise
+     */
+    boolean checkSkuExists(String sku, Long excludeProductId);
 }
