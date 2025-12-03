@@ -1,6 +1,7 @@
 package com.gameshop.service.impl;
 
 import com.gameshop.exception.ResourceNotFoundException;
+import com.gameshop.model.dto.common.PageResponse;
 import com.gameshop.model.dto.request.CreateCategoryRequest;
 import com.gameshop.model.dto.request.UpdateCategoryRequest;
 import com.gameshop.model.dto.response.CategoryResponse;
@@ -9,6 +10,9 @@ import com.gameshop.repository.CategoryRepository;
 import com.gameshop.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,18 +22,26 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor // Tự động tạo Constructor cho các biến final (thay cho @Autowired)
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<CategoryResponse> getAllCategories() {
-        //Lấy toàn bộ dữ liệu
-        List<Category> categories = categoryRepository.findAll();
-        return categories.stream() // Dùng Java Stream để duyệt qua từng phần tử và chuyển đổi
+    public PageResponse<CategoryResponse> getAllCategories(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Category> categoryPage = categoryRepository.findAll(pageable);
+
+        List<CategoryResponse> content = categoryPage.getContent().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+
+        return new PageResponse<>(
+                content,
+                categoryPage.getTotalPages(),
+                categoryPage.getTotalElements(),
+                categoryPage.getNumber(),
+                categoryPage.getSize());
     }
 
     @Override
@@ -50,7 +62,8 @@ public class CategoryServiceImpl implements CategoryService {
 
         if (request.getParentId() != null) {
             Category parent = categoryRepository.findById(request.getParentId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy danh mục cha với ID: " + request.getParentId()));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Không tìm thấy danh mục cha với ID: " + request.getParentId()));
             category.setParent(parent);
         }
 
@@ -76,7 +89,8 @@ public class CategoryServiceImpl implements CategoryService {
         }
         if (request.getParentId() != null) {
             Category parent = categoryRepository.findById(request.getParentId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy danh mục cha với ID: " + request.getParentId()));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Không tìm thấy danh mục cha với ID: " + request.getParentId()));
             category.setParent(parent);
         }
 

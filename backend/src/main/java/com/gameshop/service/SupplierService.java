@@ -1,5 +1,6 @@
 package com.gameshop.service;
 
+import com.gameshop.model.dto.common.PageResponse;
 import com.gameshop.model.dto.request.CreateSupplierRequest;
 import com.gameshop.model.dto.request.UpdateSupplierRequest;
 import com.gameshop.model.dto.response.SupplierResponse;
@@ -22,9 +23,9 @@ public interface SupplierService {
     SupplierResponse getSupplierById(Long id);
 
     /**
-     * Lấy tất cả nhà cung cấp
+     * Lấy tất cả nhà cung cấp (có phân trang)
      */
-    List<SupplierResponse> getAllSuppliers();
+    PageResponse<SupplierResponse> getAllSuppliers(int page, int size);
 
     /**
      * Tìm nhà cung cấp theo tên

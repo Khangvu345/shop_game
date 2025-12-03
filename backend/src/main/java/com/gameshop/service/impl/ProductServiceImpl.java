@@ -1,6 +1,7 @@
 package com.gameshop.service.impl;
 
 import com.gameshop.exception.ResourceNotFoundException;
+import com.gameshop.model.dto.common.PageResponse;
 import com.gameshop.model.dto.request.CreateProductRequest;
 import com.gameshop.model.dto.request.UpdateProductRequest;
 import com.gameshop.model.dto.response.ProductResponse;
@@ -13,6 +14,9 @@ import com.gameshop.service.CategoryService;
 import com.gameshop.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,10 +35,10 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryService categoryService;
 
     @Override
-    public List<ProductResponse> getAllProducts(String keyword, Long categoryId, BigDecimal minPrice,
-            BigDecimal maxPrice) {
-        log.debug("Filter params - keyword: {}, categoryId: {}, minPrice: {}, maxPrice: {}",
-                keyword, categoryId, minPrice, maxPrice);
+    public PageResponse<ProductResponse> getAllProducts(String keyword, Long categoryId, BigDecimal minPrice,
+            BigDecimal maxPrice, int page, int size) {
+        log.debug("Filter params - keyword: {}, categoryId: {}, minPrice: {}, maxPrice: {}, page: {}, size: {}",
+                keyword, categoryId, minPrice, maxPrice, page, size);
 
         // Lấy danh sách categoryIds (bao gồm children) nếu có categoryId
         List<Long> categoryIds = null;
@@ -50,13 +54,23 @@ public class ProductServiceImpl implements ProductService {
                 minPrice,
                 maxPrice);
 
-        // Thực hiện query với Specification
-        List<Product> products = productRepository.findAll(spec);
-        log.debug("Tìm thấy {} sản phẩm", products.size());
+        // Tạo Pageable
+        Pageable pageable = PageRequest.of(page, size);
 
-        return products.stream()
+        // Thực hiện query với Specification và Pageable
+        Page<Product> productPage = productRepository.findAll(spec, pageable);
+        log.debug("Tìm thấy {} sản phẩm", productPage.getTotalElements());
+
+        List<ProductResponse> content = productPage.getContent().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+
+        return new PageResponse<>(
+                content,
+                productPage.getTotalPages(),
+                productPage.getTotalElements(),
+                productPage.getNumber(),
+                productPage.getSize());
     }
 
     @Override
@@ -67,10 +81,9 @@ public class ProductServiceImpl implements ProductService {
         return mapToResponse(product);
     }
 
-    // --- ĐÂY LÀ PHẦN CẦN SỬA ĐỂ THÊM URL ---
     @Override
     @Transactional
-    public ProductResponse createProduct(CreateProductRequest request, String imageUrl) { // Thêm tham số imageUrl
+    public ProductResponse createProduct(CreateProductRequest request, String imageUrl) {
         log.info("Tạo sản phẩm mới: {}", request.getProductName());
 
         Category category = categoryRepository.findById(request.getCategoryId())
@@ -85,7 +98,6 @@ public class ProductServiceImpl implements ProductService {
         product.setStatus(request.getStatus());
         product.setCategory(category);
 
-        // Lưu URL ảnh vào Entity (nếu có)
         if (imageUrl != null) {
             product.setProductImageUrl(imageUrl);
         }
@@ -95,7 +107,6 @@ public class ProductServiceImpl implements ProductService {
 
         return mapToResponse(savedProduct);
     }
-    // ---------------------------
 
     @Override
     @Transactional

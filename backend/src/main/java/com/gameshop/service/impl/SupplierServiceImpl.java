@@ -2,6 +2,7 @@ package com.gameshop.service.impl;
 
 import com.gameshop.exception.BadRequestException;
 import com.gameshop.exception.ResourceNotFoundException;
+import com.gameshop.model.dto.common.PageResponse;
 import com.gameshop.model.dto.request.CreateSupplierRequest;
 import com.gameshop.model.dto.request.UpdateSupplierRequest;
 import com.gameshop.model.dto.response.SupplierResponse;
@@ -10,6 +11,9 @@ import com.gameshop.repository.SupplierRepository;
 import com.gameshop.service.SupplierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,10 +67,20 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public List<SupplierResponse> getAllSuppliers() {
-        return supplierRepository.findAll().stream()
+    public PageResponse<SupplierResponse> getAllSuppliers(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Supplier> supplierPage = supplierRepository.findAll(pageable);
+
+        List<SupplierResponse> content = supplierPage.getContent().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+
+        return new PageResponse<>(
+                content,
+                supplierPage.getTotalPages(),
+                supplierPage.getTotalElements(),
+                supplierPage.getNumber(),
+                supplierPage.getSize());
     }
 
     @Override
@@ -87,7 +101,7 @@ public class SupplierServiceImpl implements SupplierService {
         if (request.name() != null && !request.name().isBlank()) {
             // Check unique name if changed
             if (!supplier.getName().equals(request.name()) &&
-                supplierRepository.existsByName(request.name())) {
+                    supplierRepository.existsByName(request.name())) {
                 throw new BadRequestException("Nhà cung cấp với tên '" + request.name() + "' đã tồn tại");
             }
             supplier.setName(request.name());
@@ -97,7 +111,7 @@ public class SupplierServiceImpl implements SupplierService {
         if (request.contactEmail() != null) {
             // Check unique email if changed
             if (!request.contactEmail().equals(supplier.getContactEmail()) &&
-                supplierRepository.existsByContactEmail(request.contactEmail())) {
+                    supplierRepository.existsByContactEmail(request.contactEmail())) {
                 throw new BadRequestException("Email '" + request.contactEmail() + "' đã được sử dụng");
             }
             supplier.setContactEmail(request.contactEmail());
@@ -132,7 +146,6 @@ public class SupplierServiceImpl implements SupplierService {
                 supplier.getSupplierId(),
                 supplier.getName(),
                 supplier.getContactEmail(),
-                supplier.getContactPhone()
-        );
+                supplier.getContactPhone());
     }
-} 
+}

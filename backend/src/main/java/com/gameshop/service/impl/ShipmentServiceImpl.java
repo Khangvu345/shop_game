@@ -1,6 +1,7 @@
 package com.gameshop.service.impl;
 
 import com.gameshop.model.dto.*;
+import com.gameshop.model.dto.common.PageResponse;
 import com.gameshop.model.entity.Shipment;
 import com.gameshop.model.enums.OrderStatus;
 import com.gameshop.model.enums.ShipmentStatus;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -119,7 +121,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
-    public Page<ShipmentResponse> getAllShipments(Pageable pageable, Long orderId, String status) {
+    public PageResponse<ShipmentResponse> getAllShipments(Pageable pageable, Long orderId, String status) {
         Page<Shipment> page;
 
         if (orderId != null) {
@@ -142,7 +144,16 @@ public class ShipmentServiceImpl implements ShipmentService {
             page = shipmentRepository.findAll(pageable);
         }
 
-        return page.map(this::toResponse);
+        List<ShipmentResponse> content = page.getContent().stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+
+        return new PageResponse<>(
+                content,
+                page.getTotalPages(),
+                page.getTotalElements(),
+                page.getNumber(),
+                page.getSize());
     }
 
     private ShipmentResponse toResponse(Shipment s) {
