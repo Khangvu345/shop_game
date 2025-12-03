@@ -1,30 +1,31 @@
-// src/store/utils/createGenericSlice.ts
-import { createSlice, createAsyncThunk, type PayloadAction,type Draft } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, type PayloadAction, type Draft } from '@reduxjs/toolkit';
 import { BaseApi } from '../../api/baseApi';
-import { type IApiState } from '../../types';
+import { type IApiState, type IPageResponse } from '../../types'; // Nhớ import IPageResponse vừa tạo ở bước trước
 
-// 1. Định nghĩa State chung
+// 1. Định nghĩa State chung có thêm Pagination
 interface GenericState<T> extends IApiState<T[]> {
-    // Có thể thêm item đang chọn để sửa/xem chi tiết
     selectedItem: T | null;
+    pagination?: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+    }
 }
 
 // 2. Hàm Factory
-// T: Kiểu dữ liệu (ví dụ ICategory)
-// api: Instance của BaseApi (ví dụ categoryApi)
-// sliceName: Tên slice (ví dụ 'categories')
-// idKey: Tên trường ID (ví dụ 'categoryId' hay 'productId')
 export function createGenericSlice<T>(
     sliceName: string,
     api: BaseApi<T>,
-    idKey: keyof T // Cần biết trường nào là ID để Update/Delete
+    idKey: keyof T
 ){
 
     // --- A. TỰ ĐỘNG TẠO THUNKS ---
 
+    // SỬA: fetchAll nhận params (mặc định là object rỗng)
     const fetchAll = createAsyncThunk(
         `${sliceName}/fetchAll`,
-        async () =>  api.getAll()
+        async (params: any = {}) =>  api.getAll(params)
     );
 
     const fetchById = createAsyncThunk(
@@ -58,13 +59,14 @@ export function createGenericSlice<T>(
         status: 'idle',
         error: null,
         selectedItem: null,
+        // Khởi tạo giá trị mặc định cho phân trang
+        pagination: { page: 0, limit: 10, total: 0, totalPages: 0 }
     };
 
     const slice = createSlice({
         name: sliceName,
         initialState,
         reducers: {
-            // Các action đồng bộ (nếu cần)
             resetState: (state) => {
                 state.status = 'idle';
                 state.error = null;
@@ -75,11 +77,25 @@ export function createGenericSlice<T>(
             }
         },
         extraReducers: (builder) => {
-            // 1. Fetch All
+            // 1. Fetch All - SỬA LOGIC QUAN TRỌNG NHẤT
             builder.addCase(fetchAll.pending, (state) => { state.status = 'loading'; });
             builder.addCase(fetchAll.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.data = action.payload as Draft<T>[];
+
+                // Ép kiểu payload về IPageResponse<T>
+                // Vì BaseApi.getAll giờ trả về IPageResponse
+                const pageResponse = action.payload as unknown as IPageResponse<T>;
+
+                // Lấy mảng dữ liệu thực tế từ field 'content'
+                state.data = pageResponse.content as Draft<T>[];
+
+                // Lưu lại thông tin phân trang (để dùng cho UI phân trang nếu cần)
+                state.pagination = {
+                    page: pageResponse.currentPage,
+                    limit: pageResponse.pageSize,
+                    total: pageResponse.totalElements,
+                    totalPages: pageResponse.totalPages
+                };
             });
             builder.addCase(fetchAll.rejected, (state, action) => {
                 state.status = 'failed';
@@ -88,13 +104,14 @@ export function createGenericSlice<T>(
 
             // 2. Create (Thêm vào đầu mảng)
             builder.addCase(create.fulfilled, (state, action) => {
+                // Lưu ý: Với phân trang server, việc unshift này chỉ là tạm thời trên UI
+                // Khi reload lại trang 1, nó sẽ load lại từ server.
                 state.data?.unshift(action.payload as Draft<T>);
             });
 
             // 3. Update (Tìm và sửa trong mảng)
             builder.addCase(update.fulfilled, (state, action) => {
                 const newItem = action.payload;
-                // Tìm index dựa trên idKey truyền vào
                 const index = state.data?.findIndex(
                     (item) => String((item as never)[idKey]) === String(newItem[idKey])
                 );

@@ -28,7 +28,7 @@ export interface IProduct {
 
     categoryId: number;
     categoryName?: string;
-    thumbnailUrl?: string;
+    productImageUrl?: string;
     suppliers?: ISupplier[];
 }
 

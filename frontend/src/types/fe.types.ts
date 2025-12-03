@@ -6,15 +6,29 @@ export interface IServerResponse<T> {
     success: boolean;
     message: string;
     data: T;
-    timestamp: string;
+    timestamp?: string;
+    error?: string;
+}
+
+export interface IPageResponse<T> {
+    content: T[];
+    totalPages: number;
+    totalElements: number;
+    currentPage: number;
+    pageSize: number;
 }
 
 export interface IApiState<T> {
     data: T | null;
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     error: string | null | undefined;
+    pagination?: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+    }
 }
-
 
 // Local Storage
 export interface ICartItem {
@@ -31,7 +45,7 @@ export interface IColumn<T> {
     render?: (item: T) => React.ReactNode;
 }
 
-export type FieldType = 'text' | 'number' | 'email' | 'textarea' | 'select' | 'checkbox' | 'date';
+export type FieldType = 'text' | 'number' | 'email' | 'textarea' | 'select' | 'checkbox' | 'date'| 'image';
 
 export interface IFieldConfig<T> {
     name: keyof T;
@@ -44,3 +58,4 @@ export interface IFieldConfig<T> {
     options?: { label: string; value: string | number }[];
     colSpan?: 1 | 2;
 }
+
