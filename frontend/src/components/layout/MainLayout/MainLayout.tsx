@@ -7,6 +7,7 @@ import {Button} from "../../ui/button/Button";
 import './MainLayout.css'
 import {Logo} from "../../ui/logo/Logo.tsx";
 import {logoutUser} from "../../../store/slices/Auth/authSlice.ts";
+import Footer from '../Footer/Footer.tsx';
 
 
 
@@ -88,7 +89,10 @@ export function MainLayout() {
                 <Outlet />
             </main>
 
-            <footer className={'main-footer'}></footer>
+            <footer className={'main-footer'}>
+                <Footer />
+            </footer>
+                
 
         </div>
     );
