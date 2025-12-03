@@ -5,25 +5,22 @@ import axiosClient from '../axiosClient.ts';
 class ProductApi extends BaseApi<IProduct> {
 
     // Ghi đè create để xử lý upload ảnh
-    async create(data: Partial<IProduct> & { image?: File }): Promise<IProduct> {
+    async create(data: any): Promise<IProduct> {
         const formData = new FormData();
 
-        // Tách file ảnh ra khỏi data json
-        // Lưu ý: Ở AdminForm, ta đang lưu File vào field 'productImageUrl' hoặc tên field do config quy định
-        // Chúng ta cần lấy file đó ra gán vào part 'image'
-
+        // Tách file ảnh ra khỏi dữ liệu JSON
+        // Lưu ý: AdminForm lưu file vào field 'productImageUrl'
         const { productImageUrl, ...productJson } = data;
-        // productImageUrl ở đây sẽ là File object do component ImageUpload trả về
 
-        // 1. JSON part
+        // 1.1. Thêm phần JSON (Bắt buộc phải bọc trong Blob với type application/json)
         formData.append("data", new Blob([JSON.stringify(productJson)], { type: "application/json" }));
 
-        // 2. File part (Nếu có file)
-        // @ts-ignore
-        if (productImageUrl && productImageUrl instanceof File) {
+        // 1.2. Thêm phần File (Nếu có)
+        if (productImageUrl instanceof File) {
             formData.append("image", productImageUrl);
         }
 
+        // 1.3. Gọi API với Header multipart/form-data
         const response = await axiosClient.post<IServerResponse<IProduct>>(`/${this.resource}`, formData, {
             headers: { "Content-Type": "multipart/form-data" }
         });

@@ -25,7 +25,6 @@ export function AppRoutes() {
                 <Route path="products/:id" element={<ProductDetailPage />} />
                 <Route element={<LoggedInRoute/>}>
                     <Route path="cart" element={<CartPage />} />
-                    <Route path="cart" element={<CartPage />} />
                     <Route path='checkout' element={<CheckoutPage/>}/>
                     <Route path='my-orders' element={<OrderHistoryPage/>}/>
                     <Route path='my-orders/:id' element={<OrderDetailPage/>}/>
