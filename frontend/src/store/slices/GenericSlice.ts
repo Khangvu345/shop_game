@@ -18,14 +18,14 @@ export function createGenericSlice<T>(
     sliceName: string,
     api: BaseApi<T>,
     idKey: keyof T
-){
+) {
 
     // --- A. TỰ ĐỘNG TẠO THUNKS ---
 
     // SỬA: fetchAll nhận params (mặc định là object rỗng)
     const fetchAll = createAsyncThunk(
         `${sliceName}/fetchAll`,
-        async (params: any = {}) =>  api.getAll(params)
+        async (params: any = {}) => api.getAll(params)
     );
 
     const fetchById = createAsyncThunk(
@@ -102,7 +102,20 @@ export function createGenericSlice<T>(
                 state.error = action.error.message;
             });
 
-            // 2. Create (Thêm vào đầu mảng)
+            // 2. Fetch By ID (Lấy chi tiết 1 item)
+            builder.addCase(fetchById.pending, (state) => {
+                state.status = 'loading';
+            });
+            builder.addCase(fetchById.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.selectedItem = action.payload as Draft<T>;
+            });
+            builder.addCase(fetchById.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            });
+
+            // 3. Create (Thêm vào đầu mảng)
             builder.addCase(create.fulfilled, (state, action) => {
                 // Lưu ý: Với phân trang server, việc unshift này chỉ là tạm thời trên UI
                 // Khi reload lại trang 1, nó sẽ load lại từ server.

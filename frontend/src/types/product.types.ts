@@ -1,4 +1,4 @@
-import type {TModerationStatus, TProductStatus, TReviewVisibility} from "./common.types.ts";
+import type { TModerationStatus, TProductStatus, TReviewVisibility } from "./common.types.ts";
 
 export interface ICategory {
     categoryId: number,
@@ -68,23 +68,6 @@ export interface IReviewModeration {
     moderatorPartyId: number;
     status: TModerationStatus;
     reasonCode?: string;
-    notes?: string;
-    createdAt: string;
-    decidedAt?: string;
-}
-
-
-    export interface IServerProductFilters {
-    keyword?: string;
-    categoryId?: number;
-    minPrice?: number;
-    maxPrice?: number;
-}
-
-
-
-export interface IProductFilters {
-    page: number;
     limit: number;
     sortBy: 'default' | 'price-asc' | 'price-desc';
 }

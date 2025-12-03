@@ -32,22 +32,22 @@ public class ProductController {
         private final CloudinaryService cloudinaryService;
 
         @GetMapping
-        @Operation(summary = "Lấy danh sách sản phẩm", description = "Lấy danh sách tất cả sản phẩm với bộ lọc đa điều kiện: tìm kiếm theo tên, lọc theo danh mục, lọc theo khoảng giá")
+        @Operation(summary = "Lấy danh sách sản phẩm", description = "Lấy danh sách tất cả sản phẩm với bộ lọc đa điều kiện: tìm kiếm theo tên, lọc theo danh mục, lọc theo khoảng giá, lọc theo trạng thái")
         public ResponseEntity<ApiResponse<PageResponse<ProductResponse>>> getAllProducts(
                         @Parameter(description = "Từ khóa tìm kiếm trong tên sản phẩm") @RequestParam(required = false) String keyword,
                         @Parameter(description = "ID danh mục để lọc sản phẩm (bao gồm cả danh mục con)") @RequestParam(required = false) Long categoryId,
                         @Parameter(description = "Giá tối thiểu (VND)") @RequestParam(required = false) BigDecimal minPrice,
                         @Parameter(description = "Giá tối đa (VND)") @RequestParam(required = false) BigDecimal maxPrice,
+                        @Parameter(description = "Trạng thái sản phẩm (Active/Inactive)") @RequestParam(required = false) String status,
                         @Parameter(description = "Số trang (bắt đầu từ 0)") @RequestParam(defaultValue = "0") int page,
                         @Parameter(description = "Số lượng sản phẩm mỗi trang") @RequestParam(defaultValue = "10") int size) {
                 PageResponse<ProductResponse> products = productService.getAllProducts(keyword, categoryId, minPrice,
-                                maxPrice, page, size);
+                                maxPrice, status, page, size);
                 return ResponseEntity.ok(
                                 ApiResponse.success("Lấy danh sách sản phẩm thành công", products));
         }
 
         @GetMapping("/{id}")
-        @Operation(summary = "Lấy thông tin chi tiết sản phẩm", description = "Lấy thông tin chi tiết của một sản phẩm theo ID")
         public ResponseEntity<ApiResponse<ProductResponse>> getProductById(
                         @Parameter(description = "ID của sản phẩm") @PathVariable Long id) {
                 ProductResponse product = productService.getProductById(id);

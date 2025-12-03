@@ -39,16 +39,23 @@ interface AdminManageProps<T> {
         update: AsyncThunk<any, any, any>;
         delete: AsyncThunk<any, any, any>;
     };
+
+    // Optional: Render custom filters above the table
+    renderFilters?: () => React.ReactNode;
+    // Optional: Extra params to pass to fetchAll (e.g. filters)
+    extraParams?: Record<string, any>;
 }
 
 export function AdminManage<T extends object>({
-                                                  title,
-                                                  idKey,
-                                                  columns,
-                                                  formFields,
-                                                  stateSelector,
-                                                  actions
-                                              }: AdminManageProps<T>) {
+    title,
+    idKey,
+    columns,
+    formFields,
+    stateSelector,
+    actions,
+    renderFilters,
+    extraParams
+}: AdminManageProps<T>) {
 
     const dispatch = useAppDispatch();
     // Lấy cả pagination từ Redux
@@ -64,8 +71,8 @@ export function AdminManage<T extends object>({
     // --- 1. FETCH DATA (Có phân trang) ---
     useEffect(() => {
         // Backend Spring Boot dùng page index bắt đầu từ 0
-        dispatch(actions.fetchAll({ page: currentPage - 1, size: pageSize }));
-    }, [dispatch, actions, currentPage]); // Gọi lại khi đổi trang
+        dispatch(actions.fetchAll({ page: currentPage - 1, size: pageSize, ...extraParams }));
+    }, [dispatch, actions, currentPage, extraParams]); // Gọi lại khi đổi trang hoặc filter thay đổi
 
     // --- 2. HANDLERS ---
     const handlePageChange = (newPage: number) => {
@@ -86,7 +93,7 @@ export function AdminManage<T extends object>({
         if (window.confirm('Bạn có chắc chắn muốn xóa dòng này?')) {
             await dispatch(actions.delete(item[idKey]));
             // Sau khi xóa, load lại trang hiện tại
-            dispatch(actions.fetchAll({ page: currentPage - 1, size: pageSize }));
+            dispatch(actions.fetchAll({ page: currentPage - 1, size: pageSize, ...extraParams }));
         }
     };
 
@@ -106,7 +113,7 @@ export function AdminManage<T extends object>({
     };
 
     if (error) {
-        return <div style={{color: 'red', padding: '20px'}}>Lỗi hệ thống: {error}</div>;
+        return <div style={{ color: 'red', padding: '20px' }}>Lỗi hệ thống: {error}</div>;
     }
 
     return (
@@ -116,6 +123,13 @@ export function AdminManage<T extends object>({
                 <h2 style={{ margin: 0, fontSize: '1.8rem' }}>{title}</h2>
                 <Button onClick={handleOpenAdd} size="medium">+ Thêm Mới</Button>
             </div>
+
+            {/* FILTERS */}
+            {renderFilters && (
+                <div style={{ marginBottom: '1.5rem' }}>
+                    {renderFilters()}
+                </div>
+            )}
 
             {/* TABLE */}
             <AdminTable<T>
@@ -129,7 +143,7 @@ export function AdminManage<T extends object>({
 
             {/* PAGINATION */}
             {pagination && pagination.totalPages > 1 && (
-                <div style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                     <Pagination
                         totalRows={pagination.total}
                         limit={pageSize}
@@ -141,7 +155,7 @@ export function AdminManage<T extends object>({
 
             {/* Pagination Info Text */}
             {pagination && (
-                <div style={{textAlign: 'center', marginTop: '10px', color: '#666', fontSize: '0.9rem'}}>
+                <div style={{ textAlign: 'center', marginTop: '10px', color: '#666', fontSize: '0.9rem' }}>
                     Hiển thị trang {pagination.page + 1} trên {pagination.totalPages}
                 </div>
             )}
