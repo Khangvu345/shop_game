@@ -26,7 +26,13 @@ export function LoginPage() {
         const resultAction = await dispatch(loginUser(formData));
 
         if (loginUser.fulfilled.match(resultAction)) {
-            navigate(from, { replace: true });
+            const userData = resultAction.payload;
+
+            if (userData.role === 'ADMIN') {
+                navigate('/admin', { replace: true });
+            } else {
+                navigate(from, { replace: true });
+            }
         }
     };
 

@@ -30,10 +30,9 @@ export function AppRoutes() {
                     <Route path='my-orders' element={<OrderHistoryPage/>}/>
                     <Route path='my-orders/:id' element={<OrderDetailPage/>}/>
                 </Route>
-
-                <Route element={<AuthRoute/>}>
-                    <Route path={'login'} element={<LoginPage/>} />
-                </Route>
+            </Route>
+            <Route path="/auth" element={<AuthRoute/>}>
+                <Route path={'login'} element={<LoginPage/>} />
             </Route>
             <Route element={<AdminRoute/>}>
                 <Route path='/admin' element={<AdminLayout />}>
