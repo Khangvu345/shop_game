@@ -37,22 +37,59 @@
 }
 
 .hero-banner h1 {
-    font-size: clamp(2.5rem, 5vw + 1rem, 5rem); 
-    color: var(--color-primary-0);
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: 0.05em; 
-    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.6); 
+  position: absolute; 
+  top: 143px; 
+  left: 128px; 
+  width: 1184px; 
+  font-family: Sarabun; /* Heading */
+  font-size: 72px; 
+  line-height: 72px; 
+  font-weight: 800; 
+  color: #FFFFFFFF; 
 }
 
 .hero-banner p {
-    max-width: 700px; 
-    margin: 0 auto 2rem;
-    font-size: 1.25rem; 
-    line-height: 1.6;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  position: absolute; 
+  top: 316px; 
+  left: 384px; 
+  width: 672px; 
+  font-family: Lato; /* Body */
+  font-size: 20px; 
+  line-height: 28px; 
+  font-weight: 400; 
+  color: #FFFFFFFF; /* white */
+}
+.hero-banner .shop-now-button {
+  position: absolute; 
+  top: 402px; 
+  left: 620px; 
+  width: 200px; 
+  height: 44px; 
+  padding: 0 12px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-family: Lato; 
+  font-size: 14px; 
+  line-height: 22px; 
+  font-weight: 500; 
+  color: #FFFFFFFF; /* white */
+  background: #0EA89BFF; /* primary-500 */
+  opacity: 1; 
+  border: none; 
+  border-radius: 4px; 
+}
+
+.hero-banner .shop-now-button:hover {
+  color: #FFFFFFFF; /* white */
+  background: #0C988DFF; /* primary-550 */
+}
+.hero-banner .shop-now-button:active {
+  background: #095352FF; /* primary-900 */
+}
+.hero-banner .shop-now-button:focus {
+  outline: none; 
+  box-shadow: 0 0 0 3px rgba(14, 168, 155, 0.5); 
 }
 
 .hero-banner .btn-primary {
@@ -71,8 +108,189 @@
     margin-bottom: var(--spacing-lg);
     font-weight: 700;
 }
+/* --- CATEGORIES --- */
+.categories-section {
+    background-color: #fafafa;
+}
 
+.categories-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.category-card {
+    width: 180px;
+    height: 180px;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    color: var(--color-primary-1);
+    border: 1px solid #eee;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: var(--color-secondary-0);
+}
+
+.category-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.category-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
 /* SẢN PHẨM NỔI BẬT  */
 .featured-products {
     background-color: var(--color-primary-0);
+}
+/* --- CSS MỚI CHO PHẦN PROMO BANNER --- */
+.promo-banner-section {
+    background: url('/assets/images/BannerHompage.png') center center no-repeat;
+    position: relative;
+    width: 100%;
+    height: 300px; /* Chiều cao cố định theo yêu cầu */
+    margin: 4rem 0;
+    overflow: hidden;
+
+}
+
+/* Overlay box (Thay thế class .container trong yêu cầu của bạn) */
+.promo-overlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 1184px; /* Theo yêu cầu */
+    height: 300px; /* Theo yêu cầu */
+    background: #FFFFFF80; /* Màu trắng trong suốt 50% */
+    border-radius: 0px 0px 0px 0px;
+
+    /* Căn giữa nội dung bên trong overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Căn giữa overlay trong section cha nếu màn hình lớn hơn 1184px */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.promo-content-inner {
+    text-align: center;
+    color: var(--color-primary-1);
+}
+
+.promo-content-inner h2 {
+  position: absolute; 
+  top: 84px; 
+  left: 423px; 
+  font-family: Sarabun; /* Heading */
+  font-size: 36px; 
+  line-height: 40px; 
+  font-weight: 700; 
+  color: #FFFFFFFF; 
+}
+
+.promo-content-inner p {
+  position: absolute; 
+  top: 142px; 
+  left: 325px; 
+  font-family: Lato; /* Body */
+  font-size: 18px; 
+  line-height: 28px; 
+  font-weight: 400; 
+  color: #FFFFFFFF;
+}
+.promo-content-inner .promo-button {
+  position: absolute; 
+  top: 191px; 
+  left: 554px; 
+  width: 74.359375px; 
+  height: 22px; 
+  padding: 0 12px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-family: Lato; 
+  font-size: 14px; 
+  line-height: 22px; 
+  font-weight: 500; 
+  color: #171A1FFF; /* neutral-900 */
+  background: #FFFFFFFF; /* white */
+  opacity: 1; 
+  border-radius: 4px; 
+  border-width: 1px; 
+  border-color: #DEE1E6FF; /* neutral-300 */
+  border-style: solid; 
+}
+
+/* Responsive cho mobile: Overlay co lại theo màn hình */
+@media (max-width: 1200px) {
+    .promo-overlay {
+        width: 100%;
+        left: 0;
+        transform: none;
+    }
+}
+/* --- NEWS SECTION --- */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+}
+
+.news-card {
+    display: flex;
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    align-items: center;
+    gap: 15px;
+    transition: box-shadow 0.3s ease;
+}
+
+.news-card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.news-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.news-info h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.news-date {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+@media (max-width: 768px) {
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
 }
