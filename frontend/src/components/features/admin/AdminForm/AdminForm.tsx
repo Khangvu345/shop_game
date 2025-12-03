@@ -1,12 +1,13 @@
 // src/components/ui/AdminGenericForm.tsx
 import React, { useEffect, useState } from 'react';
-import { Button} from "../../../ui/button/Button";
-import { Input} from "../../../ui/input/Input";
-import { Select} from "../../../ui/input/Select";
-import type {IFieldConfig} from "../../../../types";
+import { Button } from "../../../ui/button/Button";
+import { Input } from "../../../ui/input/Input";
+import { Select } from "../../../ui/input/Select";
+import type { IFieldConfig } from "../../../../types";
 
 import './AdminForm.css'
-import {ImageUpload} from "../../../ui/input/ImageUpload.tsx";
+import { ImageUpload } from "../../../ui/input/ImageUpload.tsx";
+import { SkuInput } from "../../../ui/input/SkuInput.tsx";
 
 interface AdminFormProps<T> {
     fields: IFieldConfig<T>[];
@@ -17,10 +18,11 @@ interface AdminFormProps<T> {
 }
 
 export const AdminForm = <T extends Record<string, any>>({
-                                                                    fields, initialData, onSubmit, onCancel, isSubmitting
-                                                                }: AdminFormProps<T>) => {
+    fields, initialData, onSubmit, onCancel, isSubmitting
+}: AdminFormProps<T>) => {
 
     const [formData, setFormData] = useState<Partial<T>>({});
+    const [skuValid, setSkuValid] = useState(true); // Track SKU validation status
 
     useEffect(() => {
         if (initialData) setFormData(initialData);
@@ -40,13 +42,35 @@ export const AdminForm = <T extends Record<string, any>>({
     const renderField = (field: IFieldConfig<T>) => {
         const value = formData[field.name] ?? ''; // Tránh lỗi controlled component
 
+        // Special handling for SKU field with validation
+        if (field.name === 'sku') {
+            return (
+                <SkuInput
+                    label={field.label}
+                    value={value as string}
+                    onChange={(e) => handleChange(field.name, e.target.value)}
+                    required={field.required}
+                    disabled={field.disabled}
+                    productId={initialData?.['productId' as keyof T] as number | undefined}
+                    onValidationChange={(isValid) => setSkuValid(isValid)}
+                />
+            );
+        }
+
         if (field.type === 'select') {
             return (
                 <Select
                     label={field.label}
                     value={value}
                     options={field.options || []}
-                    onChange={(e) => handleChange(field.name, e.target.value)} // Select value luôn là string/number
+                    onChange={(e) => {
+                        let val: any = e.target.value;
+                        // Convert to number for categoryId field
+                        if (field.name === 'categoryId') {
+                            val = Number(val);
+                        }
+                        handleChange(field.name, val);
+                    }}
                     required={field.required}
                     disabled={field.disabled}
                 />
@@ -70,13 +94,15 @@ export const AdminForm = <T extends Record<string, any>>({
         }
 
         if (field.type === 'image') {
-            // Giả sử field chứa URL ảnh là field.name (ví dụ: productImageUrl)
-            // Khi chọn file mới, ta lưu object File vào state tạm để gửi đi
+            // Chỉ truyền initialPreview nếu value là string URL
+            // Nếu value là File, component ImageUpload sẽ tự tạo preview từ File object
+            const imagePreview = typeof value === 'string' ? value : undefined;
+
             return (
                 <ImageUpload
                     label={field.label}
-                    initialPreview={value as string} // URL ảnh cũ
-                    onChange={(file) => handleChange(field.name, file)} // Lưu File object
+                    initialPreview={imagePreview}
+                    onChange={(file) => handleChange(field.name, file)}
                 />
             );
         }
@@ -112,7 +138,7 @@ export const AdminForm = <T extends Record<string, any>>({
             {/* Buttons */}
             <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end', gap: '1rem', borderTop: '1px solid #eee', paddingTop: '1rem' }}>
                 <Button type="button" onClick={onCancel} disabled={isSubmitting}>Hủy</Button>
-                <Button type="submit" disabled={isSubmitting}>
+                <Button type="submit" disabled={isSubmitting || !skuValid}>
                     {initialData ? 'Lưu thay đổi' : 'Tạo mới'}
                 </Button>
             </div>

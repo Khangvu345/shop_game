@@ -20,6 +20,7 @@ import com.gameshop.service.CloudinaryService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -128,6 +129,23 @@ public class ProductController {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                         .body(ApiResponse.error("Lỗi hệ thống: " + e.getMessage()));
                 }
+        }
+
+        @GetMapping("/check-sku")
+        @Operation(summary = "Kiểm tra SKU đã tồn tại", description = "Kiểm tra xem SKU có bị trùng lặp hay không (Admin only). "
+                        +
+                        "Tham số excludeProductId dùng khi edit sản phẩm để bỏ qua chính sản phẩm đang edit.")
+        public ResponseEntity<Map<String, Object>> checkSkuExists(
+                        @Parameter(description = "SKU cần kiểm tra") @RequestParam String sku,
+                        @Parameter(description = "ID sản phẩm đang edit (nếu có)") @RequestParam(required = false) Long excludeProductId) {
+
+                boolean exists = productService.checkSkuExists(sku, excludeProductId);
+
+                Map<String, Object> response = new java.util.HashMap<>();
+                response.put("exists", exists);
+                response.put("message", exists ? "SKU đã tồn tại" : "SKU khả dụng");
+
+                return ResponseEntity.ok(response);
         }
 
         @DeleteMapping("/{id}")

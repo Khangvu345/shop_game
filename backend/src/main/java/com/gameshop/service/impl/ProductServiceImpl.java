@@ -181,4 +181,25 @@ public class ProductServiceImpl implements ProductService {
         response.setProductImageUrl(product.getProductImageUrl());
         return response;
     }
+
+    @Override
+    public boolean checkSkuExists(String sku, Long excludeProductId) {
+        if (sku == null || sku.isBlank()) {
+            return false;
+        }
+
+        boolean exists = productRepository.existsBySku(sku);
+
+        // Nếu đang edit sản phẩm (excludeProductId != null), kiểm tra xem SKU có thuộc
+        // chính sản phẩm đó không
+        if (exists && excludeProductId != null) {
+            Product product = productRepository.findById(excludeProductId).orElse(null);
+            if (product != null && sku.equals(product.getSku())) {
+                // SKU này thuộc về chính sản phẩm đang edit → Không bị trùng
+                return false;
+            }
+        }
+
+        return exists;
+    }
 }
