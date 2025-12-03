@@ -39,7 +39,7 @@ function ActionBar (){
     const handleLogout = async () => {
         if (user?.accountId) {
             await dispatch(logoutUser(user.accountId));
-            navigate('/login');
+            navigate('/auth/login');
         }
     };
 
@@ -62,7 +62,7 @@ function ActionBar (){
                 <Link to={'/cart'}>
                     giỏ hàng
                 </Link>
-                <Link to={'/login'}>
+                <Link to={'/auth/login'}>
                     <Button size = "small" color = "0" >Đăng nhập</Button>
                 </Link>
                 <Link to={'/regíter'}>
