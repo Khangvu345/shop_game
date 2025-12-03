@@ -1,6 +1,7 @@
 package com.gameshop.controller;
 
 import com.gameshop.model.dto.common.ApiResponse;
+import com.gameshop.model.dto.common.PageResponse;
 import com.gameshop.model.dto.request.CreateProductRequest;
 import com.gameshop.model.dto.request.UpdateProductRequest;
 import com.gameshop.model.dto.response.ProductResponse;
@@ -32,12 +33,15 @@ public class ProductController {
 
         @GetMapping
         @Operation(summary = "Lấy danh sách sản phẩm", description = "Lấy danh sách tất cả sản phẩm với bộ lọc đa điều kiện: tìm kiếm theo tên, lọc theo danh mục, lọc theo khoảng giá")
-        public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts(
+        public ResponseEntity<ApiResponse<PageResponse<ProductResponse>>> getAllProducts(
                         @Parameter(description = "Từ khóa tìm kiếm trong tên sản phẩm") @RequestParam(required = false) String keyword,
                         @Parameter(description = "ID danh mục để lọc sản phẩm (bao gồm cả danh mục con)") @RequestParam(required = false) Long categoryId,
                         @Parameter(description = "Giá tối thiểu (VND)") @RequestParam(required = false) BigDecimal minPrice,
-                        @Parameter(description = "Giá tối đa (VND)") @RequestParam(required = false) BigDecimal maxPrice) {
-                List<ProductResponse> products = productService.getAllProducts(keyword, categoryId, minPrice, maxPrice);
+                        @Parameter(description = "Giá tối đa (VND)") @RequestParam(required = false) BigDecimal maxPrice,
+                        @Parameter(description = "Số trang (bắt đầu từ 0)") @RequestParam(defaultValue = "0") int page,
+                        @Parameter(description = "Số lượng mỗi trang") @RequestParam(defaultValue = "10") int size) {
+                PageResponse<ProductResponse> products = productService.getAllProducts(keyword, categoryId, minPrice,
+                                maxPrice, page, size);
                 return ResponseEntity.ok(
                                 ApiResponse.success("Lấy danh sách sản phẩm thành công", products));
         }

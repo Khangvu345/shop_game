@@ -10,8 +10,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import com.gameshop.model.dto.common.PageResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,11 +62,11 @@ public class ShipmentController {
             @Parameter(name = "orderId", description = "Lọc theo ID đơn hàng", required = false, example = "1"),
             @Parameter(name = "status", description = "Lọc theo trạng thái (READY, SHIPPED, DELIVERED, RETURNED)", required = false, example = "SHIPPED")
     })
-    public ResponseEntity<ApiResponse<Page<ShipmentResponse>>> getAllShipments(
+    public ResponseEntity<ApiResponse<PageResponse<ShipmentResponse>>> getAllShipments(
             Pageable pageable,
             @RequestParam(required = false) Long orderId,
             @RequestParam(required = false) String status) {
-        Page<ShipmentResponse> shipments = shipmentService.getAllShipments(pageable, orderId, status);
+        PageResponse<ShipmentResponse> shipments = shipmentService.getAllShipments(pageable, orderId, status);
         return ResponseEntity.ok(ApiResponse.success("Lấy danh sách vận đơn thành công", shipments));
     }
 }
