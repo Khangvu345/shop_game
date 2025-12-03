@@ -12,8 +12,8 @@ export function useProductDetail() {
     const { id } = useParams<{ id: string }>();
     const dispatch = useAppDispatch();
 
-    const { selectedProduct } = useAppSelector((state) => state.products);
-    const { data: product, status, error } = selectedProduct;
+    const { selectedItem, status, error } = useAppSelector((state) => state.products);
+    const product = selectedItem;
 
     const [quantity, setQuantity] = useState(1);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);

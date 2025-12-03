@@ -1,23 +1,22 @@
-
 :root {
-    --color-primary-0: #FFFFFF; 
-    --color-primary-1: #171A1F; 
-    --color-primary-2: #F3F4F6; 
-    --color-primary-3: #999999; 
-    --color-primary-4: #F0F0F0; 
+    --color-primary-0: #FFFFFF;
+    --color-primary-1: #171A1F;
+    --color-primary-2: #F3F4F6;
+    --color-primary-3: #999999;
+    --color-primary-4: #F0F0F0;
 
-    --color-secondary-0: #0EA89B; 
-    --color-secondary-1: #0D83A8; 
-    --color-secondary-2: #0EA89B; 
+    --color-secondary-0: #0EA89B;
+    --color-secondary-1: #0D83A8;
+    --color-secondary-2: #0EA89B;
 
-    --color-accent-0: #0DA832; 
-    --color-accent-1: #A8250D; 
+    --color-accent-0: #0DA832;
+    --color-accent-1: #A8250D;
 
     --font-size-base: clamp(14px, 1.2vw, 18px);
     --font-family-heading: Sarabun;
     --font-family-body: Lato, sans-serif;
 
-    --spacing-sm: 0.5rem; 
+    --spacing-sm: 0.5rem;
     --spacing-md: 1.5rem;
     --spacing-lg: 3rem;
     --max-width-container: 1200px;
@@ -34,7 +33,9 @@ html {
     scroll-behavior: smooth;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: inherit;
     margin: 0;
     padding: 0;
@@ -46,7 +47,12 @@ html {
 }
 
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: var(--font-family-heading), sans-serif;
     color: var(--color-primary-1);
     line-height: 1.2;
@@ -63,4 +69,3 @@ h2 {
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
 }
-

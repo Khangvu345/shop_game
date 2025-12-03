@@ -36,9 +36,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public PageResponse<ProductResponse> getAllProducts(String keyword, Long categoryId, BigDecimal minPrice,
-            BigDecimal maxPrice, int page, int size) {
-        log.debug("Filter params - keyword: {}, categoryId: {}, minPrice: {}, maxPrice: {}, page: {}, size: {}",
-                keyword, categoryId, minPrice, maxPrice, page, size);
+            BigDecimal maxPrice, String status, int page, int size) {
+        log.debug(
+                "Filter params - keyword: {}, categoryId: {}, minPrice: {}, maxPrice: {}, status: {}, page: {}, size: {}",
+                keyword, categoryId, minPrice, maxPrice, status, page, size);
 
         // Lấy danh sách categoryIds (bao gồm children) nếu có categoryId
         List<Long> categoryIds = null;
@@ -52,7 +53,8 @@ public class ProductServiceImpl implements ProductService {
                 keyword,
                 categoryIds,
                 minPrice,
-                maxPrice);
+                maxPrice,
+                status);
 
         // Thực hiện query với Specification và Pagination
         Pageable pageable = PageRequest.of(page, size);
@@ -179,6 +181,7 @@ public class ProductServiceImpl implements ProductService {
         response.setCreatedAt(product.getCreatedAt());
         response.setUpdatedAt(product.getUpdatedAt());
         response.setProductImageUrl(product.getProductImageUrl());
+        response.setStockQuantity(product.getStockQuantity());
         return response;
     }
 
