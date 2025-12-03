@@ -18,5 +18,7 @@ public interface ProductService {
 
     ProductResponse updateProduct(Long id, UpdateProductRequest request);
 
+    ProductResponse updateProduct(Long id, UpdateProductRequest request, String imageUrl);
+
     void deleteProduct(Long id);
 }

@@ -20,7 +20,6 @@ import com.gameshop.service.CloudinaryService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -39,7 +38,7 @@ public class ProductController {
                         @Parameter(description = "Giá tối thiểu (VND)") @RequestParam(required = false) BigDecimal minPrice,
                         @Parameter(description = "Giá tối đa (VND)") @RequestParam(required = false) BigDecimal maxPrice,
                         @Parameter(description = "Số trang (bắt đầu từ 0)") @RequestParam(defaultValue = "0") int page,
-                        @Parameter(description = "Số lượng mỗi trang") @RequestParam(defaultValue = "10") int size) {
+                        @Parameter(description = "Số lượng sản phẩm mỗi trang") @RequestParam(defaultValue = "10") int size) {
                 PageResponse<ProductResponse> products = productService.getAllProducts(keyword, categoryId, minPrice,
                                 maxPrice, page, size);
                 return ResponseEntity.ok(
@@ -57,7 +56,7 @@ public class ProductController {
 
         @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
         @Operation(summary = "Tạo sản phẩm mới", description = "Tạo một sản phẩm mới kèm ảnh (Admin only). " +
-                        "Lưu ý: Trên Swagger UI có thể gặp lỗi, khuyến nghị dùng Postman để test.")
+                        "Lưu ý: Trên Swagger UI có thể gặp lỗi, khuyến nghị dùng Postman hoặc cURL để test.")
         public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
                         @Parameter(description = "Thông tin sản phẩm (JSON)", required = true) @RequestPart("data") @Valid CreateProductRequest request,
                         @Parameter(description = "File ảnh sản phẩm (JPG, PNG, WEBP, tối đa 5MB)") @RequestPart(value = "image", required = false) MultipartFile file) {
@@ -74,30 +73,61 @@ public class ProductController {
                                         ApiResponse.success("Tạo sản phẩm thành công", product));
 
                 } catch (IllegalArgumentException e) {
-                        // Validation errors (file type, size, etc.)
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                         .body(ApiResponse.error("Lỗi validation: " + e.getMessage()));
 
                 } catch (IOException e) {
-                        // Upload errors
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                         .body(ApiResponse.error("Lỗi upload ảnh: " + e.getMessage()));
 
                 } catch (Exception e) {
-                        // Other system errors
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                         .body(ApiResponse.error("Lỗi hệ thống: " + e.getMessage()));
                 }
         }
 
         @PutMapping("/{id}")
-        @Operation(summary = "Cập nhật sản phẩm", description = "Cập nhật thông tin sản phẩm (Admin only)")
+        @Operation(summary = "Cập nhật sản phẩm (JSON)", description = "Cập nhật thông tin sản phẩm không bao gồm ảnh (Admin only)")
         public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(
                         @Parameter(description = "ID của sản phẩm") @PathVariable Long id,
                         @Valid @RequestBody UpdateProductRequest request) {
                 ProductResponse product = productService.updateProduct(id, request);
                 return ResponseEntity.ok(
                                 ApiResponse.success("Cập nhật sản phẩm thành công", product));
+        }
+
+        @PutMapping(value = "/{id}/with-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+        @Operation(summary = "Cập nhật sản phẩm kèm ảnh", description = "Cập nhật thông tin sản phẩm và ảnh (Admin only). "
+                        +
+                        "Lưu ý: Trên Swagger UI có thể gặp lỗi, khuyến nghị dùng Postman hoặc cURL để test.")
+        public ResponseEntity<ApiResponse<ProductResponse>> updateProductWithImage(
+                        @Parameter(description = "ID của sản phẩm") @PathVariable Long id,
+                        @Parameter(description = "Thông tin sản phẩm (JSON)", required = true) @RequestPart("data") @Valid UpdateProductRequest request,
+                        @Parameter(description = "File ảnh sản phẩm mới (JPG, PNG, WEBP, tối đa 5MB)") @RequestPart(value = "image", required = false) MultipartFile file) {
+                String imageUrl = null;
+
+                try {
+                        if (file != null && !file.isEmpty()) {
+                                imageUrl = cloudinaryService.uploadImage(file);
+                        }
+
+                        ProductResponse product = productService.updateProduct(id, request, imageUrl);
+
+                        return ResponseEntity.ok(
+                                        ApiResponse.success("Cập nhật sản phẩm thành công", product));
+
+                } catch (IllegalArgumentException e) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                        .body(ApiResponse.error("Lỗi validation: " + e.getMessage()));
+
+                } catch (IOException e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body(ApiResponse.error("Lỗi upload ảnh: " + e.getMessage()));
+
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body(ApiResponse.error("Lỗi hệ thống: " + e.getMessage()));
+                }
         }
 
         @DeleteMapping("/{id}")

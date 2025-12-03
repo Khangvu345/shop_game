@@ -54,19 +54,17 @@ public class ProductServiceImpl implements ProductService {
                 minPrice,
                 maxPrice);
 
-        // Tạo Pageable
+        // Thực hiện query với Specification và Pagination
         Pageable pageable = PageRequest.of(page, size);
-
-        // Thực hiện query với Specification và Pageable
         Page<Product> productPage = productRepository.findAll(spec, pageable);
         log.debug("Tìm thấy {} sản phẩm", productPage.getTotalElements());
 
-        List<ProductResponse> content = productPage.getContent().stream()
+        List<ProductResponse> productResponses = productPage.getContent().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
 
         return new PageResponse<>(
-                content,
+                productResponses,
                 productPage.getTotalPages(),
                 productPage.getTotalElements(),
                 productPage.getNumber(),
@@ -98,6 +96,7 @@ public class ProductServiceImpl implements ProductService {
         product.setStatus(request.getStatus());
         product.setCategory(category);
 
+        // Lưu URL ảnh vào Entity (nếu có)
         if (imageUrl != null) {
             product.setProductImageUrl(imageUrl);
         }
@@ -111,6 +110,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductResponse updateProduct(Long id, UpdateProductRequest request) {
+        return updateProduct(id, request, null);
+    }
+
+    @Override
+    @Transactional
+    public ProductResponse updateProduct(Long id, UpdateProductRequest request, String imageUrl) {
         log.info("Cập nhật sản phẩm ID: {}", id);
 
         Product product = productRepository.findById(id)
@@ -136,6 +141,11 @@ public class ProductServiceImpl implements ProductService {
                     .orElseThrow(() -> new ResourceNotFoundException(
                             "Không tìm thấy danh mục với ID: " + request.getCategoryId()));
             product.setCategory(category);
+        }
+
+        // Cập nhật URL ảnh nếu có
+        if (imageUrl != null) {
+            product.setProductImageUrl(imageUrl);
         }
 
         Product updatedProduct = productRepository.save(product);
