@@ -49,7 +49,7 @@ export function CheckoutPage() {
 
     useEffect(() => {
         if (cartItems.length === 0) {
-            navigate('/products');
+            navigate('/my-orders');
         }
     }, [cartItems, navigate]);
 
@@ -63,7 +63,7 @@ export function CheckoutPage() {
 
         // 1. Chuẩn bị Payload theo đúng mẫu JSON mới
         const orderPayload: ICreateOrderPayload = {
-            customerId: user?.partyId || 0, // Lấy ID khách hàng (nếu guest thì xử lý logic riêng hoặc bắt buộc login)
+
             paymentMethod: formData.paymentMethod,
 
             // Object address lồng nhau
@@ -90,7 +90,6 @@ export function CheckoutPage() {
 
         if (placeOrder.fulfilled.match(resultAction)) {
             dispatch(clearCart());
-            navigate('/order-success');
         } else {
             alert("Đặt hàng thất bại: " + resultAction.payload);
         }
@@ -146,7 +145,7 @@ export function CheckoutPage() {
                     <div style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '1rem' }}>
                         {cartItems.map(item => (
                             <div key={item.product.productId} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-                                <img src={item.product.thumbnailUrl} style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} />
+                                <img src={item.product.productImageUrl} style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} />
                                 <div style={{ flex: 1 }}>
                                     <div style={{ fontSize: '0.9rem', fontWeight: 500 }}>{item.product.productName}</div>
                                     <div style={{ fontSize: '0.85rem', color: '#666' }}>

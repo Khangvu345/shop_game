@@ -1,4 +1,4 @@
-.admin-container{
+.admin-container {
     display: grid;
     grid-template-areas:
         "admin-header admin-header"
@@ -14,10 +14,10 @@
     box-shadow: var(--shadow-sm);
 }
 
-.admin-sidebar{
+.admin-sidebar {
     grid-area: admin-sidebar;
 }
 
-.admin-main-content{
+.admin-main-content {
     grid-area: admin-content;
 }

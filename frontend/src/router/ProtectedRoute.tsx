@@ -8,7 +8,7 @@ export function LoggedInRoute(){
     const location = useLocation();
 
     if (!user) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
+        return <Navigate to="/auth/login" state={{ from: location }} replace />;
     }
     return <Outlet />;
 }
@@ -19,6 +19,9 @@ export function AuthRoute(){
     const location = useLocation();
 
     if (user) {
+        if (user.role == "ADMIN") {
+            <Navigate to="admin" state={{ from: location }} replace />;
+        }
         return <Navigate to="/" state={{ from: location }} replace />;
     }
     return <Outlet />;

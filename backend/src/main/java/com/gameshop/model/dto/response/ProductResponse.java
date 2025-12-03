@@ -24,4 +24,5 @@ public class ProductResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String productImageUrl;
+    private Integer stockQuantity;
 }

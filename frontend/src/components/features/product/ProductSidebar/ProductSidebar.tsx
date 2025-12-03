@@ -1,58 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
-// Import actions từ productSlice (để lọc và sắp xếp)
-import {
-    setServerFilters,
-    setSort
-} from '../../../../store/slices/ProductBlock/productSlice.ts';
-// Import action từ categorySlice (để lấy danh mục về hiển thị)
-import { fetchCategories } from '../../../../store/slices/ProductBlock/categorySlice.ts';
+import { fetchCategories } from '../../../../store/slices/ProductBlock/categorySlice';
 import { Button } from '../../../ui/button/Button';
-import type { IProductFilters} from "../../../../types";
+import type { IServerProductFilters } from '../../../../types';
 
 import './ProductSlidebar.css';
 
-export const ProductSidebar: React.FC = () => {
-    const dispatch = useAppDispatch();
+interface ProductSidebarProps {
+    currentFilters: IServerProductFilters;
+    onFilterChange: (newFilters: IServerProductFilters) => void;
+    onClearFilters: () => void;
+}
 
-    // 1. Lấy danh sách danh mục từ categorySlice
-    // Lưu ý: Dữ liệu nằm trong state.categories.data
+export const ProductSidebar: React.FC<ProductSidebarProps> = ({
+                                                                  currentFilters,
+                                                                  onFilterChange,
+                                                                  onClearFilters
+                                                              }) => {
+    const dispatch = useAppDispatch();
     const { data: categories } = useAppSelector((state) => state.categories);
 
-    // 2. Lấy bộ lọc hiện tại từ productSlice
-    const { serverFilters, clientFilters  } = useAppSelector((state) => state.products);
-
-    // State nội bộ để quản lý UI của Radio button giá (để biết cái nào đang được checked)
-    const [selectedPriceRange, setSelectedPriceRange] = useState<string>('all');
-
-    // Gọi API lấy danh mục khi component mount (nếu chưa có dữ liệu)
+    // Load danh mục nếu chưa có
     useEffect(() => {
         if (!categories || categories.length === 0) {
-            dispatch(fetchCategories());
+            dispatch(fetchCategories({}));
         }
     }, [dispatch, categories]);
 
     // --- HANDLERS ---
 
-    // 3. Xử lý Sắp xếp (Client-side Sort)
-    const handleSortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // Ép kiểu an toàn thay vì dùng 'any'
-        const value = e.target.value as IProductFilters['sortBy'];
-        dispatch(setSort(value));
-    };
-
-    // 4. Xử lý chọn Danh mục (Server-side Filter)
+    // 1. Xử lý chọn Danh mục (Toggle)
     const handleCategoryChange = (categoryId: number) => {
-        // Logic toggle: Nếu đang chọn cái này rồi thì bỏ chọn (undefined), ngược lại thì chọn nó
-        const newId = serverFilters.categoryId === categoryId ? undefined : categoryId;
-        dispatch(setServerFilters({ categoryId: newId }));
+        // Nếu đang chọn danh mục này thì bỏ chọn (undefined), ngược lại thì chọn nó
+        const newCategoryId = currentFilters.categoryId === categoryId ? undefined : categoryId;
+        onFilterChange({ categoryId: newCategoryId });
     };
 
-    // 5. Xử lý chọn Giá (Server-side Filter)
+    // 2. Xử lý chọn Giá
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        setSelectedPriceRange(value);
-
         let minPrice: number | undefined;
         let maxPrice: number | undefined;
 
@@ -76,21 +62,21 @@ export const ProductSidebar: React.FC = () => {
                 maxPrice = undefined;
         }
 
-        // Gửi minPrice/maxPrice lên Redux -> Redux sẽ gọi API fetchProducts
-        dispatch(setServerFilters({ minPrice, maxPrice }));
+        onFilterChange({ minPrice, maxPrice });
     };
 
-    // 6. Xóa tất cả bộ lọc
-    const handleClearFilters = () => {
-        setSelectedPriceRange('all');
-        dispatch(setServerFilters({
-            categoryId: undefined,
-            minPrice: undefined,
-            maxPrice: undefined,
-            keyword: undefined
-        }));
-        dispatch(setSort('default'));
+    // Helper: Xác định radio nào đang active dựa trên minPrice/maxPrice hiện tại
+    const getCurrentPriceValue = () => {
+        const { minPrice, maxPrice } = currentFilters;
+        if (!minPrice && !maxPrice) return 'all';
+        if (!minPrice && maxPrice === 1000000) return 'under-1m';
+        if (minPrice === 1000000 && maxPrice === 5000000) return '1m-5m';
+        if (minPrice === 5000000 && maxPrice === 10000000) return '5m-10m';
+        if (minPrice === 10000000 && !maxPrice) return 'above-10m';
+        return 'custom'; // Trường hợp khác
     };
+
+    const activePriceValue = getCurrentPriceValue();
 
     return (
         <aside className="page-sidebar">
@@ -128,79 +114,83 @@ export const ProductSidebar: React.FC = () => {
                 </label>
             </div>
 
-            {/* --- NHÓM 2: DANH MỤC (Render động từ API) --- */}
+            {/* --- NHÓM DANH MỤC --- */}
             <div className="filter-group">
                 <h4>Danh mục</h4>
                 {categories && categories.length > 0 ? (
                     categories.map((cat) => (
-                        <label key={cat.categoryId}>
+                        <label key={cat.categoryId} className="filter-label">
                             <input
                                 type="checkbox"
-                                // Kiểm tra xem categoryId này có đang được chọn trong Redux không
-                                checked={serverFilters.categoryId === cat.categoryId}
+                                checked={currentFilters.categoryId === cat.categoryId}
                                 onChange={() => handleCategoryChange(cat.categoryId)}
-                                
                             />
+                            <span className="checkmark"></span>
                             {cat.categoryName}
                         </label>
                     ))
                 ) : (
-                    <p style={{fontSize: '0.9rem', color: '#666'}}>Đang tải danh mục...</p>
+                    <p style={{fontSize: '0.9rem', color: '#888', fontStyle: 'italic'}}>Đang tải danh mục...</p>
                 )}
             </div>
 
-            {/* --- NHÓM 3: MỨC GIÁ --- */}
+            {/* --- NHÓM MỨC GIÁ --- */}
             <div className="filter-group">
                 <h4>Mức giá</h4>
-                <label>
+                <label className="filter-label">
                     <input
                         type="radio"
                         name="price"
                         value="all"
-                        checked={selectedPriceRange === 'all'}
+                        checked={activePriceValue === 'all'}
                         onChange={handlePriceChange}
-                    /> Tất cả
+                    />
+                    Tất cả
                 </label>
-                <label>
+                <label className="filter-label">
                     <input
                         type="radio"
                         name="price"
                         value="under-1m"
-                        checked={selectedPriceRange === 'under-1m'}
+                        checked={activePriceValue === 'under-1m'}
                         onChange={handlePriceChange}
-                    /> Dưới 1 Triệu
+                    />
+                    Dưới 1 Triệu
                 </label>
-                <label>
+                <label className="filter-label">
                     <input
                         type="radio"
                         name="price"
                         value="1m-5m"
-                        checked={selectedPriceRange === '1m-5m'}
+                        checked={activePriceValue === '1m-5m'}
                         onChange={handlePriceChange}
-                    /> 1 - 5 Triệu
+                    />
+                    1 - 5 Triệu
                 </label>
-                <label >
+                <label className="filter-label">
                     <input
                         type="radio"
                         name="price"
                         value="5m-10m"
-                        checked={selectedPriceRange === '5m-10m'}
+                        checked={activePriceValue === '5m-10m'}
                         onChange={handlePriceChange}
-                    /> 5 - 10 Triệu
+                    />
+                    5 - 10 Triệu
                 </label>
-                <label >
+                <label className="filter-label">
                     <input
                         type="radio"
                         name="price"
                         value="above-10m"
-                        checked={selectedPriceRange === 'above-10m'}
+                        checked={activePriceValue === 'above-10m'}
                         onChange={handlePriceChange}
-                    /> Trên 10 Triệu
+                    />
+                    Trên 10 Triệu
                 </label>
             </div>
 
             {/* Nút Xóa bộ lọc */}
-            <Button onClick={handleClearFilters}>
+            <Button onClick={onClearFilters}>
                 Xóa bộ lọc
             </Button>
         </aside>

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public interface ProductService {
 
     PageResponse<ProductResponse> getAllProducts(String keyword, Long categoryId, BigDecimal minPrice,
-            BigDecimal maxPrice, int page, int size);
+            BigDecimal maxPrice, String status, int page, int size);
 
     ProductResponse getProductById(Long id);
 
@@ -21,4 +21,14 @@ public interface ProductService {
     ProductResponse updateProduct(Long id, UpdateProductRequest request, String imageUrl);
 
     void deleteProduct(Long id);
+
+    /**
+     * Check if a product with the given SKU already exists
+     * 
+     * @param sku              Product SKU to check
+     * @param excludeProductId Optional product ID to exclude from check (for edit
+     *                         mode)
+     * @return true if SKU exists, false otherwise
+     */
+    boolean checkSkuExists(String sku, Long excludeProductId);
 }

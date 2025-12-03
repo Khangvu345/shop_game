@@ -20,6 +20,7 @@ import com.gameshop.service.CloudinaryService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -31,22 +32,22 @@ public class ProductController {
         private final CloudinaryService cloudinaryService;
 
         @GetMapping
-        @Operation(summary = "Lấy danh sách sản phẩm", description = "Lấy danh sách tất cả sản phẩm với bộ lọc đa điều kiện: tìm kiếm theo tên, lọc theo danh mục, lọc theo khoảng giá")
+        @Operation(summary = "Lấy danh sách sản phẩm", description = "Lấy danh sách tất cả sản phẩm với bộ lọc đa điều kiện: tìm kiếm theo tên, lọc theo danh mục, lọc theo khoảng giá, lọc theo trạng thái")
         public ResponseEntity<ApiResponse<PageResponse<ProductResponse>>> getAllProducts(
                         @Parameter(description = "Từ khóa tìm kiếm trong tên sản phẩm") @RequestParam(required = false) String keyword,
                         @Parameter(description = "ID danh mục để lọc sản phẩm (bao gồm cả danh mục con)") @RequestParam(required = false) Long categoryId,
                         @Parameter(description = "Giá tối thiểu (VND)") @RequestParam(required = false) BigDecimal minPrice,
                         @Parameter(description = "Giá tối đa (VND)") @RequestParam(required = false) BigDecimal maxPrice,
+                        @Parameter(description = "Trạng thái sản phẩm (Active/Inactive)") @RequestParam(required = false) String status,
                         @Parameter(description = "Số trang (bắt đầu từ 0)") @RequestParam(defaultValue = "0") int page,
                         @Parameter(description = "Số lượng sản phẩm mỗi trang") @RequestParam(defaultValue = "10") int size) {
                 PageResponse<ProductResponse> products = productService.getAllProducts(keyword, categoryId, minPrice,
-                                maxPrice, page, size);
+                                maxPrice, status, page, size);
                 return ResponseEntity.ok(
                                 ApiResponse.success("Lấy danh sách sản phẩm thành công", products));
         }
 
         @GetMapping("/{id}")
-        @Operation(summary = "Lấy thông tin chi tiết sản phẩm", description = "Lấy thông tin chi tiết của một sản phẩm theo ID")
         public ResponseEntity<ApiResponse<ProductResponse>> getProductById(
                         @Parameter(description = "ID của sản phẩm") @PathVariable Long id) {
                 ProductResponse product = productService.getProductById(id);
@@ -128,6 +129,23 @@ public class ProductController {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                         .body(ApiResponse.error("Lỗi hệ thống: " + e.getMessage()));
                 }
+        }
+
+        @GetMapping("/check-sku")
+        @Operation(summary = "Kiểm tra SKU đã tồn tại", description = "Kiểm tra xem SKU có bị trùng lặp hay không (Admin only). "
+                        +
+                        "Tham số excludeProductId dùng khi edit sản phẩm để bỏ qua chính sản phẩm đang edit.")
+        public ResponseEntity<Map<String, Object>> checkSkuExists(
+                        @Parameter(description = "SKU cần kiểm tra") @RequestParam String sku,
+                        @Parameter(description = "ID sản phẩm đang edit (nếu có)") @RequestParam(required = false) Long excludeProductId) {
+
+                boolean exists = productService.checkSkuExists(sku, excludeProductId);
+
+                Map<String, Object> response = new java.util.HashMap<>();
+                response.put("exists", exists);
+                response.put("message", exists ? "SKU đã tồn tại" : "SKU khả dụng");
+
+                return ResponseEntity.ok(response);
         }
 
         @DeleteMapping("/{id}")

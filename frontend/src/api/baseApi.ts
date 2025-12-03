@@ -1,5 +1,5 @@
 import axiosClient from './axiosClient';
-import type {IServerResponse} from "../types";
+import type { IServerResponse, IPageResponse } from "../types";
 
 export class BaseApi<T, P = unknown> {
     protected readonly resource: string;
@@ -8,8 +8,11 @@ export class BaseApi<T, P = unknown> {
         this.resource = resource;
     }
 
-    async getAll(params?: P): Promise<T[]> {
-        const response = await axiosClient.get<IServerResponse<T[]>>(`/${this.resource}`, { params });
+    // SỬA: Return type là IPageResponse<T> thay vì T[]
+    async getAll(params?: P): Promise<IPageResponse<T>> {
+        // Gọi API, Backend trả về PageResponse nằm trong data
+        const response = await axiosClient.get<IServerResponse<IPageResponse<T>>>(`/${this.resource}`, { params });
+       console.log(response)
         return response.data.data;
     }
 
@@ -31,7 +34,4 @@ export class BaseApi<T, P = unknown> {
     async delete(id: string | number): Promise<void> {
         await axiosClient.delete(`/${this.resource}/${id}`);
     }
-
 }
-
-

@@ -1,0 +1,109 @@
+/* Footer.css */
+
+/* Thiết lập font chữ cơ bản cho đẹp */
+.site-footer {
+  background-color: #ffffff; /* Nền trắng */
+  color: #333333; /* Chữ màu xám đậm cho dễ đọc */
+  padding: 60px 0 40px; /* Padding trên/dưới */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  border-top: 1px solid #e5e7eb; /* Đường kẻ mờ ngăn cách với body */
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* --- Phần Top (3 cột) --- */
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Để responsive trên mobile */
+  gap: 40px;
+  margin-bottom: 60px;
+  align-items: flex-start;
+}
+
+.footer-column {
+  flex: 1;
+  min-width: 200px; /* Đảm bảo không bị quá nhỏ trên mobile */
+  text-align: left;
+}
+
+/* Cột đầu tiên (Brand) rộng hơn chút để chứa câu slogan dài */
+.brand-column {
+
+  flex: 2; 
+  padding-right: 20px;
+}
+
+.footer-description {
+    margin-top: 40px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #666; /* Màu chữ nhạt hơn một chút cho mô tả */
+  max-width: 600px; /* Giới hạn chiều rộng để chữ không tràn lan */
+}
+
+.footer-heading {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #111;
+  text-transform: capitalize;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #555;
+  font-size: 14px;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: inline-block;
+}
+
+/* Hiệu ứng Hover: Màu tím đặc trưng PlayStation/Game */
+.footer-links a:hover {
+  color: #6200ea; /* Màu tím đậm */
+  transform: translateX(5px); /* Di chuyển nhẹ sang phải khi di chuột */
+}
+
+/* --- Phần Bottom (Copyright) --- */
+.footer-bottom {
+  border-top: 1px solid #f3f4f6;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.footer-bottom p {
+  font-size: 12px;
+  color: #888;
+  margin: 0;
+}
+
+/* --- Responsive cho Mobile --- */
+@media (max-width: 768px) {
+  .footer-top {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .brand-column {
+    padding-right: 0;
+    max-width: 100%;
+  }
+
+  .footer-heading {
+    margin-bottom: 10px;
+  }
+}

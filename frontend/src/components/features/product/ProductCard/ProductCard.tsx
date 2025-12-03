@@ -23,7 +23,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             <Link to={`/products/${product.productId}`}>
                 <img
                     // SỬA: dùng thumbnailUrl (nếu có) hoặc placeholder
-                    src={product.thumbnailUrl || 'https://placehold.co/400x400?text=No+Image'}
+                    src={product.productImageUrl || 'https://placehold.co/400x400?text=No+Image'}
                     // SỬA: dùng productName
                     alt={product.productName}
                     className="product-card-image"

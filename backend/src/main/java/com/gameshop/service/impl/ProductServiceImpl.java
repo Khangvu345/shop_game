@@ -36,9 +36,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public PageResponse<ProductResponse> getAllProducts(String keyword, Long categoryId, BigDecimal minPrice,
-            BigDecimal maxPrice, int page, int size) {
-        log.debug("Filter params - keyword: {}, categoryId: {}, minPrice: {}, maxPrice: {}, page: {}, size: {}",
-                keyword, categoryId, minPrice, maxPrice, page, size);
+            BigDecimal maxPrice, String status, int page, int size) {
+        log.debug(
+                "Filter params - keyword: {}, categoryId: {}, minPrice: {}, maxPrice: {}, status: {}, page: {}, size: {}",
+                keyword, categoryId, minPrice, maxPrice, status, page, size);
 
         // Lấy danh sách categoryIds (bao gồm children) nếu có categoryId
         List<Long> categoryIds = null;
@@ -52,7 +53,8 @@ public class ProductServiceImpl implements ProductService {
                 keyword,
                 categoryIds,
                 minPrice,
-                maxPrice);
+                maxPrice,
+                status);
 
         // Thực hiện query với Specification và Pagination
         Pageable pageable = PageRequest.of(page, size);
@@ -179,6 +181,28 @@ public class ProductServiceImpl implements ProductService {
         response.setCreatedAt(product.getCreatedAt());
         response.setUpdatedAt(product.getUpdatedAt());
         response.setProductImageUrl(product.getProductImageUrl());
+        response.setStockQuantity(product.getStockQuantity());
         return response;
+    }
+
+    @Override
+    public boolean checkSkuExists(String sku, Long excludeProductId) {
+        if (sku == null || sku.isBlank()) {
+            return false;
+        }
+
+        boolean exists = productRepository.existsBySku(sku);
+
+        // Nếu đang edit sản phẩm (excludeProductId != null), kiểm tra xem SKU có thuộc
+        // chính sản phẩm đó không
+        if (exists && excludeProductId != null) {
+            Product product = productRepository.findById(excludeProductId).orElse(null);
+            if (product != null && sku.equals(product.getSku())) {
+                // SKU này thuộc về chính sản phẩm đang edit → Không bị trùng
+                return false;
+            }
+        }
+
+        return exists;
     }
 }
