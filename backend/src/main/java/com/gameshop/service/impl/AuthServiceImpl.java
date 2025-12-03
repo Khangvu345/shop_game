@@ -2,11 +2,15 @@ package com.gameshop.service.impl;
 
 import com.gameshop.exception.BadRequestException;
 import com.gameshop.model.dto.request.LoginRequest;
+import com.gameshop.model.dto.request.RegisterRequest;
 import com.gameshop.model.dto.response.LoginResponse;
+import com.gameshop.model.dto.response.RegisterResponse;
 import com.gameshop.model.dto.response.ValidateTokenResponse;
 import com.gameshop.model.entity.Account;
+import com.gameshop.model.entity.Customer;
 import com.gameshop.model.entity.Party;
 import com.gameshop.repository.AccountRepository;
+import com.gameshop.repository.CustomerRepository;
 import com.gameshop.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +26,7 @@ import java.time.LocalDateTime;
 public class AuthServiceImpl implements AuthService {
 
     private final AccountRepository accountRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public LoginResponse login(LoginRequest request) {
@@ -62,6 +67,51 @@ public class AuthServiceImpl implements AuthService {
                 party.getFullName(),
                 account.getRole().name(),
                 token);
+    }
+
+    @Override
+    public RegisterResponse register(RegisterRequest request) {
+        log.info("Registration attempt for username: {}", request.username());
+
+        // 1. Kiểm tra username đã tồn tại chưa
+        if (accountRepository.existsByUsername(request.username())) {
+            throw new BadRequestException("Username đã tồn tại");
+        }
+
+        // 2. Tạo Customer entity (extends Party)
+        Customer customer = new Customer();
+        customer.setFullName(request.fullName());
+        customer.setEmail(request.email());
+        customer.setPhoneNumber(request.phoneNumber());
+        customer.setBirthDate(request.birthDate());
+        customer.setTier("Bronze"); // Default tier
+        customer.setPoints(0); // Default points
+
+        // Save customer (Party sẽ được save trước do cascade)
+        Customer savedCustomer = customerRepository.save(customer);
+
+        // 3. Tạo Account entity
+        Account account = new Account();
+        account.setParty(savedCustomer);
+        account.setUsername(request.username());
+        account.setPassword(request.password()); // TODO: Hash password in production
+        account.setRole(Account.Role.CUSTOMER);
+        account.setAccountStatus(Account.AccountStatus.Active);
+
+        // Save account
+        Account savedAccount = accountRepository.save(account);
+
+        log.info("Registration successful - username: {}, partyId: {}",
+                request.username(), savedCustomer.getId());
+
+        // 4. Return response
+        return new RegisterResponse(
+                savedAccount.getAccountId(),
+                savedAccount.getUsername(),
+                savedCustomer.getId(),
+                savedCustomer.getFullName(),
+                savedCustomer.getEmail(),
+                savedAccount.getRole().name());
     }
 
     @Override
