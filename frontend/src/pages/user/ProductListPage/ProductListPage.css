@@ -2,12 +2,12 @@
     display: grid;
     grid-template-areas:
         "products-list-sidebar products-list-content";
-    grid-template-columns: 1fr 8fr;
+    grid-template-columns: 1.5fr 7fr;
 }
 
 .page-sidebar{
     grid-area: products-list-sidebar;
-    padding: var(--spacing-lg);
+    
 }
 
 .product-page-content{

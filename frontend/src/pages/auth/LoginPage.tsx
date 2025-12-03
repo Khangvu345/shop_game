@@ -6,6 +6,8 @@ import { Button } from '../../components/ui/button/Button';
 import { Input } from '../../components/ui/input/Input';
 import { Card} from "../../components/ui/card/Card.tsx";
 
+import "./LoginPage.css";
+
 export function LoginPage() {
     const navigate = useNavigate();
     const location = useLocation()
@@ -31,44 +33,46 @@ export function LoginPage() {
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
-            <Card style={{ width: '400px', padding: '2rem' }}>
-                <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', fontSize: '1.5rem' }}>Đăng Nhập</h2>
+        <div className="login-page-container">
+            <Card className="login-card">
+                <h2 className="login-heading">Đăng Nhập</h2>
 
-                {error && <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
+                {error && <div className="error-message">{error}</div>}
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="login-form">
                     <Input
-                        label="Tên đăng nhập"
+                        placeholder="Tên đăng nhập"
                         name="username"
                         type="string"
                         value={formData.username}
                         onChange={handleChange}
                         required
+                        className="custom-input-style"
                     />
                     <Input
-                        label="Mật khẩu"
+                        placeholder="Mật khẩu"
                         name="password"
                         type="password"
                         value={formData.password}
                         onChange={handleChange}
                         required
+                        className="custom-input-style"
                     />
 
                     <Button
                         type="submit"
-                        style={{ width: '100%', marginTop: '1rem' }}
+                        className="login-button"
                         disabled={status === 'loading'}
                     >
                         {status === 'loading' ? 'Đang xử lý...' : 'Đăng nhập'}
                     </Button>
                 </form>
 
-                <div style={{ marginTop: '1rem', textAlign: 'center', fontSize: '0.9rem' }}>
-                    Chưa có tài khoản? <Link to="/register" style={{ color: 'var(--primary-color)' }}>Đăng ký ngay</Link>
+                <div className="login-link-group">
+                    Chưa có tài khoản? <Link to="/register" className="primary-link">Đăng ký ngay</Link>
                 </div>
-                <div style={{ marginTop: '0.5rem', textAlign: 'center', fontSize: '0.9rem' }}>
-                    <Link to="/" style={{ color: '#666' }}>← Về trang chủ</Link>
+                <div className="login-link-group back-home">
+                    <Link to="/" className="secondary-link">← Về trang chủ</Link>
                 </div>
 
 
