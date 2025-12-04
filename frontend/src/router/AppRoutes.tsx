@@ -15,7 +15,8 @@ import {CheckoutPage} from "../pages/user/CheckOut/CheckOut.tsx";
 import {OrderHistoryPage} from "../pages/user/OrderHistoryPage/OrderHistoryPage.tsx";
 import {OrderDetailPage} from "../pages/user/OrderDetail/OrderDetailPage.tsx";
 import {DashboardPage} from "../pages/admin/Dashboard/DashboardPage.tsx";
-// import { ProductDetailPage } from '../pages/ProductDetailPage'; // Sẽ thêm sau
+import {RegisterPage} from "../pages/auth/RegisterPage.tsx";
+
 
 export function AppRoutes() {
     return (
@@ -33,6 +34,7 @@ export function AppRoutes() {
             </Route>
             <Route path="/auth" element={<AuthRoute/>}>
                 <Route path={'login'} element={<LoginPage/>} />
+                <Route path={'register'} element={<RegisterPage/>} /> {/* Thêm dòng này */}
             </Route>
             <Route element={<AdminRoute/>}>
                 <Route path='/admin' element={<AdminLayout />}>
@@ -43,6 +45,5 @@ export function AppRoutes() {
                         <Route path='suppliers' element={<ManageSupplierPage/>} />
                 </Route>
             </Route>
-
         </Routes>    );
 }

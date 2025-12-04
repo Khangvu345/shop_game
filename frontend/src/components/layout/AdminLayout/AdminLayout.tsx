@@ -33,7 +33,7 @@ function AdminActionBar() {
     const handleLogout = async () => {
         if (user?.accountId) {
             await dispatch(logoutUser(user.accountId));
-            navigate('/login');
+            navigate('/auth/login');
         }
     };
     return (

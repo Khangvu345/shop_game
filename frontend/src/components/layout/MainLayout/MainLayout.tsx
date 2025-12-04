@@ -65,7 +65,7 @@ function ActionBar (){
                 <Link to={'/auth/login'}>
                     <Button size = "small" color = "0" >Đăng nhập</Button>
                 </Link>
-                <Link to={'/regíter'}>
+                <Link to={'/auth/register'}>
                     <Button size = "small" color = "0">Đăng ký</Button>
                 </Link>
             </>
