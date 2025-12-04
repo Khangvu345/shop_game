@@ -1,2 +1,2 @@
 # Tạo một file .env.local trong thư mục frontend và thêm các biến môi trường cần thiết bên dưới
-VITE_API_BASE_URL=
+VITE_API_BASE_URL=http://localhost:8080/api/v1
