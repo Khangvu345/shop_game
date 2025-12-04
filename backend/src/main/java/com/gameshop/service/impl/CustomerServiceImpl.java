@@ -2,6 +2,7 @@ package com.gameshop.service.impl;
 
 import com.gameshop.exception.BadRequestException;
 import com.gameshop.exception.ResourceNotFoundException;
+import com.gameshop.model.dto.common.PageResponse;
 import com.gameshop.model.dto.request.ChangePasswordRequest;
 import com.gameshop.model.dto.request.SaveAddressRequest;
 import com.gameshop.model.dto.request.UpdateCustomerProfileRequest;
@@ -18,12 +19,16 @@ import com.gameshop.repository.OrderRepository;
 import com.gameshop.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation cho customer profile và address management
@@ -135,9 +140,24 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CustomerListResponse> getAllCustomers(Pageable pageable) {
-        Page<Customer> customers = customerRepository.findAll(pageable);
-        return customers.map(this::buildCustomerListResponse);
+    public PageResponse<CustomerListResponse> getAllCustomers(int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("ASC")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Customer> customerPage = customerRepository.findAll(pageable);
+
+        List<CustomerListResponse> content = customerPage.getContent().stream()
+                .map(this::buildCustomerListResponse)
+                .collect(Collectors.toList());
+
+        return new PageResponse<>(
+                content,
+                customerPage.getTotalPages(),
+                customerPage.getTotalElements(),
+                customerPage.getNumber(),
+                customerPage.getSize());
     }
 
     @Override
@@ -151,9 +171,25 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CustomerListResponse> searchCustomers(String keyword, Pageable pageable) {
-        Page<Customer> customers = customerRepository.searchCustomers(keyword, pageable);
-        return customers.map(this::buildCustomerListResponse);
+    public PageResponse<CustomerListResponse> searchCustomers(String keyword, int page, int size, String sortBy,
+            String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("ASC")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Customer> customerPage = customerRepository.searchCustomers(keyword, pageable);
+
+        List<CustomerListResponse> content = customerPage.getContent().stream()
+                .map(this::buildCustomerListResponse)
+                .collect(Collectors.toList());
+
+        return new PageResponse<>(
+                content,
+                customerPage.getTotalPages(),
+                customerPage.getTotalElements(),
+                customerPage.getNumber(),
+                customerPage.getSize());
     }
 
     // ===== Private Helper Methods =====

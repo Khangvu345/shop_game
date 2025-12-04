@@ -1,13 +1,12 @@
 package com.gameshop.service;
 
+import com.gameshop.model.dto.common.PageResponse;
 import com.gameshop.model.dto.request.ChangePasswordRequest;
 import com.gameshop.model.dto.request.SaveAddressRequest;
 import com.gameshop.model.dto.request.UpdateCustomerProfileRequest;
 import com.gameshop.model.dto.response.AddressResponse;
 import com.gameshop.model.dto.response.CustomerListResponse;
 import com.gameshop.model.dto.response.CustomerProfileResponse;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 /**
  * Service interface cho customer profile và address management
@@ -61,10 +60,13 @@ public interface CustomerService {
     /**
      * Lấy danh sách tất cả customers (Admin)
      * 
-     * @param pageable Phân trang
+     * @param page    Số trang (0-indexed)
+     * @param size    Kích thước trang
+     * @param sortBy  Trường để sắp xếp
+     * @param sortDir Hướng sắp xếp (ASC/DESC)
      * @return Danh sách customers với statistics
      */
-    Page<CustomerListResponse> getAllCustomers(Pageable pageable);
+    PageResponse<CustomerListResponse> getAllCustomers(int page, int size, String sortBy, String sortDir);
 
     /**
      * Lấy chi tiết customer theo ID (Admin)
@@ -77,9 +79,13 @@ public interface CustomerService {
     /**
      * Tìm kiếm customers theo keyword (Admin)
      * 
-     * @param keyword  Từ khóa tìm kiếm (fullName, email, phone)
-     * @param pageable Phân trang
+     * @param keyword Từ khóa tìm kiếm (fullName, email, phone)
+     * @param page    Số trang (0-indexed)
+     * @param size    Kích thước trang
+     * @param sortBy  Trường để sắp xếp
+     * @param sortDir Hướng sắp xếp (ASC/DESC)
      * @return Danh sách customers tìm được
      */
-    Page<CustomerListResponse> searchCustomers(String keyword, Pageable pageable);
+    PageResponse<CustomerListResponse> searchCustomers(String keyword, int page, int size, String sortBy,
+            String sortDir);
 }
