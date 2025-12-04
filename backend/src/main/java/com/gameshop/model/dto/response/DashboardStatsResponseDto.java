@@ -45,6 +45,11 @@ public class DashboardStatsResponseDto {
     private Integer lowStockCount;
 
     /**
+     * Revenue breakdown with sales, cost, and profit analysis
+     */
+    private RevenueBreakdownDto revenueBreakdown;
+
+    /**
      * Time period for these statistics
      */
     private PeriodDto period;

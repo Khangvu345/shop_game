@@ -47,7 +47,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
 
         /**
          * Tính tổng doanh thu trong khoảng thời gian (Dashboard)
-         * Chỉ tính các đơn hàng đã thanh toán
+         * Tính các đơn hàng đã thanh toán (PAID) và COD đã thu tiền (COD_COLLECTED)
          * 
          * @param startDate Ngày bắt đầu
          * @param endDate   Ngày kết thúc
@@ -55,8 +55,26 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
          */
         @Query("SELECT COALESCE(SUM(o.grandTotal), 0) FROM Order o " +
                         "WHERE o.createdAt BETWEEN :startDate AND :endDate " +
-                        "AND o.paymentStatus = 'PAID'")
+                        "AND (o.paymentStatus = 'PAID' OR o.paymentStatus = 'COD_COLLECTED')")
         BigDecimal sumRevenueByDateRange(@Param("startDate") java.time.LocalDateTime startDate,
+                        @Param("endDate") java.time.LocalDateTime endDate);
+
+        /**
+         * Tính tổng chi phí (giá vốn) trong khoảng thời gian (Dashboard)
+         * Tính tổng (quantity × purchasePrice) của tất cả sản phẩm trong đơn hàng đã
+         * thanh toán (PAID hoặc COD_COLLECTED)
+         * 
+         * @param startDate Ngày bắt đầu
+         * @param endDate   Ngày kết thúc
+         * @return Tổng chi phí
+         */
+        @Query("SELECT COALESCE(SUM(ol.quantity * p.purchasePrice), 0) " +
+                        "FROM OrderLine ol " +
+                        "JOIN ol.product p " +
+                        "JOIN ol.order o " +
+                        "WHERE o.createdAt BETWEEN :startDate AND :endDate " +
+                        "AND (o.paymentStatus = 'PAID' OR o.paymentStatus = 'COD_COLLECTED')")
+        BigDecimal sumCostByDateRange(@Param("startDate") java.time.LocalDateTime startDate,
                         @Param("endDate") java.time.LocalDateTime endDate);
 
         /**

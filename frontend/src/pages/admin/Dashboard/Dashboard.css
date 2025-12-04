@@ -25,7 +25,7 @@
     background: white;
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     border: 1px solid #eee;
     transition: transform 0.2s;
 }
@@ -55,14 +55,29 @@
 }
 
 /* Màu sắc riêng cho từng card */
-.stat-card.revenue .stat-value { color: var(--color-secondary-0); }
-.stat-card.orders .stat-value { color: #3b82f6; }
-.stat-card.customers .stat-value { color: #8b5cf6; }
-.stat-card.inventory .stat-value { color: #f59e0b; }
+.stat-card.revenue .stat-value {
+    color: var(--color-secondary-0);
+}
+
+.stat-card.orders .stat-value {
+    color: #3b82f6;
+}
+
+.stat-card.customers .stat-value {
+    color: #8b5cf6;
+}
+
+.stat-card.inventory .stat-value {
+    color: #f59e0b;
+}
+
+.stat-card.profit .stat-value {
+    color: #667eea;
+}
 
 .charts-section {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 20px;
 }
 
