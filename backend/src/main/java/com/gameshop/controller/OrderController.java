@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 
 @RestController
@@ -31,8 +32,10 @@ public class OrderController {
 
     @PostMapping
     @Operation(summary = "Create new order", description = "Create a new order with COD or VNPay payment method")
-    public ResponseEntity<CreateOrderResponse> createOrder(@Valid @RequestBody CreateOrderRequest request) {
-        CreateOrderResponse response = orderService.createOrder(request);
+    public ResponseEntity<CreateOrderResponse> createOrder(
+            @Valid @RequestBody CreateOrderRequest request,
+            Principal principal) {
+        CreateOrderResponse response = orderService.createOrder(request, principal.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -55,17 +58,19 @@ public class OrderController {
     @GetMapping("/my-orders")
     @Operation(summary = "Get customer orders", description = "Get order history for a specific customer")
     public ResponseEntity<OrderListResponse> getMyOrders(
-            @RequestParam Long customerId, // In real app, get from authenticated user
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        OrderListResponse response = orderService.getCustomerOrders(customerId, page, size);
+            @RequestParam(defaultValue = "10") int size,
+            Principal principal) {
+        OrderListResponse response = orderService.getMyOrders(principal.getName(), page, size);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get order details", description = "Get detailed information about a specific order")
-    public ResponseEntity<OrderResponse> getOrderDetail(@PathVariable Long id) {
-        OrderResponse response = orderService.getOrderResponse(id);
+    public ResponseEntity<OrderResponse> getOrderDetail(
+            @PathVariable Long id,
+            Principal principal) {
+        OrderResponse response = orderService.getOrderDetail(id, principal.getName());
         return ResponseEntity.ok(response);
     }
 
@@ -91,8 +96,9 @@ public class OrderController {
     @Operation(summary = "Cancel order", description = "Cancel order and restore stock automatically")
     public ResponseEntity<OrderResponse> cancelOrder(
             @PathVariable Long id,
-            @Valid @RequestBody CancelOrderRequest request) {
-        OrderResponse response = orderService.cancelOrder(id, request);
+            @Valid @RequestBody CancelOrderRequest request,
+            Principal principal) {
+        OrderResponse response = orderService.cancelOrder(id, request, principal.getName());
         return ResponseEntity.ok(response);
     }
 }

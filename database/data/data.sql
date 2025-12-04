@@ -923,11 +923,13 @@ INSERT INTO review_moderation (review_id, moderator_party_id, status, reason_cod
 -- CẬP NHẬT STOCK_QUANTITY TỪ STOCK_MOVEMENT
 -- =====================================================================
 -- Tính tổng stock từ lịch sử movements và cập nhật vào bảng product
+SET SQL_SAFE_UPDATES = 0;
 UPDATE product p
 SET stock_quantity = COALESCE((
     SELECT SUM(quantity_delta)
     FROM stock_movement sm
     WHERE sm.product_id = p.product_id
 ), 0);
+SET SQL_SAFE_UPDATES = 1;
 
 SELECT '=== IMPORT DỮ LIỆU SẢN PHẨM VÀ MẪU THÀNH CÔNG ===' AS Status;

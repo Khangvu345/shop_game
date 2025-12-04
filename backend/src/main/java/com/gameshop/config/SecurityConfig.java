@@ -63,15 +63,33 @@ public class SecurityConfig {
                         // Public endpoints - Category (READ only)
                         .requestMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
 
+                        // Admin-only - SKU validation endpoint (must be before public GET products/**)
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products/check-sku").hasRole("ADMIN")
+
                         // Public endpoints - Product (READ only)
                         .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
 
-                        // Public endpoints - Order (create and view own orders)
-                        .requestMatchers(HttpMethod.POST, "/api/v1/orders").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/orders/my-orders").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/orders/{id}").permitAll()
+                        // Customer endpoints - Order management (require authentication)
+                        .requestMatchers(HttpMethod.POST, "/api/v1/orders").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/orders/my-orders").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/orders/{id}").hasRole("CUSTOMER")
 
-                        // Admin-only endpoints - All /admin/* paths
+                        // Admin-only endpoints - Dashboard
+                        .requestMatchers("/api/v1/admin/dashboard/**").hasRole("ADMIN")
+
+                        // Admin-only endpoints - Supplier management
+                        .requestMatchers("/api/v1/admin/suppliers/**").hasRole("ADMIN")
+
+                        // Admin-only endpoints - Goods Receipt management
+                        .requestMatchers("/api/v1/admin/goods-receipts/**").hasRole("ADMIN")
+
+                        // Admin-only endpoints - Shipment management
+                        .requestMatchers("/api/v1/admin/shipments/**").hasRole("ADMIN")
+
+                        // Admin-only endpoints - Stock Movement management
+                        .requestMatchers("/api/v1/admin/stock-movements/**").hasRole("ADMIN")
+
+                        // Admin-only endpoints - All other /admin/* paths (fallback)
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
 
                         // Admin-only endpoints - Category management
@@ -87,7 +105,7 @@ public class SecurityConfig {
                         // Admin-only endpoints - Order management
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/orders/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/orders/{id}/cancel").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/orders/{id}/cancel").hasAnyRole("ADMIN", "CUSTOMER")
 
                         // All other requests require authentication
                         .anyRequest().authenticated())

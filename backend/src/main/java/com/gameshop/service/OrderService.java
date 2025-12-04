@@ -14,6 +14,7 @@ import com.gameshop.model.enums.OrderStatus;
 import com.gameshop.model.enums.PaymentMethod;
 import com.gameshop.model.enums.PaymentStatus;
 import com.gameshop.model.enums.StockMovementReason;
+import com.gameshop.repository.AccountRepository;
 import com.gameshop.repository.CustomerRepository;
 import com.gameshop.repository.OrderRepository;
 import com.gameshop.repository.ProductRepository;
@@ -41,29 +42,48 @@ public class OrderService {
     private final ProductRepository productRepo;
     private final OrderRepository orderRepo;
     private final StockMovementService stockMovementService;
+    private final AccountRepository accountRepo;
 
     @Autowired
     public OrderService(CustomerRepository customerRepo,
             ProductRepository productRepo,
             OrderRepository orderRepo,
-            StockMovementService stockMovementService) {
+            StockMovementService stockMovementService,
+            AccountRepository accountRepo) {
         this.customerRepo = customerRepo;
         this.productRepo = productRepo;
         this.orderRepo = orderRepo;
         this.stockMovementService = stockMovementService;
+        this.accountRepo = accountRepo;
     }
-        
 
-    public CreateOrderResponse createOrder(CreateOrderRequest request) {
-        // 1. Get customer
-        Customer customer = customerRepo.findById(request.customerId())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
+    // Helper method: Get Customer from accountId
+    private Customer getCustomerFromAccountId(String accountIdStr) {
+        Long accountId = Long.parseLong(accountIdStr);
+        Account account = accountRepo.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Tài khoản không tồn tại"));
+
+        // Use customerRepo to avoid Hibernate proxy instanceof issues
+        return customerRepo.findById(account.getParty().getId())
+                .orElseThrow(() -> new RuntimeException("Chỉ khách hàng mới có thể thực hiện thao tác này"));
+    }
+
+    // Helper method: Validate order ownership
+    private void validateOrderOwnership(Order order, Customer customer) {
+        if (!order.getCustomer().getId().equals(customer.getId())) {
+            throw new RuntimeException("Bạn không có quyền truy cập đơn hàng này");
+        }
+    }
+
+    public CreateOrderResponse createOrder(CreateOrderRequest request, String accountIdStr) {
+        // 1. Get customer from authenticated account
+        Customer customer = getCustomerFromAccountId(accountIdStr);
 
         Order order = new Order();
         order.setCustomer(customer);
 
         // 2. Map Address
-        order.setShippingAddress(mapAddress(request.address()));
+        order.setShippingAddress(mapAddress(request.address(), order));
 
         // 3. Set payment method and initial statuses
         PaymentMethod paymentMethod = PaymentMethod.valueOf(request.paymentMethod().toUpperCase());
@@ -80,6 +100,7 @@ public class OrderService {
         BigDecimal grandTotal = BigDecimal.ZERO;
 
         // 4. Process order items
+        int lineNo = 1; // Line number counter
         for (OrderItemDto itemDto : request.items()) {
             Product product = productRepo.findById(itemDto.productId())
                     .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại"));
@@ -88,9 +109,13 @@ public class OrderService {
                 throw new RuntimeException("Sản phẩm " + product.getName() + " không đủ hàng!");
             }
 
-    
-
             OrderLine line = new OrderLine();
+
+            // Initialize composite key (will be set properly after order is saved)
+            OrderLinePK linePK = new OrderLinePK();
+            linePK.setLineNo(lineNo++);
+            line.setId(linePK);
+
             line.setOrder(order);
             line.setProduct(product);
             line.setQuantity(itemDto.quantity());
@@ -124,8 +149,21 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
     }
 
+    public OrderResponse getOrderDetail(Long id, String accountIdStr) {
+        Customer customer = getCustomerFromAccountId(accountIdStr);
+        Order order = orderRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+
+        // Validate ownership
+        validateOrderOwnership(order, customer);
+
+        return mapToOrderResponse(order);
+    }
+
+    // Keep old method for admin use
     public OrderResponse getOrderResponse(Long id) {
-        Order order = getOrderDetail(id);
+        Order order = orderRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
         return mapToOrderResponse(order);
     }
 
@@ -170,9 +208,11 @@ public class OrderService {
                 orderPage.getSize());
     }
 
-    public OrderListResponse getCustomerOrders(Long customerId, int page, int size) {
+    public OrderListResponse getMyOrders(String accountIdStr, int page, int size) {
+        Customer customer = getCustomerFromAccountId(accountIdStr);
+
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Order> orderPage = orderRepo.findByCustomerId(customerId, pageable);
+        Page<Order> orderPage = orderRepo.findByCustomerId(customer.getId(), pageable);
 
         List<OrderResponse> orderResponses = orderPage.getContent().stream()
                 .map(this::mapToOrderResponse)
@@ -215,8 +255,13 @@ public class OrderService {
         return mapToOrderResponse(order);
     }
 
-    public OrderResponse cancelOrder(Long orderId, CancelOrderRequest request) {
-        Order order = getOrderDetail(orderId);
+    public OrderResponse cancelOrder(Long orderId, CancelOrderRequest request, String accountIdStr) {
+        Customer customer = getCustomerFromAccountId(accountIdStr);
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+
+        // Validate ownership (customer can only cancel their own orders)
+        validateOrderOwnership(order, customer);
 
         // Validate cancellation
         if (order.getStatus() == OrderStatus.SHIPPED ||
@@ -251,11 +296,12 @@ public class OrderService {
     }
 
     // Helper methods
-    private OrderAddress mapAddress(OrderAddressDto dto) {
+    private OrderAddress mapAddress(OrderAddressDto dto, Order order) {
         if (dto == null)
             return null;
 
         OrderAddress address = new OrderAddress();
+        address.setOrder(order); // Set bidirectional relationship for @MapsId
         address.setReceiverName(dto.recipientName());
         address.setReceiverPhone(dto.phone());
         address.setLine1(dto.street());

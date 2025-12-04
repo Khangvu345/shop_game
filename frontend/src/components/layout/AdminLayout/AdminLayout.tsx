@@ -1,13 +1,13 @@
 import React from 'react';
-import {Outlet, NavLink, useNavigate} from 'react-router-dom';
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 
 import './AdminLayout.css'
-import {Navbar} from "../Navbar/Navbar.tsx";
-import {Button} from "../../ui/button/Button.tsx";
-import {useAppDispatch, useAppSelector} from "../../../store/hooks.ts";
-import {logoutUser} from "../../../store/slices/Auth/authSlice.ts";
+import { Navbar } from "../Navbar/Navbar.tsx";
+import { Button } from "../../ui/button/Button.tsx";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks.ts";
+import { logoutUser } from "../../../store/slices/Auth/authSlice.ts";
 
-function AdminNavLinks () {
+function AdminNavLinks() {
 
 
 
@@ -24,7 +24,7 @@ function AdminNavLinks () {
     )
 }
 
-function AdminActionBar (){
+function AdminActionBar() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -44,14 +44,14 @@ function AdminActionBar (){
     )
 }
 
-export function AdminLayout(){
+export function AdminLayout() {
     return (
         <div className={'admin-container'}>
             <header className={'admin-header'}>
                 <h1>Quản li cơ sở dữ liệu</h1>
             </header>
             <aside className={'admin-sidebar'}>
-                <Navbar styleNav={"-vertical"} links={<AdminNavLinks />} actions={<AdminActionBar/>}></Navbar>
+                <Navbar styleNav={"-vertical"} links={<AdminNavLinks />} actions={<AdminActionBar />}></Navbar>
             </aside>
             <main className={'admin-main-content'}>
                 <Outlet />

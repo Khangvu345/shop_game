@@ -1,6 +1,7 @@
 package com.gameshop.controller;
 
 import com.gameshop.model.dto.common.ApiResponse;
+import com.gameshop.model.dto.common.PageResponse;
 import com.gameshop.model.dto.request.CreateStockAdjustmentRequest;
 import com.gameshop.model.dto.response.StockMovementResponse;
 import com.gameshop.model.enums.StockMovementReason;
@@ -11,84 +12,71 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin/stock-movements")
 @RequiredArgsConstructor
-@Tag(name = "Stock Movement Management", description = "APIs quản lý biến động kho hàng (Admin)")
+@Tag(name = "Stock Movement Management", description = "APIs quản lý lịch sử tồn kho (Admin)")
 public class StockMovementController {
 
-    private final StockMovementService stockMovementService;
+        private final StockMovementService stockMovementService;
 
-    @GetMapping("/product/{productId}")
-    @Operation(summary = "Lấy lịch sử biến động kho của sản phẩm",
-               description = "Lấy tất cả các biến động kho của một sản phẩm, sắp xếp theo thời gian giảm dần")
-    public ResponseEntity<ApiResponse<List<StockMovementResponse>>> getStockHistory(
-            @Parameter(description = "ID của sản phẩm")
-            @PathVariable Long productId
-    ) {
-        List<StockMovementResponse> movements = stockMovementService.getStockHistory(productId);
-        return ResponseEntity.ok(
-                ApiResponse.success("Lấy lịch sử biến động kho thành công", movements)
-        );
-    }
+        @GetMapping("/product/{productId}")
+        @Operation(summary = "Xem lịch sử tồn kho của sản phẩm", description = "Lấy danh sách các lần thay đổi tồn kho của một sản phẩm (có phân trang)")
+        public ResponseEntity<ApiResponse<PageResponse<StockMovementResponse>>> getStockHistory(
+                        @Parameter(description = "ID của sản phẩm") @PathVariable Long productId,
+                        @Parameter(description = "Số trang (bắt đầu từ 0)") @RequestParam(defaultValue = "0") int page,
+                        @Parameter(description = "Số lượng mỗi trang") @RequestParam(defaultValue = "10") int size) {
+                PageResponse<StockMovementResponse> history = stockMovementService.getStockHistory(productId, page,
+                                size);
+                return ResponseEntity.ok(
+                                ApiResponse.success("Lấy lịch sử tồn kho thành công", history));
+        }
 
-    @GetMapping("/date-range")
-    @Operation(summary = "Lấy biến động kho theo khoảng thời gian",
-               description = "Lấy tất cả các biến động kho trong khoảng thời gian, sắp xếp theo thời gian giảm dần")
-    public ResponseEntity<ApiResponse<List<StockMovementResponse>>> getMovementsByDateRange(
-            @Parameter(description = "Thời gian bắt đầu (ISO format: yyyy-MM-dd'T'HH:mm:ss)")
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @Parameter(description = "Thời gian kết thúc (ISO format: yyyy-MM-dd'T'HH:mm:ss)")
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate
-    ) {
-        List<StockMovementResponse> movements = stockMovementService.getMovementsByDateRange(startDate, endDate);
-        return ResponseEntity.ok(
-                ApiResponse.success("Lấy biến động kho theo khoảng thời gian thành công", movements)
-        );
-    }
+        @GetMapping("/filter/date-range")
+        @Operation(summary = "Lọc lịch sử theo khoảng thời gian", description = "Lấy danh sách thay đổi tồn kho trong khoảng thời gian (có phân trang)")
+        public ResponseEntity<ApiResponse<PageResponse<StockMovementResponse>>> getMovementsByDateRange(
+                        @Parameter(description = "Thời gian bắt đầu (yyyy-MM-dd HH:mm:ss)") @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
+                        @Parameter(description = "Thời gian kết thúc (yyyy-MM-dd HH:mm:ss)") @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate,
+                        @Parameter(description = "Số trang (bắt đầu từ 0)") @RequestParam(defaultValue = "0") int page,
+                        @Parameter(description = "Số lượng mỗi trang") @RequestParam(defaultValue = "10") int size) {
+                PageResponse<StockMovementResponse> movements = stockMovementService.getMovementsByDateRange(startDate,
+                                endDate, page, size);
+                return ResponseEntity.ok(
+                                ApiResponse.success("Lọc lịch sử tồn kho thành công", movements));
+        }
 
-    @GetMapping("/reason/{reason}")
-    @Operation(summary = "Lấy biến động kho theo lý do",
-               description = "Lấy tất cả các biến động kho theo lý do cụ thể (GoodsReceipt, Sale, Return, DamagedAdjustment, StocktakeAdjustment, ManualAdjustment)")
-    public ResponseEntity<ApiResponse<List<StockMovementResponse>>> getMovementsByReason(
-            @Parameter(description = "Lý do biến động kho")
-            @PathVariable StockMovementReason reason
-    ) {
-        List<StockMovementResponse> movements = stockMovementService.getMovementsByReason(reason);
-        return ResponseEntity.ok(
-                ApiResponse.success("Lấy biến động kho theo lý do thành công", movements)
-        );
-    }
+        @GetMapping("/filter/reason")
+        @Operation(summary = "Lọc lịch sử theo lý do", description = "Lấy danh sách thay đổi tồn kho theo lý do cụ thể (có phân trang)")
+        public ResponseEntity<ApiResponse<PageResponse<StockMovementResponse>>> getMovementsByReason(
+                        @Parameter(description = "Lý do thay đổi (ImportGoods, OrderPlacement, OrderCancellation, etc.)") @RequestParam StockMovementReason reason,
+                        @Parameter(description = "Số trang (bắt đầu từ 0)") @RequestParam(defaultValue = "0") int page,
+                        @Parameter(description = "Số lượng mỗi trang") @RequestParam(defaultValue = "10") int size) {
+                PageResponse<StockMovementResponse> movements = stockMovementService.getMovementsByReason(reason, page,
+                                size);
+                return ResponseEntity.ok(
+                                ApiResponse.success("Lọc lịch sử tồn kho thành công", movements));
+        }
 
-    @PostMapping("/adjust")
-    @Operation(summary = "Điều chỉnh kho thủ công",
-               description = "Admin điều chỉnh số lượng kho thủ công (tăng/giảm) với lý do: ManualAdjustment, DamagedAdjustment, hoặc StocktakeAdjustment")
-    public ResponseEntity<ApiResponse<StockMovementResponse>> adjustStockManually(
-            @Valid @RequestBody CreateStockAdjustmentRequest request
-    ) {
-        StockMovementResponse movement = stockMovementService.adjustStockManually(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                ApiResponse.success("Điều chỉnh kho thủ công thành công", movement)
-        );
-    }
+        @PostMapping("/adjust")
+        @Operation(summary = "Điều chỉnh tồn kho thủ công", description = "Admin điều chỉnh số lượng tồn kho (kiểm kê, hư hỏng, v.v.)")
+        public ResponseEntity<ApiResponse<StockMovementResponse>> adjustStock(
+                        @Valid @RequestBody CreateStockAdjustmentRequest request) {
+                StockMovementResponse response = stockMovementService.adjustStockManually(request);
+                return ResponseEntity.ok(
+                                ApiResponse.success("Điều chỉnh tồn kho thành công", response));
+        }
 
-    @GetMapping("/current-stock/{productId}")
-    @Operation(summary = "Lấy số lượng tồn kho hiện tại",
-               description = "Lấy số lượng tồn kho hiện tại của một sản phẩm")
-    public ResponseEntity<ApiResponse<Integer>> getCurrentStock(
-            @Parameter(description = "ID của sản phẩm")
-            @PathVariable Long productId
-    ) {
-        Integer currentStock = stockMovementService.getCurrentStock(productId);
-        return ResponseEntity.ok(
-                ApiResponse.success("Lấy số lượng tồn kho thành công", currentStock)
-        );
-    }
+        @GetMapping("/product/{productId}/current")
+        @Operation(summary = "Xem tồn kho hiện tại", description = "Lấy số lượng tồn kho hiện tại của một sản phẩm")
+        public ResponseEntity<ApiResponse<Integer>> getCurrentStock(
+                        @Parameter(description = "ID của sản phẩm") @PathVariable Long productId) {
+                Integer currentStock = stockMovementService.getCurrentStock(productId);
+                return ResponseEntity.ok(
+                                ApiResponse.success("Lấy tồn kho hiện tại thành công", currentStock));
+        }
 }

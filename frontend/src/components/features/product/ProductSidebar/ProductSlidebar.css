@@ -1,13 +1,13 @@
 
 /* Sidebar ngoài cùng */
 .page-sidebar {
-    margin-top: 1rem;
+    margin: 1rem 15px 0 15px;
     padding: 20px 10px 10px var(--spacing-md);
     background-color: var(--color-primary-0); 
     max-width: 300px;
     border-right: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: var(--border-radius-sm);
+    border-radius: 10px;
     min-height: 80vh;
     height: auto; 
 }
@@ -96,6 +96,7 @@
 }
 
 /* Nút Xóa Bộ Lọc */
+
 .page-sidebar .btn-secondary {
     margin-top: 3px;
     margin-left: 0px;

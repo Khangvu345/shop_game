@@ -17,12 +17,40 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     List<Product> findByCategory_CategoryId(Long categoryId);
 
     List<Product> findByCategory_CategoryIdIn(List<Long> categoryIds);
+
+    /**
+     * Calculate total inventory (sum of stock quantities) for active products
+     * 
+     * @return Total stock quantity across all active products
+     */
+    @Query("SELECT COALESCE(SUM(p.stockQuantity), 0) FROM Product p " +
+            "WHERE p.status = 'Active'")
+    Long sumTotalInventory();
+
+    /**
+     * Count products with low stock (below threshold)
+     * 
+     * @param threshold Stock quantity threshold
+     * @return Count of products with stock below threshold
+     */
+    @Query("SELECT COUNT(p) FROM Product p " +
+            "WHERE p.stockQuantity < :threshold AND p.status = 'Active'")
+    Integer countLowStockProducts(@Param("threshold") Integer threshold);
+
     @Modifying
     @Query(value = """
-        UPDATE product p
-        JOIN order_line ol ON ol.product_id = p.product_id
-        SET p.stock_quantity = p.stock_quantity + ol.quantity
-        WHERE ol.order_id = :orderId
-        """, nativeQuery = true)
+            UPDATE product p
+            JOIN order_line ol ON ol.product_id = p.product_id
+            SET p.stock_quantity = p.stock_quantity + ol.quantity
+            WHERE ol.order_id = :orderId
+            """, nativeQuery = true)
     int restoreStockByOrderId(@Param("orderId") Long orderId);
+
+    /**
+     * Check if a product with the given SKU already exists
+     * 
+     * @param sku Product SKU to check
+     * @return true if SKU exists, false otherwise
+     */
+    boolean existsBySku(String sku);
 }

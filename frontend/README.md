@@ -242,4 +242,5 @@ Chúng ta sử dụng một luồng Git đơn giản dựa trên "feature branch
 6.  **Cập nhật:**
     * Luôn kéo code mới nhất từ `main` về trước khi bắt đầu một tính năng mới (Quay lại Bước 2).
 
+
 ---

@@ -28,7 +28,7 @@ export interface IProduct {
 
     categoryId: number;
     categoryName?: string;
-    thumbnailUrl?: string;
+    productImageUrl?: string;
     suppliers?: ISupplier[];
 }
 
@@ -74,7 +74,7 @@ export interface IReviewModeration {
 }
 
 
-    export interface IServerProductFilters {
+export interface IServerProductFilters {
     keyword?: string;
     categoryId?: number;
     minPrice?: number;

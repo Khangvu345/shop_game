@@ -15,29 +15,41 @@ export interface IOrder {
     paymentMethod: TPaymentMethod;
     paymentStatus: TPaymentStatus;
 
+    items?:IOrderItem[];
+
     subtotal: number;
     discountAmount?: number;
     taxAmount?: number;
-    grandTotal?: number;
+    grandTotal: number;
 
     notes?: string;
 
+    createdAt: string,
+    updatedAt?: string,
+
     cancelledAt?: string;
-    cancelledReason?: string;
+    cancelReason?: string;
     cancelledBy?: string;
 
     customer?: ICustomer;
-    orderLines?: IOrderLine[];
-    orderAddress?: IOrderAddress;
+    address?: IShippingAddress;
     payments?: IPayment[];
     shipments?: IShipment[];
 }
-export interface IOrderLine {
-    orderId: number;
-    lineNo: number;
+export interface IShippingAddress {
+    recipientName: string,
+    phone: string,
+    street: string,
+    ward: string,
+    city: string
+}
+
+export interface IOrderItem {
+    orderId?: number;
+    lineNo?: number;
     productId: number;
     quantity: number;
-    unitPriceAtOrder: number;
+    price: number;
     lineTotal: number;
 
     productName?: string;
@@ -45,16 +57,6 @@ export interface IOrderLine {
     thumbnailUrl?: string;
 }
 
-export interface IOrderAddress {
-    orderId: number;
-    receiverName: string;
-    receiverPhone: string;
-    line1: string;
-    line2?: string;
-    district?: string;
-    city: string;
-    postalCode?: string;
-}
 
 export interface IPayment {
     paymentId: number;
@@ -66,14 +68,14 @@ export interface IPayment {
 }
 
 export interface IShipment {
-    shipmentId: number;
-    orderId: number;
-    carrier?: string;
-    trackingNo?: string;
-    estimatedDelivery?: string;
-    shippedAt?: string;
-    deliveredAt?: string;
-    status: TShipmentStatus;
+    shipmentId: number,
+    orderId: number,
+    carrier: string,
+    trackingNo: string,
+    estimatedDelivery: string,
+    shippedAt: string,
+    deliveredAt: string,
+    "status": TShipmentStatus
 }
 
 
@@ -94,7 +96,6 @@ export interface IOrderAddressPayload {
 }
 
 export interface ICreateOrderPayload {
-    customerId: number;
     paymentMethod: string;
     address: IOrderAddressPayload;
     items: IOrderItemPayload[];

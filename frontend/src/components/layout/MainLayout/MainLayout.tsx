@@ -7,6 +7,7 @@ import {Button} from "../../ui/button/Button";
 import './MainLayout.css'
 import {Logo} from "../../ui/logo/Logo.tsx";
 import {logoutUser} from "../../../store/slices/Auth/authSlice.ts";
+import Footer from '../Footer/Footer.tsx';
 
 
 
@@ -38,20 +39,19 @@ function ActionBar (){
     const handleLogout = async () => {
         if (user?.accountId) {
             await dispatch(logoutUser(user.accountId));
-            navigate('/login');
+            navigate('/auth/login');
         }
     };
 
-    const actionReturn = () => {
-        return(<></>)
-    }
+
     if (user){
         return (
             <>
                 <Link to={'/cart'}>
                     giỏ hàng
                 </Link>
-                <Button>Profile</Button>
+                <Button onClick={() => {navigate('/my-orders');
+                }}>Profile</Button>
                 <Button onClick={handleLogout}>Đăng xuất</Button>
 
             </>
@@ -62,7 +62,7 @@ function ActionBar (){
                 <Link to={'/cart'}>
                     giỏ hàng
                 </Link>
-                <Link to={'/login'}>
+                <Link to={'/auth/login'}>
                     <Button size = "small" color = "0" >Đăng nhập</Button>
                 </Link>
                 <Link to={'/regíter'}>
@@ -88,7 +88,10 @@ export function MainLayout() {
                 <Outlet />
             </main>
 
-            <footer className={'main-footer'}></footer>
+            <footer className={'main-footer'}>
+                <Footer />
+            </footer>
+                
 
         </div>
     );

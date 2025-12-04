@@ -14,8 +14,8 @@ public class ProductSpecification {
             String keyword,
             List<Long> categoryIds,
             BigDecimal minPrice,
-            BigDecimal maxPrice
-    ) {
+            BigDecimal maxPrice,
+            String status) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -24,9 +24,7 @@ public class ProductSpecification {
                 predicates.add(
                         criteriaBuilder.like(
                                 criteriaBuilder.lower(root.get("productName")),
-                                "%" + keyword.trim().toLowerCase() + "%"
-                        )
-                );
+                                "%" + keyword.trim().toLowerCase() + "%"));
             }
 
             // Filter by category IDs (bao gồm cả children)
@@ -37,15 +35,19 @@ public class ProductSpecification {
             // Filter by minPrice (chỉ filter khi > 0)
             if (minPrice != null && minPrice.compareTo(BigDecimal.ZERO) > 0) {
                 predicates.add(
-                        criteriaBuilder.greaterThanOrEqualTo(root.get("listPrice"), minPrice)
-                );
+                        criteriaBuilder.greaterThanOrEqualTo(root.get("listPrice"), minPrice));
             }
 
             // Filter by maxPrice (chỉ filter khi > 0)
             if (maxPrice != null && maxPrice.compareTo(BigDecimal.ZERO) > 0) {
                 predicates.add(
-                        criteriaBuilder.lessThanOrEqualTo(root.get("listPrice"), maxPrice)
-                );
+                        criteriaBuilder.lessThanOrEqualTo(root.get("listPrice"), maxPrice));
+            }
+
+            // Filter by status
+            if (status != null && !status.trim().isEmpty()) {
+                predicates.add(
+                        criteriaBuilder.equal(root.get("status"), status));
             }
 
             // Kết hợp tất cả predicates với AND
@@ -53,4 +55,3 @@ public class ProductSpecification {
         };
     }
 }
-// thêm vào để commit
