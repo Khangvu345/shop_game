@@ -50,7 +50,7 @@ function ActionBar (){
                 <Link to={'/cart'}>
                     giỏ hàng
                 </Link>
-                <Button onClick={() => {navigate('/my-orders');
+                <Button onClick={() => {navigate('/profile');
                 }}>Profile</Button>
                 <Button onClick={handleLogout}>Đăng xuất</Button>
 

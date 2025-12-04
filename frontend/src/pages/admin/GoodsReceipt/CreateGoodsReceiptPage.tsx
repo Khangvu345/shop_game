@@ -112,7 +112,8 @@ export function CreateGoodsReceiptPage() {
                         required
                         value={supplierId}
                         onChange={e => setSupplierId(Number(e.target.value))}
-                        options={suppliers?.map(s => ({ label: s.name, value: s.supplierId })) || []}
+                        options={[{ label: '-- Chọn sản nhà cung cấp --', value: ''},
+                            ...(suppliers?.map(s => ({ label: s.name, value: s.supplierId }))) || []]}
                     />
                     <Input
                         label="Số hóa đơn"
@@ -134,7 +135,13 @@ export function CreateGoodsReceiptPage() {
                             label="Sản phẩm"
                             value={selectedProductId}
                             onChange={e => setSelectedProductId(Number(e.target.value))}
-                            options={products?.map(p => ({ label: p.productName, value: p.productId })) || []}
+                            options={[
+                                { label: '-- Chọn sản phẩm để nhập --', value: '' },
+                                ...(products?.map(p => ({
+                                    label: `${p.sku} - ${p.productName}`,
+                                    value: p.productId
+                                })) || [])
+                            ]}
                             style={{ flex: 2 }}
                         />
                         <Input label="SL" type="number" value={quantity} onChange={e => setQuantity(Number(e.target.value))} style={{ flex: 1 }} />

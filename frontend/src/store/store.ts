@@ -8,6 +8,7 @@ import orderSlice from "./slices/OrderBlock/orderSlice.ts";
 import shipmentSlice from "./slices/OrderBlock/shipmentSlice.tsx";
 import dashboardReducer from './slices/AdminBlock/dashboardSlice';
 import goodsReceiptSlice from "./slices/InventoryBlock/goodsReceiptSlice.ts";
+import customerSlice from "./slices/AccountBlock/customerSlice.tsx";
 
 
 export const store = configureStore({
@@ -20,7 +21,8 @@ export const store = configureStore({
         orders: orderSlice,
         shipments: shipmentSlice,
         dashboard: dashboardReducer,
-        goodsReceipts: goodsReceiptSlice
+        goodsReceipts: goodsReceiptSlice,
+        customer: customerSlice,
     },
 });
 

@@ -19,6 +19,10 @@ import {RegisterPage} from "../pages/auth/RegisterPage.tsx";
 import {ManageGoodsReceiptPage} from "../pages/admin/GoodsReceipt/ManageGoodsReceiptPage.tsx";
 import {CreateGoodsReceiptPage} from "../pages/admin/GoodsReceipt/CreateGoodsReceiptPage.tsx";
 import {GoodsReceiptDetailPage} from "../pages/admin/GoodsReceipt/GoodsReceiptDetailPage.tsx";
+import {ManageOrderPage} from "../pages/admin/Order/ManageOrderPage.tsx";
+import {AdminOrderDetailPage} from "../pages/admin/Order/AdminOrderDetailPage.tsx";
+import { UserProfilePage } from '../pages/user/UserProfilePage/UserProfilePage';
+import { ManageCustomersPage } from '../pages/admin/ManageCustomersPage';
 
 
 export function AppRoutes() {
@@ -33,6 +37,7 @@ export function AppRoutes() {
                     <Route path='checkout' element={<CheckoutPage/>}/>
                     <Route path='my-orders' element={<OrderHistoryPage/>}/>
                     <Route path='my-orders/:id' element={<OrderDetailPage/>}/>
+                    <Route path="profile" element={<UserProfilePage />} />
                 </Route>
             </Route>
             <Route path="/auth" element={<AuthRoute/>}>
@@ -49,7 +54,9 @@ export function AppRoutes() {
                     <Route path='goods-receipts' element={<ManageGoodsReceiptPage/>} />
                     <Route path='goods-receipts/create' element={<CreateGoodsReceiptPage/>} />
                     <Route path='goods-receipts/:id' element={<GoodsReceiptDetailPage/>} />
-
+                    <Route path='orders' element={<ManageOrderPage />} />
+                    <Route path='orders/:id' element={<AdminOrderDetailPage />} />
+                    <Route path='users' element={<ManageCustomersPage />} />
                 </Route>
             </Route>
         </Routes>    );

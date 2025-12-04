@@ -15,9 +15,24 @@ export interface ICancelOrderRequest {
     cancelledBy: string;
 }
 
+export interface IUpdateOrderStatusRequest {
+    status: string;
+    note?: string;
+}
+
+export interface IAdminOrderFilter {
+    page?: number;
+    size?: number;
+    status?: string;
+    fromDate?: string;
+    toDate?: string;
+    customerId?: number;
+}
+
 
 export class OrderApi extends BaseApi<IOrder> {
 
+    // User
     async placeOrder(payload: ICreateOrderPayload): Promise<IOrder> {
         const response = await axiosClient.post<IServerResponse<IOrder>>('/orders', payload);
         return response.data.data;
@@ -36,6 +51,23 @@ export class OrderApi extends BaseApi<IOrder> {
 
     async cancelOrder(orderId: number | string, payload: ICancelOrderRequest): Promise<IOrder> {
         const response = await axiosClient.post<IOrder>(`/orders/${orderId}/cancel`, payload);
+        return response.data;
+    }
+
+
+    // Admin
+    async getAllOrders(params: IAdminOrderFilter): Promise<IOrderListResponse> {
+        const response = await axiosClient.get<IOrderListResponse>('/orders', { params });
+        return response.data;
+    }
+
+    async updateStatus(orderId: number | string, payload: IUpdateOrderStatusRequest): Promise<IOrder> {
+        const response = await axiosClient.put<IOrder>(`/orders/${orderId}/status`, payload);
+        return response.data;
+    }
+
+    async updatePaymentStatus(orderId: number | string, paymentStatus: string): Promise<IOrder> {
+        const response = await axiosClient.put<IOrder>(`/orders/${orderId}/payment-status`, { paymentStatus });
         return response.data;
     }
 
