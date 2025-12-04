@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { fetchOrderDetail, updateOrderStatusThunk, resetOrderState } from '../../../store/slices/OrderBlock/orderSlice';
+import { fetchAdminOrderDetail, updateOrderStatusThunk, resetOrderState } from '../../../store/slices/OrderBlock/orderSlice';
 import { Button } from '../../../components/ui/button/Button';
 import { Card } from '../../../components/ui/card/Card';
 import { Spinner } from '../../../components/ui/loading/Spinner';
@@ -13,7 +13,7 @@ export function AdminOrderDetailPage() {
     const { currentOrder, status } = useAppSelector((state) => state.orders);
 
     useEffect(() => {
-        if (id) dispatch(fetchOrderDetail(id));
+        if (id) dispatch(fetchAdminOrderDetail(id));
         return () => { dispatch(resetOrderState()); };
     }, [id, dispatch]);
 

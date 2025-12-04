@@ -56,6 +56,12 @@ export class OrderApi extends BaseApi<IOrder> {
 
 
     // Admin
+    async getAdminOrderDetail(orderId: number | string): Promise<IOrder> {
+        const response = await axiosClient.get<IOrder>(`/orders/admin/${orderId}`);
+        console.log(response)
+        return response.data;
+    }
+
     async getAllOrders(params: IAdminOrderFilter): Promise<IOrderListResponse> {
         const response = await axiosClient.get<IOrderListResponse>('/orders', { params });
         return response.data;

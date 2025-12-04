@@ -112,6 +112,17 @@ export const fetchAdminOrders = createAsyncThunk(
     }
 );
 
+export const fetchAdminOrderDetail = createAsyncThunk(
+    'orders/fetchAdminDetail',
+    async (id: number | string, { rejectWithValue }) => {
+        try {
+            return await orderApi.getAdminOrderDetail(id);
+        } catch (error: any) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 // 2. Cập nhật trạng thái
 export const updateOrderStatusThunk = createAsyncThunk(
     'orders/updateStatus',
@@ -218,6 +229,20 @@ const orderSlice = createSlice({
             state.adminOrders.status = 'failed';
             state.adminOrders.error = action.payload as string;
         });
+
+        builder.addCase(fetchAdminOrderDetail.pending, (state) => {
+            state.status = 'loading';
+            state.error = null;
+        });
+        builder.addCase(fetchAdminOrderDetail.fulfilled, (state, action) => {
+            state.status = 'succeeded';
+            state.currentOrder = action.payload;
+        });
+        builder.addCase(fetchAdminOrderDetail.rejected, (state, action) => {
+            state.status = 'failed';
+            state.error = action.payload as string;
+        });
+
 
         // --- Admin Update Status ---
         builder.addCase(updateOrderStatusThunk.fulfilled, (state, action) => {
