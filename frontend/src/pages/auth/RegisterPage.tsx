@@ -32,7 +32,6 @@ export function RegisterPage() {
             return;
         }
 
-        // Gọi API Register
         const resultAction = await dispatch(registerUser({
             fullName: formData.fullName,
             email: formData.email,

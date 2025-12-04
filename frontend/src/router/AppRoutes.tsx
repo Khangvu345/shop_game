@@ -16,6 +16,9 @@ import {OrderHistoryPage} from "../pages/user/OrderHistoryPage/OrderHistoryPage.
 import {OrderDetailPage} from "../pages/user/OrderDetail/OrderDetailPage.tsx";
 import {DashboardPage} from "../pages/admin/Dashboard/DashboardPage.tsx";
 import {RegisterPage} from "../pages/auth/RegisterPage.tsx";
+import {ManageGoodsReceiptPage} from "../pages/admin/GoodsReceipt/ManageGoodsReceiptPage.tsx";
+import {CreateGoodsReceiptPage} from "../pages/admin/GoodsReceipt/CreateGoodsReceiptPage.tsx";
+import {GoodsReceiptDetailPage} from "../pages/admin/GoodsReceipt/GoodsReceiptDetailPage.tsx";
 
 
 export function AppRoutes() {
@@ -38,11 +41,15 @@ export function AppRoutes() {
             </Route>
             <Route element={<AdminRoute/>}>
                 <Route path='/admin' element={<AdminLayout />}>
-                        <Route index element={<DashboardPage/>} />
-                        <Route path='dashboard' element={<DashboardPage />} />
-                        <Route path='products' element={<ManageProductsPage/>} />
-                        <Route path='categories' element={<ManageCategoriesPage />} />
-                        <Route path='suppliers' element={<ManageSupplierPage/>} />
+                    <Route index element={<DashboardPage/>} />
+                    <Route path='dashboard' element={<DashboardPage />} />
+                    <Route path='products' element={<ManageProductsPage/>} />
+                    <Route path='categories' element={<ManageCategoriesPage />} />
+                    <Route path='suppliers' element={<ManageSupplierPage/>} />
+                    <Route path='goods-receipts' element={<ManageGoodsReceiptPage/>} />
+                    <Route path='goods-receipts/create' element={<CreateGoodsReceiptPage/>} />
+                    <Route path='goods-receipts/:id' element={<GoodsReceiptDetailPage/>} />
+
                 </Route>
             </Route>
         </Routes>    );

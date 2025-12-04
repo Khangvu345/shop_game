@@ -20,6 +20,7 @@ function AdminNavLinks() {
             <NavLink to="/admin/categories" className="admin-nav-link">Quản lí danh mục</NavLink>
             <NavLink to="/admin/suppliers" className="admin-nav-link">Quản lí nhà cung cấp</NavLink>
             <NavLink to="/admin/orders" className="admin-nav-link">Quản lí đơn hàng</NavLink>
+            <NavLink to="/admin/goods-receipts" className="admin-nav-link">Nhập hàng</NavLink>
         </>
     )
 }
