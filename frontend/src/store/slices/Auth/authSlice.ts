@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import { authApi } from '../../../api/AccountBlock/authApi.ts';
-import type { IAuthUser, ILoginPayload, ILoginResponse } from '../../../types';
+import type {IAuthUser, ILoginPayload, ILoginResponse, IRegisterPayload} from '../../../types';
 
 interface AuthState {
     user: IAuthUser | null; // Thông tin user (không kèm token)
@@ -81,6 +81,18 @@ export const logoutUser = createAsyncThunk(
     }
 );
 
+export const registerUser = createAsyncThunk(
+    'auth/register',
+    async (payload: IRegisterPayload, { rejectWithValue }) => {
+        try {
+            await authApi.register(payload);
+            return true; // Thành công
+        } catch (error: any) {
+            return rejectWithValue(error.message || 'Đăng ký thất bại');
+        }
+    }
+)
+
 // --- SLICE ---
 
 const authSlice = createSlice({
@@ -134,14 +146,27 @@ const authSlice = createSlice({
         });
         builder.addCase(checkAuth.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            state.user = action.payload; // Cập nhật user mới nhất từ server
-            // (Token vẫn giữ nguyên trong localStorage)
+            state.user = action.payload;
         });
         builder.addCase(checkAuth.rejected, (state) => {
             state.status = 'failed';
             state.user = null;
             state.token = null;
         });
+
+        builder
+            .addCase(registerUser.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(registerUser.fulfilled, (state) => {
+                state.status = 'succeeded';
+                state.error = null;
+            })
+            .addCase(registerUser.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload as string;
+            });
     },
 });
 
