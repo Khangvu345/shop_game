@@ -6,12 +6,20 @@ export interface IPeriod {
     quarter?: number;
 }
 
+export interface IRevenueBreakdown {
+    totalSales: number;
+    totalCost: number;
+    totalProfit: number;
+    profitMargin: number;
+}
+
 export interface IDashboardStats {
     totalRevenue: number;
     newOrders: number;
     newCustomers: number;
     totalInventory: number;
     lowStockCount: number;
+    revenueBreakdown: IRevenueBreakdown;
     period: IPeriod;
     lastUpdated: string;
 }
