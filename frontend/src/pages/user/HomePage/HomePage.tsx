@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { ProductCard } from '../../../components/features/product/ProductCard/ProductCard.tsx';
 import { Link } from 'react-router-dom';
 import { Button } from '../../../components/ui/button/Button.tsx';
-
+import { Spinner } from '../../../components/ui/loading/Spinner';
 import './HomePage.css'
 
 // Mock Data cho Danh mục (Icon giả lập bằng text/emoji vì chưa có file svg cụ thể)
@@ -83,6 +83,7 @@ const dispatch = useAppDispatch();
                 
                 {status === 'loading' ? (
                     <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
+                        <Spinner />
                     </div>
                 ) : (
                     <div className="featured-grid">
