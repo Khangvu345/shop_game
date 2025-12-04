@@ -37,3 +37,24 @@ export interface IUpdateGoodsReceiptPayload {
     notes?: string;
     updateReason: string; // Bắt buộc
 }
+
+
+export interface IStockMovement {
+    movementId: number;
+    productId: number;
+    productName: string;
+    quantityDelta: number;
+    reason: TStockMovementReason;
+    referenceNo?: string; // Mã đơn hàng hoặc mã phiếu nhập
+    orderId?: number;
+    occurredAt: string; // ISO Date
+}
+
+export interface IStockMovementFilter {
+    page: number;
+    size: number;
+    productId?: number;
+    startDate?: string; // YYYY-MM-DD
+    endDate?: string;   // YYYY-MM-DD
+    reason?: TStockMovementReason | '';
+}

@@ -14,13 +14,14 @@ function AdminNavLinks() {
 
     return (
         <>
-            <NavLink to="/admin/dashboard" className="admin-nav-link">Bảng điều khiển</NavLink>
-            <NavLink to="/admin/users" className="admin-nav-link">Quản lí người dùng</NavLink>
-            <NavLink to="/admin/products" className="admin-nav-link">Quản lí sản phẩm</NavLink>
-            <NavLink to="/admin/categories" className="admin-nav-link">Quản lí danh mục</NavLink>
-            <NavLink to="/admin/suppliers" className="admin-nav-link">Quản lí nhà cung cấp</NavLink>
-            <NavLink to="/admin/orders" className="admin-nav-link">Quản lí đơn hàng</NavLink>
-            <NavLink to="/admin/goods-receipts" className="admin-nav-link">Nhập hàng</NavLink>
+            <NavLink to="dashboard" className="admin-nav-link">Bảng điều khiển</NavLink>
+            <NavLink to="users" className="admin-nav-link">Quản lí người dùng</NavLink>
+            <NavLink to="products" className="admin-nav-link">Quản lí sản phẩm</NavLink>
+            <NavLink to="categories" className="admin-nav-link">Quản lí danh mục</NavLink>
+            <NavLink to="suppliers" className="admin-nav-link">Quản lí nhà cung cấp</NavLink>
+            <NavLink to="orders" className="admin-nav-link">Quản lí đơn hàng</NavLink>
+            <NavLink to="stock-movements" className="admin-nav-link" >Lịch sử biến động kho</NavLink>
+            <NavLink to="goods-receipts" className="admin-nav-link">Nhập hàng</NavLink>
         </>
     )
 }
