@@ -16,41 +16,67 @@ export interface ICustomer extends IParty {
     points: number;
 }
 
-export interface IEmployee extends IParty {
-    employeeCode: string;
-    hireDate?: string;
-    status?: string;
 
-    roles?: IRole[];
+export interface ICustomerProfile {
+    id: number;
+    fullName: string;
+    email: string;
+    phone: string;
+    birthDate: string; // YYYY-MM-DD
+    tier: string;
+    points: number;
+    totalOrders: number;
+    totalSpent: number;
 }
 
-export interface IRole {
-    roleId: number;
-    roleName: string;
+export interface ICustomerListItem {
+    id: number;
+    fullName: string;
+    email: string;
+    phone: string;
+    tier: string;
+    points: number;
+    totalOrders: number;
+    totalSpent: number;
+    registeredDate: string;
 }
 
-export interface IAddress {
-    addressId: number;
-    partyId: number;
+export interface IAddressResponse {
+    id: number;
     line1: string;
     line2?: string;
-    ward?: string;
-    district?: string;
+    ward: string;
     city: string;
-    postalCode?: string;
+    postalCode: string;
     isDefault: boolean;
-    createdAt: string;
-    updatedAt: string;
 }
 
-export interface IAccount {
-    accountId: number;
-    partyId: number;
-    provider: TAccountProvider;
-    providerUserId?: string;
-    username?: string;
-    emailForLogin?: string;
-    accountStatus: TAccountStatus;
-    createdAt: string;
-    lastLoginAt?: string;
+// --- Request DTOs ---
+
+export interface IUpdateProfilePayload {
+    fullName: string;
+    phone: string;
+    birthDate: string;
+}
+
+export interface IChangePasswordPayload {
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+}
+
+export interface ISaveAddressPayload {
+    line1: string;
+    line2?: string;
+    ward: string;
+    city: string;
+    postalCode?: string;
+}
+
+export interface IAdminCustomerFilter {
+    page: number;
+    size: number;
+    keyword?: string;
+    sortBy?: string;
+    sortDir?: 'ASC' | 'DESC';
 }

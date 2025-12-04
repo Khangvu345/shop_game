@@ -66,11 +66,18 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get order details", description = "Get detailed information about a specific order")
+    @Operation(summary = "Get order details (Customer)", description = "Get detailed information about a specific order (customer can only view their own orders)")
     public ResponseEntity<OrderResponse> getOrderDetail(
             @PathVariable Long id,
             Principal principal) {
         OrderResponse response = orderService.getOrderDetail(id, principal.getName());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/admin/{id}")
+    @Operation(summary = "Get order details (Admin)", description = "Admin can view any order details without ownership restriction")
+    public ResponseEntity<OrderResponse> getOrderDetailAdmin(@PathVariable Long id) {
+        OrderResponse response = orderService.getOrderResponse(id);
         return ResponseEntity.ok(response);
     }
 

@@ -14,7 +14,17 @@ import {AdminRoute, AuthRoute, LoggedInRoute} from "./ProtectedRoute.tsx";
 import {CheckoutPage} from "../pages/user/CheckOut/CheckOut.tsx";
 import {OrderHistoryPage} from "../pages/user/OrderHistoryPage/OrderHistoryPage.tsx";
 import {OrderDetailPage} from "../pages/user/OrderDetail/OrderDetailPage.tsx";
-// import { ProductDetailPage } from '../pages/ProductDetailPage'; // Sẽ thêm sau
+import {DashboardPage} from "../pages/admin/Dashboard/DashboardPage.tsx";
+import {RegisterPage} from "../pages/auth/RegisterPage.tsx";
+import {ManageGoodsReceiptPage} from "../pages/admin/GoodsReceipt/ManageGoodsReceiptPage.tsx";
+import {CreateGoodsReceiptPage} from "../pages/admin/GoodsReceipt/CreateGoodsReceiptPage.tsx";
+import {GoodsReceiptDetailPage} from "../pages/admin/GoodsReceipt/GoodsReceiptDetailPage.tsx";
+import {ManageOrderPage} from "../pages/admin/Order/ManageOrderPage.tsx";
+import {AdminOrderDetailPage} from "../pages/admin/Order/AdminOrderDetailPage.tsx";
+import { UserProfilePage } from '../pages/user/UserProfilePage/UserProfilePage';
+import { ManageCustomersPage } from '../pages/admin/ManageCustomersPage';
+import { ManageStockMovementPage } from '../pages/admin/ManageStockMovementPage';
+
 
 export function AppRoutes() {
     return (
@@ -28,19 +38,28 @@ export function AppRoutes() {
                     <Route path='checkout' element={<CheckoutPage/>}/>
                     <Route path='my-orders' element={<OrderHistoryPage/>}/>
                     <Route path='my-orders/:id' element={<OrderDetailPage/>}/>
+                    <Route path="profile" element={<UserProfilePage />} />
                 </Route>
             </Route>
             <Route path="/auth" element={<AuthRoute/>}>
                 <Route path={'login'} element={<LoginPage/>} />
+                <Route path={'register'} element={<RegisterPage/>} /> {/* Thêm dòng này */}
             </Route>
             <Route element={<AdminRoute/>}>
                 <Route path='/admin' element={<AdminLayout />}>
-                        <Route index element={<ManageProductsPage/>} />
-                        <Route path='products' element={<ManageProductsPage/>} />
-                        <Route path='categories' element={<ManageCategoriesPage />} />
-                        <Route path='suppliers' element={<ManageSupplierPage/>} />
+                    <Route index element={<DashboardPage/>} />
+                    <Route path='dashboard' element={<DashboardPage />} />
+                    <Route path='products' element={<ManageProductsPage/>} />
+                    <Route path='categories' element={<ManageCategoriesPage />} />
+                    <Route path='suppliers' element={<ManageSupplierPage/>} />
+                    <Route path='goods-receipts' element={<ManageGoodsReceiptPage/>} />
+                    <Route path='goods-receipts/create' element={<CreateGoodsReceiptPage/>} />
+                    <Route path='goods-receipts/:id' element={<GoodsReceiptDetailPage/>} />
+                    <Route path='orders' element={<ManageOrderPage />} />
+                    <Route path='orders/:id' element={<AdminOrderDetailPage />} />
+                    <Route path='users' element={<ManageCustomersPage />} />
+                    <Route path='stock-movements' element={<ManageStockMovementPage />} />
                 </Route>
             </Route>
-
         </Routes>    );
 }
