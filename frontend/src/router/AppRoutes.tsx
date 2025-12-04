@@ -14,6 +14,7 @@ import {AdminRoute, AuthRoute, LoggedInRoute} from "./ProtectedRoute.tsx";
 import {CheckoutPage} from "../pages/user/CheckOut/CheckOut.tsx";
 import {OrderHistoryPage} from "../pages/user/OrderHistoryPage/OrderHistoryPage.tsx";
 import {OrderDetailPage} from "../pages/user/OrderDetail/OrderDetailPage.tsx";
+import {DashboardPage} from "../pages/admin/Dashboard/DashboardPage.tsx";
 // import { ProductDetailPage } from '../pages/ProductDetailPage'; // Sẽ thêm sau
 
 export function AppRoutes() {
@@ -35,7 +36,8 @@ export function AppRoutes() {
             </Route>
             <Route element={<AdminRoute/>}>
                 <Route path='/admin' element={<AdminLayout />}>
-                        <Route index element={<ManageProductsPage/>} />
+                        <Route index element={<DashboardPage/>} />
+                        <Route path='dashboard' element={<DashboardPage />} />
                         <Route path='products' element={<ManageProductsPage/>} />
                         <Route path='categories' element={<ManageCategoriesPage />} />
                         <Route path='suppliers' element={<ManageSupplierPage/>} />

@@ -6,6 +6,7 @@ import supplierReducer from './slices/ProductBlock/supplierSilce.ts';
 import authReducer from "./slices/Auth/authSlice.ts";
 import orderSlice from "./slices/OrderBlock/orderSlice.ts";
 import shipmentSlice from "./slices/OrderBlock/shipmentSlice.tsx";
+import dashboardReducer from './slices/AdminBlock/dashboardSlice';
 
 
 export const store = configureStore({
@@ -17,6 +18,7 @@ export const store = configureStore({
         auth: authReducer,
         orders: orderSlice,
         shipments: shipmentSlice,
+        dashboard: dashboardReducer
     },
 });
 
