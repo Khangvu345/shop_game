@@ -5,8 +5,10 @@ import { AdminTable } from '../AdminTable/AdminTable';
 import { AdminForm } from '../AdminForm/AdminForm';
 import { Modal } from '../../../ui/Modal/Modal';
 import { Button } from '../../../ui/button/Button';
-import { Pagination } from '../../../ui/pagination/Pagination'; // Import Pagination
+import { Pagination } from '../../../ui/pagination/Pagination';
 import type { IColumn, IFieldConfig } from "../../../../types";
+import '../../../../assets/styles/admin.css';
+import '../AdminPageHeader/AdminPageHeader.css';
 
 // Interface cho State Redux (phải khớp với GenericSlice)
 interface IReduxState<T> {
@@ -117,19 +119,36 @@ export function AdminManage<T extends object>({
     }
 
     return (
-        <div>
-            {/* HEADER */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h2 style={{ margin: 0, fontSize: '1.8rem' }}>{title}</h2>
-                <Button onClick={handleOpenAdd} size="medium">+ Thêm Mới</Button>
+        <div className="admin-page-container">
+            {/* HEADER - 3 column grid: Logo | Spacer | Title */}
+            <div className="admin-page-header">
+                <span className="admin-logo-header">Admin</span>
+                <div></div> {/* Spacer column */}
+                <h2 className="admin-page-title">{title}</h2>
             </div>
 
-            {/* FILTERS */}
-            {renderFilters && (
-                <div style={{ marginBottom: '1.5rem' }}>
-                    {renderFilters()}
+            {/* ACTION BAR - Filters (left) and Button (right) */}
+            <div className="admin-action-bar">
+                <div className="filter-group">
+                    {renderFilters && renderFilters()}
                 </div>
-            )}
+                <Button
+                    onClick={handleOpenAdd}
+                    style={{
+                        background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+                        color: '#fff',
+                        fontWeight: 600,
+                        padding: '0.75rem 1.5rem',
+                        borderRadius: '6px',
+                        border: 'none',
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                        flexShrink: 0
+                    }}
+                >
+                    + Thêm Mới
+                </Button>
+            </div>
 
             {/* TABLE */}
             <AdminTable<T>

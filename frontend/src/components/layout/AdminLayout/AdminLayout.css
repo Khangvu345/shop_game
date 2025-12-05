@@ -1,23 +1,39 @@
 .admin-container {
-    display: grid;
-    grid-template-areas:
-        "admin-header admin-header"
-        "admin-sidebar admin-content";
-    grid-template-columns: 1fr 12fr;
-}
-
-.admin-header {
-    grid-area: admin-header;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: var(--shadow-sm);
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--admin-bg-page);
 }
 
 .admin-sidebar {
-    grid-area: admin-sidebar;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--admin-sidebar-width);
+    height: 100vh;
+    background-color: var(--admin-bg-container);
+    border-right: 1px solid var(--admin-border-light);
+    display: flex;
+    overflow-y: auto;
+    flex-direction: column;
+}
+
+.admin-sidebar-header {
+    padding: 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--admin-border-light);
+}
+
+.admin-logo-text {
+    color: var(--admin-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
 }
 
 .admin-main-content {
-    grid-area: admin-content;
+    margin-left: var(--admin-sidebar-width);
+    flex: 1;
+    padding: 0;
+    /* NO padding - để header chạm sidebar */
+    background-color: var(--admin-bg-page);
 }
