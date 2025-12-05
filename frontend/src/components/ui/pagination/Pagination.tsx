@@ -23,10 +23,9 @@ export const Pagination: React.FC<PaginationProps> = ({
     // Nếu chỉ có 1 trang hoặc không có dữ liệu thì không hiện phân trang
     if (totalPages <= 1) return null;
 
-    // --- LOGIC TẠO DÃY SỐ TRANG (CORE FIX) ---
+    // --- LOGIC TẠO DÃY SỐ TRANG ---
     const generatePagination = () => {
-        // Tổng số trang muốn hiển thị tối đa (First + Last + Current + 2*Sibling + 2*Dots)
-        // Ví dụ sibling=1 thì hiện khoảng 7 nút: 1 ... 4 5 6 ... 100
+
         const totalPageNumbers = siblingCount + 5;
 
         // Case 1: Nếu tổng số trang ít hơn số nút tối đa -> Hiện tất cả

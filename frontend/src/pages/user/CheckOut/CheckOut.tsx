@@ -29,7 +29,7 @@ export function CheckoutPage() {
         city: address.data?.city || '',
         ward: address.data?.ward || '',
         street: address.data?.line1  || '',
-        paymentMethod: address.data?.city || 'COD'
+        paymentMethod: 'COD'
     });
 
     const subTotal = cartItems.reduce((sum, item) => sum + (item.product.listPrice * item.quantity), 0);
@@ -41,9 +41,18 @@ export function CheckoutPage() {
             setFormData(prev => ({
                 ...prev,
                 receiverName: user.fullName || '',
+                phone: user.phone || '',
             }));
         }
-    }, [user]);
+        if (address.data){
+            setFormData(prev => ({
+                ...prev,
+                city: address.data?.city || '',
+                ward: address.data?.ward || '',
+                street: address.data?.line1  || '',
+            }));
+        }
+    }, [user, address]);
 
     useEffect(() => {
         if (cartItems.length === 0) {
