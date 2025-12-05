@@ -23,6 +23,8 @@ import { UserProfilePage } from '../pages/user/UserProfilePage/UserProfilePage';
 import { ManageCustomersPage } from '../pages/admin/ManageCustomersPage';
 import { ManageStockMovementPage } from '../pages/admin/ManageStockMovementPage';
 import { ManageShipmentPage} from "../pages/admin/ManageShipmentPage.tsx";
+import {FAQPage} from "../pages/user/FAQPage/FAQPage.tsx";
+import { ContactPage } from '../pages/user/ContactPage/ContactPage.tsx';
 import { AuthPage } from '../pages/auth/AuthPage.tsx';
 
 export function AppRoutes() {
@@ -32,6 +34,8 @@ export function AppRoutes() {
                 <Route index element={<HomePage />} />
                 <Route path="products" element={<ProductListPage />} />
                 <Route path="products/:id" element={<ProductDetailPage />} />
+                <Route path="faq" element={<FAQPage />} />
+                <Route path="contact" element={<ContactPage />} />
                 <Route element={<LoggedInRoute/>}>
                     <Route path="cart" element={<CartPage />} />
                     <Route path='checkout' element={<CheckoutPage/>}/>
@@ -63,3 +67,4 @@ export function AppRoutes() {
             </Route>
         </Routes>    );
 }
+//test

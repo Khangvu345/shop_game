@@ -150,12 +150,18 @@
 }
 
 .overlay {
-    background: #0C988D;
-    background: -webkit-linear-gradient(to right, #00c1a9, #0C988D);
-    background: linear-gradient(to right, #00c1a9, #0C988D);
+    /* Màu nền dự phòng nếu ảnh chưa tải xong */
+    background-color: #0C988D; 
+    
+    /* Thay đổi URL ảnh của bạn ở đây */
+    background-image: url('../../assets/images/login.png');
+    
+    /* 3 dòng quan trọng nhất để Responsive */
     background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 0 0;
+    background-size: cover;      /* Ảnh luôn phủ kín khung, không bị méo */
+    background-position: center; /* Ảnh luôn căn giữa, trượt qua lại vẫn đẹp */
+    
+    /* Giữ nguyên các thuộc tính cũ */
     color: #ffffff;
     position: relative;
     left: -100%;
@@ -163,6 +169,15 @@
     width: 200%;
     transform: translateX(0);
     transition: transform 0.6s ease-in-out;
+}
+
+/* Thêm một lớp phủ tối mỏng (overlay tint) nếu ảnh quá sáng làm chìm chữ trắng */
+.overlay::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(12, 152, 141, 0.4); /* Màu xanh ngọc trong suốt phủ lên ảnh */
+    z-index: -1; /* Nằm sau nội dung nhưng trên ảnh nền */
 }
 
 .auth-container.right-panel-active .overlay {
