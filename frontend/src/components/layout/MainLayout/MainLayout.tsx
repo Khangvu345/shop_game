@@ -1,27 +1,30 @@
+// src/components/layout/MainLayout/MainLayout.tsx
+import React, { useState } from 'react';
 import { Outlet, Link, NavLink, useNavigate } from 'react-router-dom';
 import { Navbar } from '../Navbar/Navbar';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { Button } from "../../ui/button/Button";
-import './MainLayout.css'
 import { Logo } from "../../ui/logo/Logo.tsx";
 import { logoutUser } from "../../../store/slices/Auth/authSlice.ts";
 import Footer from '../Footer/Footer.tsx';
-import React, { useState } from 'react'; // Import useState
-import { useEffect } from 'react';
-import { CartIcon, UserIcon, PhoneIcon } from '../../ui/icon/icon.tsx';
+// Import các Icon mới
+import { 
+    CartIcon, 
+    UserIcon, 
+    PhoneIcon, 
+    LogOutIcon, 
+    LoginIcon 
+} from '../../ui/icon/icon.tsx';
+import './MainLayout.css' // Đảm bảo CSS đã được update
 
-
-// 2. Component Search Bar
+// Component Search Bar
 function SearchBar() {
     const navigate = useNavigate();
     const [keyword, setKeyword] = useState('');
 
     const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            // Chuyển hướng sang trang products kèm query params
-            // Lưu ý: Cần update logic bên ProductListPage để đọc param này
-            // Ví dụ: navigate(`/products?search=${keyword}`);
             console.log("Searching for:", keyword);
+            // navigate(`/products?search=${keyword}`);
         }
     };
 
@@ -40,7 +43,7 @@ function SearchBar() {
 function NavLogo() {
     return (
         <Link to="/" className="nav-logo">
-            <Logo size={'small'}></Logo>
+            <Logo size={'medium'} style={{height: '50px', width: 'auto'}}></Logo>
         </Link>
     )
 }
@@ -48,9 +51,16 @@ function NavLogo() {
 function PublicNavLinks() {
     return (
         <>
-            <NavLink to="/" className="nav-link">Trang chủ</NavLink>
-            <NavLink to="/products" className="nav-link">Sản phẩm</NavLink>
-            <NavLink to="/Contact" className="nav-link">Liên hệ</NavLink>
+            <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+                Trang chủ
+            </NavLink>
+            <NavLink to="/products" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+                Sản phẩm
+            </NavLink>
+            {/* Thay chữ Liên hệ bằng Icon Phone như yêu cầu */}
+            <NavLink to="/contact" className={({ isActive }) => isActive ? "nav-icon-link active" : "nav-icon-link"} title="Liên hệ">
+                <PhoneIcon width={20} height={20} />
+            </NavLink>
         </>
     )
 }
@@ -59,7 +69,6 @@ function ActionBar() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { user } = useAppSelector((state) => state.auth);
-    // Lấy số lượng từ Redux (nếu có slice cart)
     const cartItems = useAppSelector((state: any) => state.cart.items);
     const cartCount = cartItems ? cartItems.length : 0;
 
@@ -70,36 +79,36 @@ function ActionBar() {
         }
     };
 
-    // Nút giỏ hàng chung cho cả 2 trạng thái login/logout
-    const CartButton = (
-        <Link to={'/cart'} className="cart-icon-btn">
-            <CartIcon />
-            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-        </Link>
-    );
+    return (
+        <>
+            {/* 1. Cart Icon - Luôn hiển thị */}
+            <Link to={'/cart'} className="action-icon-btn" title="Giỏ hàng">
+                <CartIcon />
+                {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </Link>
 
-    if (user) {
-        return (
-            <>
-                {CartButton}
-                <Button onClick={() => {navigate('/profile');
-                }}>Profile</Button>
-                <Button onClick={handleLogout}>Đăng xuất</Button>
-            </>
-        )
-    } else {
-        return (
-            <>
-                {CartButton}
-                <Link to={'/auth/login'}>
-                    <Button size="small" color="0">Đăng nhập</Button>
-                </Link>
-                <Link to={'/auth/register'}>
-                    <Button size="small" color="0">Đăng ký</Button>
-                </Link>
-            </>
-        )
-    }
+            {/* 2. Logic hiển thị User/Login */}
+            {user ? (
+                <>
+                    {/* Đã đăng nhập: Hiện Icon User (vào Profile) và Icon Logout */}
+                    <Link to={'/profile'} className="action-icon-btn" title="Tài khoản cá nhân">
+                        <UserIcon />
+                    </Link>
+                    
+                    <button onClick={handleLogout} className="action-icon-btn" title="Đăng xuất">
+                        <LogOutIcon />
+                    </button>
+                </>
+            ) : (
+                <>
+                    {/* Chưa đăng nhập: Hiện Icon Login */}
+                    <Link to={'/auth/login'} className="action-icon-btn" title="Đăng nhập / Đăng ký">
+                        <LoginIcon />
+                    </Link>
+                </>
+            )}
+        </>
+    )
 }
 
 export function MainLayout() {
@@ -109,7 +118,7 @@ export function MainLayout() {
                 <Navbar 
                     logo={<NavLogo />} 
                     links={<PublicNavLinks />} 
-                    search={<SearchBar />}  // Truyền SearchBar vào đây
+                    search={<SearchBar />}
                     actions={<ActionBar />} 
                 />
             </header>

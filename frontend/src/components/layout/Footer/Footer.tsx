@@ -39,7 +39,7 @@ const Footer: React.FC = () => {
 
         {/* Phần dưới: Copyright */}
         <div className="footer-bottom">
-          <p>&copy; 2025 PlayStation Store. All rights reserved.</p>
+          <p>&copy; 2025 Game Flow Store. All rights reserved.</p>
         </div>
       </div>
     </footer>
