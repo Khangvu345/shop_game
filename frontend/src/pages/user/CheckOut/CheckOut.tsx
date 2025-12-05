@@ -34,7 +34,7 @@ export function CheckoutPage() {
     });
 
     const subTotal = cartItems.reduce((sum, item) => sum + (item.product.listPrice * item.quantity), 0);
-    const shippingFee = 30000;
+    const shippingFee = 0;
     const grandTotal = subTotal + shippingFee;
 
     useEffect(() => {
@@ -44,18 +44,14 @@ export function CheckoutPage() {
 
 
     useEffect(() => {
-
-            setFormData(prev => ({
-                ...prev,
-                receiverName: user?.fullName || '',
-                phone: user?.phone || '',
-                city: address.data?.city || '',
-                ward: address.data?.ward || '',
-                street: address.data?.line1  || '',
-            }));
-
-
-
+        setFormData(prev => ({
+            ...prev,
+            receiverName: user?.fullName || '',
+            phone: user?.phone || '',
+            city: address.data?.city || '',
+            ward: address.data?.ward || '',
+            street: address.data?.line1  || '',
+        }));
     }, [user, address]);
 
     useEffect(() => {
