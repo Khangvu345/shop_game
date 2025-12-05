@@ -7,20 +7,22 @@
 .admin-sidebar {
     position: fixed;
     left: 0;
-    top: 0;
+    top: var(--admin-header-height);
     width: var(--admin-sidebar-width);
-    height: 100vh;
+    height: calc(100vh - var(--admin-header-height));
     background-color: var(--admin-bg-container);
     border-right: 1px solid var(--admin-border-light);
     display: flex;
     overflow-y: auto;
     flex-direction: column;
+    z-index: 50;
+    /* Lower than header */
 }
 
 .admin-sidebar-header {
     padding: 1.5rem;
     text-align: center;
-    border-bottom: 1px solid var(--admin-border-light);
+    /* No border - main header already has border-bottom */
 }
 
 .admin-logo-text {
@@ -32,8 +34,8 @@
 
 .admin-main-content {
     margin-left: var(--admin-sidebar-width);
+    margin-top: var(--admin-header-height);
     flex: 1;
-    padding: 0;
-    /* NO padding - để header chạm sidebar */
+    min-height: calc(100vh - var(--admin-header-height));
     background-color: var(--admin-bg-page);
 }

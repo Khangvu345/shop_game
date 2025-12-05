@@ -7,6 +7,7 @@
     /* Admin Color Palette */
     --admin-primary: #00ddff;
     --admin-primary-hover: #00c4e6;
+    --admin-nav-hover: #0891b2;
     --admin-bg-page: #f8f9fa;
     --admin-bg-container: #ffffff;
     --admin-border-light: #e5e7eb;
@@ -23,7 +24,8 @@
     --admin-radius-md: 8px;
     /* Containers */
 
-    /* Sidebar */
+    /* Layout Dimensions */
+    --admin-header-height: 77px;
     --admin-sidebar-width: 250px;
 
     /* Typography */

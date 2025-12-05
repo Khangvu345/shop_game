@@ -120,10 +120,9 @@ export function AdminManage<T extends object>({
 
     return (
         <div className="admin-page-container">
-            {/* HEADER - 3 column grid: Logo | Spacer | Title */}
+            {/* HEADER - 2 column grid: Admin | Title */}
             <div className="admin-page-header">
                 <span className="admin-logo-header">Admin</span>
-                <div></div> {/* Spacer column */}
                 <h2 className="admin-page-title">{title}</h2>
             </div>
 

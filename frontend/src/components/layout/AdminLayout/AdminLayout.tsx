@@ -36,8 +36,8 @@ function AdminActionBar() {
     };
     return (
         <>
-            <Button>Cài đặt</Button>
-            <Button onClick={handleLogout}>Đăng xuất</Button>
+            <Button className="btn-admin-secondary">Cài đặt</Button>
+            <Button onClick={handleLogout} className="btn-admin-primary">Đăng xuất</Button>
         </>
     )
 }
