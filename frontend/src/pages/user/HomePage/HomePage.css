@@ -3,101 +3,112 @@
     width: 100%;
     overflow-x: hidden;
 }
-
-/* HERO BANNER  */
+/* HERO BANNER – PHIÊN BẢN RESPONSIVE HOÀN HẢO */
 .hero-banner {
     background: url('/assets/images/BannerHompage.png') center center no-repeat;
     background-size: cover;
     color: var(--color-primary-0);
     position: relative;
     padding: 8rem 1rem;
-    min-height: 500px; 
+    min-height: 600px;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
 }
 
-
 .hero-banner::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.3); 
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
 }
-
 
 .hero-banner > * {
     position: relative;
     z-index: 10;
 }
 
+/* Nội dung chính – dùng max-width để giới hạn giống bản thiết kế 1184px */
+.hero-content {
+    max-width: 1184px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
 .hero-banner h1 {
-  position: absolute; 
-  top: 143px; 
-  left: 128px; 
-  width: 1184px; 
-  font-family: Sarabun; /* Heading */
-  font-size: 72px; 
-  line-height: 72px; 
-  font-weight: 800; 
-  color: #FFFFFFFF; 
+    font-family: Sarabun, sans-serif;
+    font-size: clamp(42px, 5vw, 72px);   /* tự co giãn đẹp */
+    font-family: Sarabun; /* Heading */
+    margin-left: 80px ;
+    margin-right: 80px ;
+    font-size: 72px; 
+    line-height: 72px; 
+    font-weight: 800; 
+    color: #FFFFFFFF;
 }
 
 .hero-banner p {
-  position: absolute; 
-  top: 316px; 
-  left: 384px; 
-  width: 672px; 
-  font-family: Lato; /* Body */
-  font-size: 20px; 
-  line-height: 28px; 
-  font-weight: 400; 
-  color: #FFFFFFFF; /* white */
+    font-family: Lato, sans-serif;
+    font-size: clamp(16px, 2vw, 20px);
+    line-height: 1.4;
+    font-weight: 400;
+    color: #FFFFFF;
+    max-width: 720px;
+    margin: 0 auto 2rem;
 }
+
 .hero-banner .shop-now-button {
-  position: absolute; 
-  top: 402px; 
-  left: 620px; 
-  width: 200px; 
-  height: 44px; 
-  padding: 0 12px; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  font-family: Lato; 
-  font-size: 14px; 
-  line-height: 22px; 
-  font-weight: 500; 
-  color: #FFFFFFFF; /* white */
-  background: #0EA89BFF; /* primary-500 */
-  opacity: 1; 
-  border: none; 
-  border-radius: 4px; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 32px;
+    font-family: Lato, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #FFFFFF;
+    background: #0EA89B;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0 auto;
 }
 
 .hero-banner .shop-now-button:hover {
-  color: #FFFFFFFF; /* white */
-  background: #0C988DFF; /* primary-550 */
+    background: #0C988DFF;
 }
+
 .hero-banner .shop-now-button:active {
-  background: #095352FF; /* primary-900 */
+    background: #095352FF;
 }
+
 .hero-banner .shop-now-button:focus {
-  outline: none; 
-  box-shadow: 0 0 0 3px rgba(14, 168, 155, 0.5); 
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(14, 168, 155, 0.5);
 }
 
-.hero-banner .btn-primary {
-    margin-top: 2rem; 
-    padding: 1rem 3rem; 
-    font-size: 1.1rem;
+/* Mobile điều chỉnh nhỏ */
+@media (max-width: 768px) {
+    .hero-banner {
+        min-height: 480px;
+        padding: 6rem 1rem;
+    }
 }
 
+@media (max-width: 576px) {
+    .hero-banner {
+        min-height: 420px;
+        padding: 5rem 1rem;
+    }
+    .hero-banner .shop-now-button {
+        width: 200px;
+        padding: 0 20px;
+    }
+}
 /* CÁC SECTION CHUNG */
 .homepage section {
     padding: var(--spacing-lg) 0; 
@@ -186,96 +197,96 @@
         grid-template-columns: 1fr;
     }
 }
-/* --- CSS MỚI CHO PHẦN PROMO BANNER --- */
+/* PROMO BANNER – GIỮ NGUYÊN 1184×300px TRÊN DESKTOP, RESPONSIVE MOBILE */
 .promo-banner-section {
-    background: url('https://res.cloudinary.com/ddehnsjtw/image/upload/v1764840017/t%E1%BA%A3i_xu%E1%BB%91ng_11_qhza7n.jpg') center center no-repeat;
-    background-size: 1184px 300px;        /* Ảnh luôn đúng 1184×300px */
-    background-position: center center;
-    
     position: relative;
     width: 100%;
     height: 300px;
     margin: 4rem 0;
     overflow: hidden;
+    background: url('https://res.cloudinary.com/ddehnsjtw/image/upload/v1764840017/t%E1%BA%A3i_xu%E1%BB%91ng_11_qhza7n.jpg') center center no-repeat;
+    background-size: 1184px 300px;
 }
 
-/* Overlay sẽ luôn luôn ĐỒNG BỘ 100% với vùng ảnh hiển thị */
 .promo-overlay {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);     /* Căn giữa cả ngang lẫn dọc */
-    
-    width: 1184px;           /* cố định đúng bằng ảnh */
-    height: 300px;           /* cố định đúng bằng ảnh */
-    max-width: 100vw;        /* không cho tràn ra ngoài màn hình nhỏ */
-    max-height: 100vh;
-    
-    background: #FFFFFF80;
+    transform: translate(-50%, -50%);
+    width: 1184px;
+    height: 300px;
+    max-width: 100vw;
+    background: rgba(255, 255, 255, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    /* Nếu muốn nội dung bên trong vẫn responsive đẹp trên mobile */
     padding: 20px;
     box-sizing: border-box;
 }
 
 .promo-content-inner {
     text-align: center;
-    color: var(--color-primary-1);
+    color: #FFFFFF;
+    max-width: 800px;
 }
 
 .promo-content-inner h2 {
-  position: absolute; 
-  top: 84px; 
-  left: 423px; 
-  font-family: Sarabun; /* Heading */
-  font-size: 36px; 
-  line-height: 40px; 
-  font-weight: 700; 
-  color: #FFFFFFFF; 
+    font-family: Sarabun, sans-serif;
+    font-size: clamp(28px, 4vw, 36px);
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
 }
 
 .promo-content-inner p {
-  position: absolute; 
-  top: 142px; 
-  left: 325px; 
-  font-family: Lato; /* Body */
-  font-size: 18px; 
-  line-height: 28px; 
-  font-weight: 400; 
-  color: #FFFFFFFF;
-}
-.promo-content-inner .promo-button {
-  position: absolute; 
-  top: 191px; 
-  left: 554px; 
-  width: 74.359375px; 
-  height: 22px; 
-  padding: 0 12px; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  font-family: Lato; 
-  font-size: 14px; 
-  line-height: 22px; 
-  font-weight: 500; 
-  color: #171A1FFF; /* neutral-900 */
-  background: #FFFFFFFF; /* white */
-  opacity: 1; 
-  border-radius: 4px; 
-  border-width: 1px; 
-  border-color: #DEE1E6FF; /* neutral-300 */
-  border-style: solid; 
+    font-family: Lato, sans-serif;
+    font-size: clamp(16px, 2vw, 18px);
+    margin: 0 0 1.5rem 0;
 }
 
-/* Responsive cho mobile: Overlay co lại theo màn hình */
+.promo-content-inner .promo-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 24px;
+    font-family: Lato, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #171A1F;
+    background: #FFFFFF;
+    border: 1px solid #DEE1E6;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.promo-content-inner .promo-button:hover {
+    background: #f0f0f0;
+}
+
+/* Mobile: chuyển về full width + cover */
 @media (max-width: 1200px) {
+    .promo-banner-section {
+        background-size: cover;
+        height: 380px;
+    }
     .promo-overlay {
-        width: 100%;
-        left: 0;
+        position: static;
         transform: none;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.75);
+    }
+}
+
+@media (max-width: 576px) {
+    .promo-banner-section {
+        height: 420px;
+        margin: 3rem 0;
+    }
+    .promo-content-inner .promo-button {
+        min-height: 48px;
+        font-size: 15px;
     }
 }
 /* --- NEWS SECTION --- */

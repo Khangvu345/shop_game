@@ -73,7 +73,7 @@ function ActionBar() {
     // Nút giỏ hàng chung cho cả 2 trạng thái login/logout
     const CartButton = (
         <Link to={'/cart'} className="cart-icon-btn">
-            <CartIcon />CartButton
+            <CartIcon />
             {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
         </Link>
     );
