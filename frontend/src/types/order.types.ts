@@ -17,7 +17,7 @@ export interface IOrder {
 
     items?:IOrderItem[];
 
-    subtotal: number;
+    subTotal: number;
     discountAmount?: number;
     taxAmount?: number;
     grandTotal: number;
