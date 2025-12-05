@@ -8,6 +8,7 @@ import { Input } from '../../../components/ui/input/Input';
 import { Select } from '../../../components/ui/input/Select';
 import type { ICreateOrderPayload } from '../../../types';
 import {Spinner} from "../../../components/ui/loading/Spinner";
+import {fetchMyAddress, fetchMyProfile} from "../../../store/slices/AccountBlock/customerSlice.tsx";
 
 export function CheckoutPage() {
 
@@ -35,6 +36,12 @@ export function CheckoutPage() {
     const subTotal = cartItems.reduce((sum, item) => sum + (item.product.listPrice * item.quantity), 0);
     const shippingFee = 30000;
     const grandTotal = subTotal + shippingFee;
+
+    useEffect(() => {
+        dispatch(fetchMyProfile());
+        dispatch(fetchMyAddress());
+    }, [dispatch]);
+
 
     useEffect(() => {
 
