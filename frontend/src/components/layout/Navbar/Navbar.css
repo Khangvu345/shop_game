@@ -1,13 +1,14 @@
 
 .navbar-horizontal {
     display: grid;
-    grid-template-areas: "navbar-logo navbar-nav navbar-actions";
-    grid-template-columns: auto auto 1fr; 
+    grid-template-areas: "navbar-logo navbar-nav navbar-search navbar-actions";
+    grid-template-columns: auto auto 1fr auto; 
     width: 100%;
     height: 60px; 
-    padding: 0; 
+    padding: 0 1rem; /* Thêm padding 2 bên cho đẹp */
     gap: 1rem; 
     background-color: var(--color-primary-0);
+    align-items: center; /* Căn giữa theo chiều dọc */
 }
 
 .navbar-vertical {
@@ -82,3 +83,65 @@
 }
 
 
+/* Thêm style cho khu vực Search */
+.navbar-search-horizontal {
+    grid-area: navbar-search;
+    display: flex;
+    justify-content: center; /* Căn ô input ra giữa */
+    width: 100%;
+}
+
+/* Style cho ô input tìm kiếm */
+/* Khu vực Search (Nằm giữa) */
+.navbar-search-horizontal {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 600px; /* Độ rộng tối đa của thanh tìm kiếm */
+    height: 40px;
+    padding: 0 15px;
+    
+    /* Style giống hệt ảnh: Viền tím, bo góc nhẹ hoặc vuông */
+    border: 2px solid #141224; /* Màu tím đậm của viền */
+    border-radius: 4px; /* Bo góc rất nhẹ (vuông vức) */
+    background-color: #fff;
+    
+    font-size: 14px;
+    color: #333;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: #888;
+}
+
+/* Style cho icon giỏ hàng */
+.cart-icon-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary-1);
+    transition: color 0.3s ease;
+}
+
+.cart-icon-btn:hover {
+    color: var(--color-secondary-0);
+}
+
+/* Badge số lượng trên giỏ hàng (nếu muốn làm sau này) */
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background-color: var(--color-accent-1);
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 5px;
+    border-radius: 10px;
+    font-weight: bold;
+}

@@ -18,19 +18,18 @@ export function CheckoutPage() {
     const dispatch = useAppDispatch();
 
     const cartItems = useAppSelector((state) => state.cart.items);
-    const { user } = useAppSelector((state) => state.auth); // Lấy customerId từ user
+    const { profile, address } = useAppSelector(state => state.customer);
     const { status ,error } = useAppSelector((state) => state.orders);
 
+    const user = profile.data
 
-
-    // State form (Cấu trúc phẳng để dễ nhập liệu)
     const [formData, setFormData] = useState({
         recipientName: user?.fullName || '',
-        phone: '',
-        city: '',
-        ward: '',
-        street: '',
-        paymentMethod: 'COD'
+        phone: user?.phone || '',
+        city: address.data?.city || '',
+        ward: address.data?.ward || '',
+        street: address.data?.line1  || '',
+        paymentMethod: address.data?.city || 'COD'
     });
 
     const subTotal = cartItems.reduce((sum, item) => sum + (item.product.listPrice * item.quantity), 0);
@@ -42,7 +41,6 @@ export function CheckoutPage() {
             setFormData(prev => ({
                 ...prev,
                 receiverName: user.fullName || '',
-                // receiverPhone: user.phone || '', // Nếu user có trường phone
             }));
         }
     }, [user]);

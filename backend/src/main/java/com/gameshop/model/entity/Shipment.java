@@ -17,18 +17,18 @@ public class Shipment {
     @Column(name = "shipment_id")
     private Long shipmentId;
 
-    @Column(name = "order_id", nullable = false, updatable = false)
-    private Long orderId;
+    @Column(name = "order_id", nullable = false, updatable = false, length = 20)
+    private String orderId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", insertable = false, updatable = false)
     private Order order;
 
-    public Long getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 

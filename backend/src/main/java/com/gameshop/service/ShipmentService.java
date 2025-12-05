@@ -13,7 +13,7 @@ public interface ShipmentService {
 
     ShipmentResponse getShipmentById(Long shipmentId);
 
-    ShipmentResponse getShipmentByOrderId(Long orderId);
+    ShipmentResponse getShipmentByOrderId(String orderId);
 
-    PageResponse<ShipmentResponse> getAllShipments(Pageable pageable, Long orderId, String status);
+    PageResponse<ShipmentResponse> getAllShipments(Pageable pageable, String orderId, String status);
 }

@@ -83,7 +83,10 @@ export function ManageProductsPage() {
             name: 'categoryId',
             type: 'select',
             required: true,
-            options: categories?.map(c => ({ label: c.categoryName, value: c.categoryId })) || []
+            options: [
+                { label: '-- Chọn danh mục --', value: '' },
+                ...(categories?.map(c => ({ label: c.categoryName, value: c.categoryId })) || [])
+            ]
         },
         {
             label: 'Trạng Thái',

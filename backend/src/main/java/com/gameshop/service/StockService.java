@@ -10,5 +10,5 @@ public interface StockService {
      * 
      * @param orderId ID của đơn hàng bị trả
      */
-    void restoreStockForReturnedOrder(Long orderId);
+    void restoreStockForReturnedOrder(String orderId);
 }

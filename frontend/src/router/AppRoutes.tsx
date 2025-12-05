@@ -14,6 +14,15 @@ import {CheckoutPage} from "../pages/user/CheckOut/CheckOut.tsx";
 import {OrderHistoryPage} from "../pages/user/OrderHistoryPage/OrderHistoryPage.tsx";
 import {OrderDetailPage} from "../pages/user/OrderDetail/OrderDetailPage.tsx";
 import {DashboardPage} from "../pages/admin/Dashboard/DashboardPage.tsx";
+import {ManageGoodsReceiptPage} from "../pages/admin/GoodsReceipt/ManageGoodsReceiptPage.tsx";
+import {CreateGoodsReceiptPage} from "../pages/admin/GoodsReceipt/CreateGoodsReceiptPage.tsx";
+import {GoodsReceiptDetailPage} from "../pages/admin/GoodsReceipt/GoodsReceiptDetailPage.tsx";
+import {ManageOrderPage} from "../pages/admin/Order/ManageOrderPage.tsx";
+import {AdminOrderDetailPage} from "../pages/admin/Order/AdminOrderDetailPage.tsx";
+import { UserProfilePage } from '../pages/user/UserProfilePage/UserProfilePage';
+import { ManageCustomersPage } from '../pages/admin/ManageCustomersPage';
+import { ManageStockMovementPage } from '../pages/admin/ManageStockMovementPage';
+
 import { AuthPage } from '../pages/auth/AuthPage.tsx';
 
 export function AppRoutes() {
@@ -36,11 +45,18 @@ export function AppRoutes() {
             </Route>
             <Route element={<AdminRoute/>}>
                 <Route path='/admin' element={<AdminLayout />}>
-                        <Route index element={<DashboardPage/>} />
-                        <Route path='dashboard' element={<DashboardPage />} />
-                        <Route path='products' element={<ManageProductsPage/>} />
-                        <Route path='categories' element={<ManageCategoriesPage />} />
-                        <Route path='suppliers' element={<ManageSupplierPage/>} />
+                    <Route index element={<DashboardPage/>} />
+                    <Route path='dashboard' element={<DashboardPage />} />
+                    <Route path='products' element={<ManageProductsPage/>} />
+                    <Route path='categories' element={<ManageCategoriesPage />} />
+                    <Route path='suppliers' element={<ManageSupplierPage/>} />
+                    <Route path='goods-receipts' element={<ManageGoodsReceiptPage/>} />
+                    <Route path='goods-receipts/create' element={<CreateGoodsReceiptPage/>} />
+                    <Route path='goods-receipts/:id' element={<GoodsReceiptDetailPage/>} />
+                    <Route path='orders' element={<ManageOrderPage />} />
+                    <Route path='orders/:id' element={<AdminOrderDetailPage />} />
+                    <Route path='users' element={<ManageCustomersPage />} />
+                    <Route path='stock-movements' element={<ManageStockMovementPage />} />
                 </Route>
             </Route>
         </Routes>    );

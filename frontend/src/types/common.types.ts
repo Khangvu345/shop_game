@@ -32,7 +32,6 @@ export type TPaymentStatus =
 
 export type TShipmentStatus = 'Ready' | 'Shipped' | 'Delivered' | 'Returned';
 
-// Inventory
 export type TStockMovementReason =
     | 'GoodsReceipt'
     | 'Sale'

@@ -1,43 +1,60 @@
 import type { TStockMovementReason } from './common.types';
 import type { ISupplier } from './product.types';
 
-export interface IWarehouse {
-    warehouseId: number;
-    name: string;
-    addressText?: string;
-}
-
-export interface IStockMovement {
-    movementId: number;
+export interface IGoodsReceiptLineDto {
     productId: number;
-    warehouseId: number;
-    quantityDelta: number;
-    reason: TStockMovementReason;
-    occurredAt: string;
-    referenceNo?: string;
-    orderId?: number;
-
-    productName?: string;
-    warehouseName?: string;
+    productName: string;
+    quantityReceived: number;
+    unitCost: number;
+    lineTotal: number;
 }
 
 export interface IGoodsReceipt {
     receiptId: number;
-    supplierId?: number;
-    receiptDate: string;
-    invoiceNumber?: string;
-    totalCost?: number;
+    supplier: ISupplier; // Backend trả về object SupplierResponse
+    invoiceNumber: string;
+    totalCost: number;
     notes?: string;
-
-    supplier?: ISupplier;
-    lines?: IGoodsReceiptLine[];
+    receiptDate: string;
+    items: IGoodsReceiptLineDto[]; // Backend trả về field là items
 }
 
-export interface IGoodsReceiptLine {
-    receiptId: number;
-    lineNo: number;
+export interface ICreateGoodsReceiptItem {
     productId: number;
-    warehouseId: number;
-    quantityReceived: number;
-    unitCost?: number;
+    quantity: number;
+    unitCost: number;
+}
+
+export interface ICreateGoodsReceiptPayload {
+    supplierId: number;
+    invoiceNumber: string;
+    notes?: string;
+    items: ICreateGoodsReceiptItem[];
+}
+
+export interface IUpdateGoodsReceiptPayload {
+    invoiceNumber?: string;
+    notes?: string;
+    updateReason: string; // Bắt buộc
+}
+
+
+export interface IStockMovement {
+    movementId: number;
+    productId: number;
+    productName: string;
+    quantityDelta: number;
+    reason: TStockMovementReason;
+    referenceNo?: string; // Mã đơn hàng hoặc mã phiếu nhập
+    orderId?: number;
+    occurredAt: string; // ISO Date
+}
+
+export interface IStockMovementFilter {
+    page: number;
+    size: number;
+    productId?: number;
+    startDate?: string; // YYYY-MM-DD
+    endDate?: string;   // YYYY-MM-DD
+    reason?: TStockMovementReason | '';
 }

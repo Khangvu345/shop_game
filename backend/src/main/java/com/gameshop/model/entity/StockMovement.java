@@ -42,6 +42,6 @@ public class StockMovement {
     @Column(name = "reference_no", length = 120)
     private String referenceNo; // Số tham chiếu (VD: INV-001, ORDER-123)
 
-    @Column(name = "order_id")
-    private Long orderId; // Nếu liên quan đến đơn hàng
+    @Column(name = "order_id", length = 20)
+    private String orderId; // Nếu liên quan đến đơn hàng
 }

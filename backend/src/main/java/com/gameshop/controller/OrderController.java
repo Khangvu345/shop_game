@@ -66,18 +66,25 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get order details", description = "Get detailed information about a specific order")
+    @Operation(summary = "Get order details (Customer)", description = "Get detailed information about a specific order (customer can only view their own orders)")
     public ResponseEntity<OrderResponse> getOrderDetail(
-            @PathVariable Long id,
+            @PathVariable String id,
             Principal principal) {
         OrderResponse response = orderService.getOrderDetail(id, principal.getName());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/admin/{id}")
+    @Operation(summary = "Get order details (Admin)", description = "Admin can view any order details without ownership restriction")
+    public ResponseEntity<OrderResponse> getOrderDetailAdmin(@PathVariable String id) {
+        OrderResponse response = orderService.getOrderResponse(id);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}/status")
     @Operation(summary = "Update order status", description = "Update order status with workflow validation")
     public ResponseEntity<OrderResponse> updateOrderStatus(
-            @PathVariable Long id,
+            @PathVariable String id,
             @Valid @RequestBody UpdateOrderStatusRequest request) {
         OrderResponse response = orderService.updateOrderStatus(id, request);
         return ResponseEntity.ok(response);
@@ -86,7 +93,7 @@ public class OrderController {
     @PutMapping("/{id}/payment-status")
     @Operation(summary = "Update payment status", description = "Update payment status (e.g., mark COD as collected)")
     public ResponseEntity<OrderResponse> updatePaymentStatus(
-            @PathVariable Long id,
+            @PathVariable String id,
             @Valid @RequestBody UpdatePaymentStatusRequest request) {
         OrderResponse response = orderService.updatePaymentStatus(id, request);
         return ResponseEntity.ok(response);
@@ -95,7 +102,7 @@ public class OrderController {
     @PostMapping("/{id}/cancel")
     @Operation(summary = "Cancel order", description = "Cancel order and restore stock automatically")
     public ResponseEntity<OrderResponse> cancelOrder(
-            @PathVariable Long id,
+            @PathVariable String id,
             @Valid @RequestBody CancelOrderRequest request,
             Principal principal) {
         OrderResponse response = orderService.cancelOrder(id, request, principal.getName());

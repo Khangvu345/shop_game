@@ -18,8 +18,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class OrderLinePK implements Serializable {
 
-    @Column(name = "order_id")
-    private Long orderId;
+    @Column(name = "order_id", length = 20)
+    private String orderId;
 
     @Column(name = "line_no")
     private Integer lineNo;
