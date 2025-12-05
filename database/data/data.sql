@@ -817,49 +817,47 @@ INSERT INTO address (party_id, line1, line2, ward, district, city, postal_code, 
 -- SAMPLE ORDERS (Đơn hàng mẫu)
 -- =====================================================================
 INSERT INTO `order` 
-(customer_id, created_at, status, payment_method, payment_status,
+(order_id, customer_id, created_at, status, payment_method, payment_status,
  subtotal, discount_amount, tax_amount, grand_total, notes,
  cancelled_at, cancel_reason, cancelled_by)
 VALUES
 -- Đơn 1: Thành công
-(101, '2025-11-20 15:30:00', 'COMPLETED', 'VNPAY', 'PAID',
+('DH20251120001', 101, '2025-11-20 15:30:00', 'COMPLETED', 'VNPAY', 'PAID',
  21998000.00, 500000.00, 0.00, 21498000.00, 'Khách VIP Gold, giảm 500k',
  NULL, NULL, NULL),
-
 -- Đơn 2: Đang giao
-(102, '2025-11-21 10:15:00', 'SHIPPED', 'COD', 'COD_PENDING',
+('DH20251121001', 102, '2025-11-21 10:15:00', 'SHIPPED', 'COD', 'COD_PENDING',
  12999000.00, 0.00, 0.00, 12999000.00, NULL,
  NULL, NULL, NULL),
-
 -- Đơn 3: Đã hủy
-(103, '2025-11-22 19:45:00', 'CANCELLED', 'COD', 'PENDING',
+('DH20251122001', 103, '2025-11-22 19:45:00', 'CANCELLED', 'COD', 'PENDING',
  1599000.00, 0.00, 0.00, 1599000.00, 'Khách hủy đơn',
  '2025-11-22 20:15:00', 'Khách không còn nhu cầu', '103');
 
 -- Chi tiết đơn hàng
 INSERT INTO order_line (order_id, line_no, product_id, quantity, unit_price_at_order, line_total) VALUES
-(1,1,2,  1,20499000,20499000),
-(1,2,45, 1,5499000,5499000),
-(2,1,14, 1,12999000,12999000),
-(3,1,23, 1,1599000,1599000);
+('DH20251120001', 1, 2,  1, 20499000, 20499000),
+('DH20251120001', 2, 45, 1, 5499000,  5499000),
+('DH20251121001', 1, 14, 1, 12999000, 12999000),
+('DH20251122001', 1, 23, 1, 1599000,  1599000);
 
 -- Địa chỉ giao hàng
 INSERT INTO order_address (order_id, receiver_name, receiver_phone, line1, line2, ward, city, postal_code) VALUES
-(1, 'Trần Văn A',   '0912345678', '123 Đường Lê Lợi',  'Ngõ 45',  'Phường Bến Nghé',    'TP. Hồ Chí Minh', '700000'),
-(2, 'Nguyễn Thị B', '0923456789', '56 Nguyễn Trãi',    NULL,      'Phường Thượng Đình', 'Hà Nội',          '100000'),
-(3, 'Lê Hoàng C',   '0934567890', '789 Trần Hưng Đạo','Tầng 5',  'Phường 5',           'TP. Hồ Chí Minh', '700000');
+('DH20251120001', 'Trần Văn A',   '0912345678', '123 Đường Lê Lợi',  'Ngõ 45',  'Phường Bến Nghé',    'TP. Hồ Chí Minh', '700000'),
+('DH20251121001', 'Nguyễn Thị B', '0923456789', '56 Nguyễn Trãi',    NULL,      'Phường Thượng Đình', 'Hà Nội',          '100000'),
+('DH20251122001', 'Lê Hoàng C',   '0934567890', '789 Trần Hưng Đạo','Tầng 5',  'Phường 5',           'TP. Hồ Chí Minh', '700000');
 
 -- Thanh toán
 INSERT INTO payment (order_id, method, amount, paid_at, status) VALUES
-(1, 'BankTransfer', 21498000, '2025-11-20 15:45:00', 'Captured'),
-(2, 'COD',          13029000, NULL,                 'Pending'),
-(3, 'Momo',         1599000,  '2025-11-22 19:50:00', 'Captured');
+('DH20251120001', 'BankTransfer', 21498000, '2025-11-20 15:45:00', 'PAID'),
+('DH20251121001', 'COD',          13029000, NULL,                 'COD_PENDING'),
+('DH20251122001', 'Momo',         1599000,  '2025-11-22 19:50:00', 'PAID');
 
 -- Vận chuyển
 INSERT INTO shipment (order_id, carrier, tracking_no, estimated_delivery, shipped_at, delivered_at, status) VALUES
-(1, 'Giao Hàng Nhanh',     'GHN123456789',  '2025-11-23 00:00:00', '2025-11-21 10:00:00', '2025-11-22 14:30:00', 'Delivered'),
-(2, 'Giao Hàng Tiết Kiệm', 'GHTK987654321', '2025-11-25 00:00:00', '2025-11-22 09:00:00', NULL,                  'Shipped'),
-(3, 'Ninja Van',           'NVN1122334455', '2025-11-24 00:00:00', NULL,                  NULL,                  'Returned');
+('DH20251120001', 'Giao Hàng Nhanh',     'GHN123456789',  '2025-11-23 00:00:00', '2025-11-21 10:00:00', '2025-11-22 14:30:00', 'Delivered'),
+('DH20251121001', 'Giao Hàng Tiết Kiệm', 'GHTK987654321', '2025-11-25 00:00:00', '2025-11-22 09:00:00', NULL,                  'Shipped'),
+('DH20251122001', 'Ninja Van',           'NVN1122334455', '2025-11-24 00:00:00', NULL,                  NULL,                  'Returned');             
 -- =====================================================================
 -- SAMPLE GOODS RECEIPTS (Phiếu nhập hàng mẫu)
 -- =====================================================================
@@ -895,9 +893,9 @@ INSERT INTO stock_movement
 (23, 1, NULL,  50, 'GoodsReceipt', '2025-11-15 11:20:00', 'GR-20251115-004'),
 (45, 1, NULL, 100, 'GoodsReceipt', '2025-11-20 13:45:00', 'GR-20251120-005'),
 -- Xuất kho theo đơn hàng
-(2,  1, 1, -1, 'Sale', '2025-11-21 11:00:00', 'SO-1'),
-(45, 1, 1, -1, 'Sale', '2025-11-21 11:00:00', 'SO-1'),
-(14, 1, 2, -1, 'Sale', '2025-11-22 10:00:00', 'SO-2');
+(2,  1, 'DH20251120001', -1, 'Sale', '2025-11-21 11:00:00', 'SO-DH20251120001'),
+(45, 1, 'DH20251120001', -1, 'Sale', '2025-11-21 11:00:00', 'SO-DH20251120001'),
+(14, 1, 'DH20251121001', -1, 'Sale', '2025-11-22 10:00:00', 'SO-DH20251121001');
 
 -- =====================================================================
 -- SAMPLE REVIEWS (Đánh giá sản phẩm mẫu)

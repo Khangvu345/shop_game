@@ -30,14 +30,16 @@ const NEWS = [
         title: 'Các tựa game PlayStation Plus tháng 11 đã có mặt!',
         date: 'Ngày 1 tháng 11 năm 2025',
         image: 'https://res.cloudinary.com/ddehnsjtw/image/upload/v1764766151/Sony_PlayStation_Italia_on_Instagram__Il_nuovo_nbgk9s.jpg',
-        desc: 'Đánh giá chi tiết...'
+        desc: 'Đánh giá chi tiết...',
+        link: 'https://blog.playstation.com/2024/11/13/playstation-plus-game-catalog-for-november-grand-theft-auto-v-dying-light-2-stay-human-like-a-dragon-ishin-and-more/'
     },
     {
         id: 2,
         title: 'Báo cáo tài chính Quý 3: Doanh số PlayStation kỷ lục',
         date: 'Ngày 10 tháng 11 năm 2025',
         image: 'https://res.cloudinary.com/ddehnsjtw/image/upload/v1764766289/t%E1%BA%A3i_xu%E1%BB%91ng_5_fln3fp.jpg',
-        desc: 'Sony vừa công bố...'
+        desc: 'Sony vừa công bố...',
+        link: 'https://haloshop.vn/tin-tuc/sony-dat-doanh-thu-ky-luc-30-ty-usd-nho-ps5/?srsltid=AfmBOooGtaJONCgz6IMi8i3vm6a80ZCsygvXcrhbIxMepEAWHGBd5UY-'
     },
 ];
 
@@ -150,22 +152,37 @@ const dispatch = useAppDispatch();
                 <h2>TIN TỨC & CẬP NHẬT MỚI NHẤT</h2>
                 <div className="news-grid">
                     {NEWS.map((item) => (
-                        <div key={item.id} className="news-card">
+                        <Link
+                            to={item.link}
+                            key={item.id}
+                            className="news-card"
+                            rel="noopener noreferrer"
+                        >
                             <img src={item.image} alt={item.title} className="news-img" />
                             <div className="news-info">
                                 <h3>{item.title}</h3>
                                 <span className="news-date">{item.date}</span>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                     {/* Hardcode thêm 1 box bên phải cho giống ảnh (nếu cần grid 2 cột lệch) */}
-                     <div className="news-card">
-                        <img src="https://res.cloudinary.com/ddehnsjtw/image/upload/v1764766232/Sony_tr%C3%ACnh_l%C3%A0ng_tay_c%E1%BA%A7m_DualSense_Edge_cho_gamer_hardcore_sqnktk.jpg" alt="Review" className="news-img" />
-                        <div className="news-info">
-                            <h3>Đánh giá chi tiết tay cầm DualSense Edge</h3>
-                            <span className="news-date">Ngày 28 tháng 10 năm 2025</span>
-                        </div>
-                    </div>
+                        <a 
+                            href="https://www.ign.com/articles/dualsense-edge-review" 
+                            className="news-card"
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                        >
+                            <img 
+                                src="https://res.cloudinary.com/ddehnsjtw/image/upload/v1764766232/Sony_tr%C3%ACnh_l%C3%A0ng_tay_c%E1%BA%A7m_DualSense_Edge_cho_gamer_hardcore_sqnktk.jpg" 
+                                alt="Review" 
+                                className="news-img" 
+                            />
+                            
+                            <div className="news-info">
+                                <h3>Đánh giá chi tiết tay cầm DualSense Edge</h3>
+                                <span className="news-date">Ngày 28 tháng 10 năm 2025</span>
+                            </div>
+                        </a>
                 </div>
             </section>
         </div>

@@ -1,0 +1,412 @@
+/* UserProfilePage.css */
+
+.page-loading {
+    min-height: 80vh;
+}
+
+.profile-page-wrapper {
+    padding: 3rem 0;
+    background-color: #f8fafc; /* Nền xám rất nhạt */
+}
+
+/* --- Layout chính --- */
+.profile-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+/* --- Sidebar Style --- */
+.profile-sidebar {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    position: sticky;
+    top: 90px;
+    border: 1px solid #f1f5f9;
+}
+
+.sidebar-cover {
+    height: 100px;
+    background: linear-gradient(135deg, var(--color-secondary-0), var(--color-secondary-1));
+}
+
+.profile-card-content {
+    margin-top: -50px;
+    padding: 0 1.5rem 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    background: #ffffff;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-secondary-0);
+    font-size: 2.5rem;
+    font-weight: 400;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 4px solid #ffffff;
+}
+
+.profile-name {
+    margin: 0.5rem 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-primary-1);
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge.tier-gold { background-color: #fef3c7; color: #b45309; }
+.badge.tier-silver { background-color: #f1f5f9; color: #475569; }
+.badge.tier-bronze { background-color: #fff7ed; color: #c2410c; }
+
+.profile-stats-mini {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.mini-stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.mini-stat strong {
+    font-size: 1.2rem;
+    color: var(--color-primary-1);
+}
+
+.mini-stat span {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+/* --- Menu Nav --- */
+.profile-menu {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 12px;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.menu-item .icon {
+    display: flex;
+    align-items: center;
+    color: #94a3b8;
+    transition: color 0.2s;
+}
+
+.menu-item:hover {
+    background-color: #f8fafc;
+    color: var(--color-secondary-0);
+}
+
+.menu-item:hover .icon {
+    color: var(--color-secondary-0);
+}
+
+.menu-item.active {
+    background-color: rgba(14, 168, 155, 0.1);
+    color: var(--color-secondary-0);
+}
+
+.menu-item.active .icon {
+    color: var(--color-secondary-0);
+}
+
+/* --- Content Area --- */
+.profile-content-area {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    padding: 2.5rem;
+    min-height: 500px;
+    border: 1px solid #f1f5f9;
+}
+
+/* Animation fade in when tab changes */
+.fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tab-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.tab-subtitle {
+    color: #64748b;
+    margin-bottom: 2rem;
+}
+
+/* --- Stats Cards (New Design) --- */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat-card {
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card .stat-info {
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-card .stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card .stat-number {
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.stat-icon-bg {
+    font-size: 4rem;
+    position: absolute;
+    right: -10px;
+    bottom: -10px;
+    opacity: 0.2;
+    z-index: 1;
+    transform: rotate(-15deg);
+}
+
+/* Gradients */
+.blue-gradient { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+.purple-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
+.green-gradient { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+
+/* --- Forms Styling --- */
+.modern-form {
+    margin-top: 2rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+.form-single-col {
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.readonly-input input {
+    background-color: #f1f5f9;
+    color: #64748b;
+    border-color: #cbd5e1;
+}
+
+.form-footer {
+    margin-top: 2.5rem;
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+    .profile-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-sidebar {
+        position: static;
+        margin-bottom: 2rem;
+    }
+
+    .profile-menu {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+        gap: 1rem;
+    }
+
+    .menu-item {
+        width: auto;
+        white-space: nowrap;
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .menu-item.active {
+        border-color: var(--color-secondary-0);
+    }
+}
+
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .full-width {
+        grid-column: span 1;
+    }
+    .profile-content-area {
+        padding: 1.5rem;
+    }
+}
+
+/* UserProfilePage.css - Phần Form & Input Style Mới */
+
+/* Container của form */
+.modern-form {
+    margin-top: 2rem;
+}
+
+/* Grid layout cho form */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+/* --- TÙY BIẾN INPUT (QUAN TRỌNG) --- */
+/* Target vào cấu trúc div > div.input-content-wrapper > label + input */
+
+/* 1. Biến wrapper thành cái khung chính */
+.modern-form .input-content-wrapper {
+    background-color: #fff;
+    border: 1px solid #e2e8f0; /* Viền xám nhẹ */
+    border-radius: 12px;       /* Bo góc mềm mại */
+    padding: 10px 16px;        /* Padding để tạo không gian cho Label và Input */
+    transition: all 0.25s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;    /* Xếp Label lên trên Input */
+    justify-content: center;
+    min-height: 56px;          /* Chiều cao chuẩn đẹp */
+}
+
+/* 2. Hiệu ứng khi click vào (Focus) */
+.modern-form .input-content-wrapper:focus-within {
+    border-color: var(--color-secondary-0); /* Đổi màu viền sang xanh teal */
+    box-shadow: 0 0 0 4px rgba(14, 168, 155, 0.1); /* Hiệu ứng tỏa sáng nhẹ */
+    background-color: #fff;
+}
+
+/* 3. Style lại Label nhỏ nằm bên trong */
+.modern-form label {
+    font-size: 0.75rem;       /* Chữ nhỏ lại */
+    color: #94a3b8;           /* Màu xám nhạt */
+    margin-bottom: 2px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: text;             /* Cho phép click vào label vẫn focus được */
+}
+
+/* 4. Xóa viền cũ của Input và chỉnh lại style text */
+.modern-form input {
+    border: none !important;  /* BẮT BUỘC: Xóa viền cũ */
+    padding: 0 !important;    /* Xóa padding cũ */
+    margin: 0 !important;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1e293b;           /* Màu chữ đậm rõ ràng */
+    background: transparent;  /* Nền trong suốt */
+    width: 100%;
+    outline: none;            /* Xóa outline mặc định */
+    box-shadow: none !important;
+    height: 24px;
+}
+
+/* 5. Style riêng cho ô Read-only (như Email) */
+/* Cần class 'readonly-input' ở component cha */
+.modern-form .readonly-input .input-content-wrapper {
+    background-color: #f8fafc; /* Nền xám cho ô không sửa được */
+    border-color: #e2e8f0;
+    cursor: not-allowed;
+}
+
+.modern-form .readonly-input input {
+    color: #64748b; /* Chữ nhạt hơn */
+    cursor: not-allowed;
+}
+
+/* Footer button */
+.form-footer {
+    margin-top: 2.5rem;
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .full-width {
+        grid-column: span 1;
+    }
+}

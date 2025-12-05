@@ -49,7 +49,7 @@ public class ShipmentController {
     @GetMapping("/{id}")
     @Operation(summary = "Xem chi tiết vận đơn theo Order ID", description = "Lấy thông tin vận đơn của một đơn hàng cụ thể")
     @Parameter(name = "id", description = "ID của đơn hàng", required = true, example = "1")
-    public ResponseEntity<ApiResponse<ShipmentResponse>> getShipment(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<ShipmentResponse>> getShipment(@PathVariable String id) {
         ShipmentResponse response = shipmentService.getShipmentByOrderId(id);
         return ResponseEntity.ok(ApiResponse.success("Lấy thông tin vận đơn thành công", response));
     }
@@ -64,7 +64,7 @@ public class ShipmentController {
     })
     public ResponseEntity<ApiResponse<PageResponse<ShipmentResponse>>> getAllShipments(
             Pageable pageable,
-            @RequestParam(required = false) Long orderId,
+            @RequestParam(required = false) String orderId,
             @RequestParam(required = false) String status) {
         PageResponse<ShipmentResponse> shipments = shipmentService.getAllShipments(pageable, orderId, status);
         return ResponseEntity.ok(ApiResponse.success("Lấy danh sách vận đơn thành công", shipments));

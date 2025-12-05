@@ -9,13 +9,11 @@ import {AdminLayout} from "../components/layout/AdminLayout/AdminLayout.tsx";
 import {ManageProductsPage} from "../pages/admin/ManageProductsPage.tsx";
 import {ManageCategoriesPage} from "../pages/admin/ManageCategoriesPage.tsx";
 import {ManageSupplierPage} from "../pages/admin/ManageSupplierPage.tsx";
-import {LoginPage} from "../pages/auth/LoginPage.tsx";
 import {AdminRoute, AuthRoute, LoggedInRoute} from "./ProtectedRoute.tsx";
 import {CheckoutPage} from "../pages/user/CheckOut/CheckOut.tsx";
 import {OrderHistoryPage} from "../pages/user/OrderHistoryPage/OrderHistoryPage.tsx";
 import {OrderDetailPage} from "../pages/user/OrderDetail/OrderDetailPage.tsx";
 import {DashboardPage} from "../pages/admin/Dashboard/DashboardPage.tsx";
-import {RegisterPage} from "../pages/auth/RegisterPage.tsx";
 import {ManageGoodsReceiptPage} from "../pages/admin/GoodsReceipt/ManageGoodsReceiptPage.tsx";
 import {CreateGoodsReceiptPage} from "../pages/admin/GoodsReceipt/CreateGoodsReceiptPage.tsx";
 import {GoodsReceiptDetailPage} from "../pages/admin/GoodsReceipt/GoodsReceiptDetailPage.tsx";
@@ -24,7 +22,10 @@ import {AdminOrderDetailPage} from "../pages/admin/Order/AdminOrderDetailPage.ts
 import { UserProfilePage } from '../pages/user/UserProfilePage/UserProfilePage';
 import { ManageCustomersPage } from '../pages/admin/ManageCustomersPage';
 import { ManageStockMovementPage } from '../pages/admin/ManageStockMovementPage';
-
+import { ManageShipmentPage} from "../pages/admin/ManageShipmentPage.tsx";
+import {FAQPage} from "../pages/user/FAQPage/FAQPage.tsx";
+import { ContactPage } from '../pages/user/ContactPage/ContactPage.tsx';
+import { AuthPage } from '../pages/auth/AuthPage.tsx';
 
 export function AppRoutes() {
     return (
@@ -33,17 +34,19 @@ export function AppRoutes() {
                 <Route index element={<HomePage />} />
                 <Route path="products" element={<ProductListPage />} />
                 <Route path="products/:id" element={<ProductDetailPage />} />
+                <Route path="faq" element={<FAQPage />} />
+                <Route path="contact" element={<ContactPage />} />
                 <Route element={<LoggedInRoute/>}>
                     <Route path="cart" element={<CartPage />} />
                     <Route path='checkout' element={<CheckoutPage/>}/>
                     <Route path='my-orders' element={<OrderHistoryPage/>}/>
                     <Route path='my-orders/:id' element={<OrderDetailPage/>}/>
-                    <Route path="profile" element={<UserProfilePage />} />
+                    <Route path='profile' element={<UserProfilePage/>} />
                 </Route>
             </Route>
             <Route path="/auth" element={<AuthRoute/>}>
-                <Route path={'login'} element={<LoginPage/>} />
-                <Route path={'register'} element={<RegisterPage/>} /> {/* Thêm dòng này */}
+                <Route path={'login'} element={<AuthPage />} />
+                <Route path={'register'} element={<AuthPage />} /> {/* Thêm dòng này */}
             </Route>
             <Route element={<AdminRoute/>}>
                 <Route path='/admin' element={<AdminLayout />}>
@@ -59,7 +62,9 @@ export function AppRoutes() {
                     <Route path='orders/:id' element={<AdminOrderDetailPage />} />
                     <Route path='users' element={<ManageCustomersPage />} />
                     <Route path='stock-movements' element={<ManageStockMovementPage />} />
+                    <Route path='shipments' element={<ManageShipmentPage />} />
                 </Route>
             </Route>
         </Routes>    );
 }
+//test

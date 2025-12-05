@@ -44,7 +44,7 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, Lo
         /**
          * Tìm stock movements theo order
          */
-        List<StockMovement> findByOrderIdOrderByOccurredAtDesc(Long orderId);
+        List<StockMovement> findByOrderIdOrderByOccurredAtDesc(String orderId);
 
         /**
          * Tìm stock movements trong khoảng thời gian

@@ -123,7 +123,6 @@ export const fetchAdminOrderDetail = createAsyncThunk(
     }
 );
 
-// 2. Cập nhật trạng thái
 export const updateOrderStatusThunk = createAsyncThunk(
     'orders/updateStatus',
     async ({ id, payload }: { id: number | string, payload: IUpdateOrderStatusRequest }, { rejectWithValue }) => {
@@ -156,7 +155,6 @@ const orderSlice = createSlice({
                 state.error = action.payload as string;
             });
 
-        // Fetch My Orders logic (MỚI)
         builder
             .addCase(fetchMyOrders.pending, (state) => {
                 state.myOrders.status = 'loading';
@@ -198,10 +196,8 @@ const orderSlice = createSlice({
         });
         builder.addCase(cancelOrderThunk.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            // Cập nhật lại currentOrder với dữ liệu mới (đã hủy) từ server
             state.currentOrder = action.payload;
 
-            // Cập nhật luôn trong danh sách myOrders nếu đang có
             const index = state.myOrders.data.findIndex(o => o.orderId === action.payload.orderId);
             if (index !== -1) {
                 state.myOrders.data[index] = action.payload;
@@ -244,10 +240,8 @@ const orderSlice = createSlice({
         });
 
 
-        // --- Admin Update Status ---
         builder.addCase(updateOrderStatusThunk.fulfilled, (state, action) => {
-            state.currentOrder = action.payload; // Cập nhật chi tiết
-            // Cập nhật trong danh sách nếu có
+            state.currentOrder = action.payload;
             const index = state.adminOrders.data.findIndex(o => o.orderId === action.payload.orderId);
             if (index !== -1) {
                 state.adminOrders.data[index] = action.payload;
