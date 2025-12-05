@@ -15,17 +15,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
+public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecificationExecutor<Order> {
         Page<Order> findByCustomerId(Long customerId, Pageable pageable);
 
         @Query("SELECT o.status FROM Order o WHERE o.id = :id")
-        Optional<OrderStatus> getOrderStatusById(@Param("id") Long id);
+        Optional<OrderStatus> getOrderStatusById(@Param("id") String id);
 
         // CẬP NHẬT TRẠNG THÁI ĐƠN HÀNG - Dành cho ShipmentService
         @Modifying(clearAutomatically = true)
         @Transactional
         @Query("UPDATE Order o SET o.status = :status WHERE o.id = :orderId")
-        int updateOrderStatus(@Param("orderId") Long orderId,
+        int updateOrderStatus(@Param("orderId") String orderId,
                         @Param("status") OrderStatus status);
 
         /**

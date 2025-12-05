@@ -22,14 +22,13 @@ import java.util.List;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
-    private Long id;
+    @Column(name = "order_id", length = 20)
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-    
+
     // @JoinColumn
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private OrderAddress shippingAddress;
