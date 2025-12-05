@@ -1,16 +1,24 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { fetchAdminOrderDetail, updateOrderStatusThunk, resetOrderState } from '../../../store/slices/OrderBlock/orderSlice';
 import { Button } from '../../../components/ui/button/Button';
 import { Card } from '../../../components/ui/card/Card';
 import { Spinner } from '../../../components/ui/loading/Spinner';
+import {createShipment} from "../../../store/slices/OrderBlock/shipmentSlice.ts";
+import {Modal} from "../../../components/ui/Modal/Modal.tsx";
+import {Input} from "../../../components/ui/input/Input.tsx";
 
 export function AdminOrderDetailPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { currentOrder, status } = useAppSelector((state) => state.orders);
+    const { currentOrder, status: orderStatus } = useAppSelector((state) => state.orders);
+    const { status: shipmentStatus } = useAppSelector((state: any) => state.shipments); // State của shipment
+
+    const [isShipModalOpen, setIsShipModalOpen] = useState(false);
+    const [shipForm, setShipForm] = useState({ carrier: '', trackingNo: '' });
+
 
     useEffect(() => {
         if (id) dispatch(fetchAdminOrderDetail(id));
@@ -28,9 +36,21 @@ export function AdminOrderDetailPage() {
         }
     };
 
-    const createShipment = () => {
-        handleUpdateStatus('SHIPPED')
-    }
+    const handleCreateShipment = async () => {
+        if (!shipForm.carrier || !shipForm.trackingNo) return alert("Vui lòng điền đủ thông tin");
+        if (!currentOrder) return;
+        console.log(currentOrder.orderId)
+
+        await dispatch(createShipment({
+            orderId: currentOrder.orderId,
+            carrier: shipForm.carrier,
+            trackingNo: shipForm.trackingNo
+        })).unwrap();
+
+        setIsShipModalOpen(false);
+        alert("Đã tạo vận đơn và chuyển trạng thái SHIPPED");
+    };
+
 
     if (!currentOrder) return <div style={{padding:'20px'}}>{status === 'loading' ? <Spinner/> : 'Không tìm thấy đơn hàng'}</div>;
 
@@ -52,7 +72,7 @@ export function AdminOrderDetailPage() {
                     <Button onClick={() => handleUpdateStatus('PREPARING')} color="1">Chuẩn bị hàng</Button>
                 )}
                 {orderStatus === 'PREPARING' && (
-                    <Button onClick={() => createShipment()} color="1">Tạo vận đơn</Button>
+                    <Button onClick={() => setIsShipModalOpen(true)} color="1">📦 Tạo vận đơn & Giao hàng</Button>
                 )}
                 {orderStatus === 'SHIPPED' && (
                     <Button color="1">Đơn vị vận chuyển đang chuyển hàng</Button>
@@ -130,6 +150,17 @@ export function AdminOrderDetailPage() {
                     </Card>
                 </div>
             </div>
+            <Modal isOpen={isShipModalOpen} onClose={() => setIsShipModalOpen(false)} title="Tạo vận đơn">
+                <div style={{minWidth:'400px', display:'flex', flexDirection:'column', gap:'15px'}}>
+                    <Input label="Đơn vị vận chuyển" placeholder="VD: GHTK, GHN..."
+                           value={shipForm.carrier} onChange={e => setShipForm({...shipForm, carrier:e.target.value})} />
+                    <Input label="Mã vận đơn (Tracking No)" placeholder="VD: GHTK_123456789"
+                           value={shipForm.trackingNo} onChange={e => setShipForm({...shipForm, trackingNo:e.target.value})} />
+                    <Button onClick={handleCreateShipment} disabled={shipmentStatus === 'loading'}>
+                        {shipmentStatus === 'loading' ? <Spinner/> : 'Tạo & Giao hàng'}
+                    </Button>
+                </div>
+            </Modal>
         </div>
     );
 }
