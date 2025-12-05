@@ -1,5 +1,5 @@
 import axiosClient from '../axiosClient.ts';
-import type {ILoginPayload, IServerResponse, ILoginResponse, IAuthUser} from '../../types';
+import type {ILoginPayload, IServerResponse, ILoginResponse, IAuthUser, IRegisterPayload} from '../../types';
 
 export const authApi = {
     login: async (payload: ILoginPayload) => {
@@ -19,5 +19,10 @@ export const authApi = {
             params: { token }
         });
         return response.data.data;
+    },
+
+    register: async (payload: IRegisterPayload) => {
+        const response = await axiosClient.post<IServerResponse<void>>('/auth/register', payload);
+        return response.data;
     }
 };

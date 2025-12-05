@@ -103,9 +103,18 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/products/**").hasRole("ADMIN")
 
                         // Admin-only endpoints - Order management
+                        .requestMatchers(HttpMethod.GET, "/api/v1/orders/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/orders/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/v1/orders/{id}/cancel").hasAnyRole("ADMIN", "CUSTOMER")
+
+                        // Customer endpoints - Profile and Address management
+                        .requestMatchers("/api/v1/customers/profile").hasRole("CUSTOMER")
+                        .requestMatchers("/api/v1/customers/change-password").hasRole("CUSTOMER")
+                        .requestMatchers("/api/v1/customers/address").hasRole("CUSTOMER")
+
+                        // Admin-only endpoints - Customer management
+                        .requestMatchers("/api/v1/customers/admin/**").hasRole("ADMIN")
 
                         // All other requests require authentication
                         .anyRequest().authenticated())

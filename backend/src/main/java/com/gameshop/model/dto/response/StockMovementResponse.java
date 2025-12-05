@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
  * Response DTO cho StockMovement
  */
 public record StockMovementResponse(
-        Long movementId,
-        Long productId,
-        String productName,
-        Integer quantityDelta,
-        StockMovementReason reason,
-        String referenceNo,
-        Long orderId,
-        LocalDateTime occurredAt
-) {}
+                Long movementId,
+                Long productId,
+                String productName,
+                Integer quantityDelta,
+                StockMovementReason reason,
+                String referenceNo,
+                String orderId,
+                LocalDateTime occurredAt) {
+}

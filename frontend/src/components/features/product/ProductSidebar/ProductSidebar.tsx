@@ -3,8 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
 import { fetchCategories } from '../../../../store/slices/ProductBlock/categorySlice';
 import { Button } from '../../../ui/button/Button';
 import type { IServerProductFilters } from '../../../../types';
-
-import './ProductSlidebar.css';
+import './ProductSlidebar.css'; // Đảm bảo file CSS tên đúng (Slidebar hay Sidebar tùy file gốc của bạn)
 
 interface ProductSidebarProps {
     currentFilters: IServerProductFilters;
@@ -80,38 +79,8 @@ export const ProductSidebar: React.FC<ProductSidebarProps> = ({
 
     return (
         <aside className="page-sidebar">
-            <h3 >BỘ LỌC & SẮP XẾP</h3>
-
-            {/* --- NHÓM 1: SẮP XẾP --- */}
-            <div className="filter-group">
-                <h4>Sắp xếp</h4>
-                <label >
-                    <input
-                        type="radio"
-                        name="sort"
-                        value="default"
-                        checked={clientFilters.sortBy === 'default'}
-                        onChange={handleSortChange}
-                    /> Mặc định
-                </label>
-                <label>
-                    <input
-                        type="radio"
-                        name="sort"
-                        value="price-asc"
-                        checked={clientFilters.sortBy === 'price-asc'}
-                        onChange={handleSortChange}
-                    /> Giá tăng dần
-                </label>
-                <label>
-                    <input
-                        type="radio"
-                        name="sort"
-                        value="price-desc"
-                        checked={clientFilters.sortBy === 'price-desc'}
-                        onChange={handleSortChange}
-                    /> Giá giảm dần
-                </label>
+            <div style={{borderBottom: '1px solid #eee', paddingBottom: '10px', marginBottom: '15px'}}>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', textTransform: 'uppercase' }}>Bộ lọc sản phẩm</h3>
             </div>
 
             {/* --- NHÓM DANH MỤC --- */}
@@ -190,7 +159,11 @@ export const ProductSidebar: React.FC<ProductSidebarProps> = ({
             </div>
 
             {/* Nút Xóa bộ lọc */}
-            <Button onClick={onClearFilters}>
+            <Button
+                style={{ width: '100%', marginTop: '1rem' }}
+                color="0"
+                onClick={onClearFilters}
+            >
                 Xóa bộ lọc
             </Button>
         </aside>

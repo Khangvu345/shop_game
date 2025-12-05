@@ -42,7 +42,7 @@ public class StockMovementServiceImpl implements StockMovementService {
 
         @Override
         public void createMovement(Long productId, Integer quantityDelta,
-                        StockMovementReason reason, String referenceNo, Long orderId) {
+                        StockMovementReason reason, String referenceNo, String orderId) {
                 log.info("Creating stock movement: productId={}, delta={}, reason={}",
                                 productId, quantityDelta, reason);
 

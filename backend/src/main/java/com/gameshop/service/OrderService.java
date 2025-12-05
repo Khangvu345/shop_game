@@ -43,18 +43,21 @@ public class OrderService {
     private final OrderRepository orderRepo;
     private final StockMovementService stockMovementService;
     private final AccountRepository accountRepo;
+    private final OrderIdGenerator orderIdGenerator;
 
     @Autowired
     public OrderService(CustomerRepository customerRepo,
             ProductRepository productRepo,
             OrderRepository orderRepo,
             StockMovementService stockMovementService,
-            AccountRepository accountRepo) {
+            AccountRepository accountRepo,
+            OrderIdGenerator orderIdGenerator) {
         this.customerRepo = customerRepo;
         this.productRepo = productRepo;
         this.orderRepo = orderRepo;
         this.stockMovementService = stockMovementService;
         this.accountRepo = accountRepo;
+        this.orderIdGenerator = orderIdGenerator;
     }
 
     // Helper method: Get Customer from accountId
@@ -80,6 +83,11 @@ public class OrderService {
         Customer customer = getCustomerFromAccountId(accountIdStr);
 
         Order order = new Order();
+
+        // Generate order ID BEFORE setting other fields
+        String orderId = orderIdGenerator.generateOrderId();
+        order.setId(orderId);
+
         order.setCustomer(customer);
 
         // 2. Map Address
@@ -144,12 +152,12 @@ public class OrderService {
         return new CreateOrderResponse(saved.getId(), "Đặt hàng thành công!");
     }
 
-    public Order getOrderDetail(Long id) {
+    public Order getOrderDetail(String id) {
         return orderRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
     }
 
-    public OrderResponse getOrderDetail(Long id, String accountIdStr) {
+    public OrderResponse getOrderDetail(String id, String accountIdStr) {
         Customer customer = getCustomerFromAccountId(accountIdStr);
         Order order = orderRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
@@ -161,7 +169,7 @@ public class OrderService {
     }
 
     // Keep old method for admin use
-    public OrderResponse getOrderResponse(Long id) {
+    public OrderResponse getOrderResponse(String id) {
         Order order = orderRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
         return mapToOrderResponse(order);
@@ -226,7 +234,7 @@ public class OrderService {
                 orderPage.getSize());
     }
 
-    public OrderResponse updateOrderStatus(Long orderId, UpdateOrderStatusRequest request) {
+    public OrderResponse updateOrderStatus(String orderId, UpdateOrderStatusRequest request) {
         Order order = getOrderDetail(orderId);
 
         // Validate status transition
@@ -247,7 +255,7 @@ public class OrderService {
         return mapToOrderResponse(order);
     }
 
-    public OrderResponse updatePaymentStatus(Long orderId, UpdatePaymentStatusRequest request) {
+    public OrderResponse updatePaymentStatus(String orderId, UpdatePaymentStatusRequest request) {
         Order order = getOrderDetail(orderId);
         order.setPaymentStatus(request.paymentStatus());
         orderRepo.save(order);
@@ -255,7 +263,7 @@ public class OrderService {
         return mapToOrderResponse(order);
     }
 
-    public OrderResponse cancelOrder(Long orderId, CancelOrderRequest request, String accountIdStr) {
+    public OrderResponse cancelOrder(String orderId, CancelOrderRequest request, String accountIdStr) {
         Customer customer = getCustomerFromAccountId(accountIdStr);
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));

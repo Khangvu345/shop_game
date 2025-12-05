@@ -2,6 +2,7 @@ package com.gameshop.service;
 
 import com.gameshop.model.dto.common.PeriodDto;
 import com.gameshop.model.dto.response.DashboardStatsResponseDto;
+import com.gameshop.model.dto.response.RevenueBreakdownDto;
 import com.gameshop.model.enums.PeriodType;
 import com.gameshop.repository.CustomerRepository;
 import com.gameshop.repository.OrderRepository;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -56,6 +58,7 @@ public class DashboardService {
         Integer newCustomers = countNewCustomers(startDateTime, endDateTime);
         Long totalInventory = getTotalInventory();
         Integer lowStockCount = countLowStockProducts(LOW_STOCK_THRESHOLD);
+        RevenueBreakdownDto revenueBreakdown = calculateRevenueBreakdown(startDateTime, endDateTime);
 
         // Create period DTO
         PeriodDto period = new PeriodDto();
@@ -70,6 +73,7 @@ public class DashboardService {
         response.setNewCustomers(newCustomers);
         response.setTotalInventory(totalInventory);
         response.setLowStockCount(lowStockCount);
+        response.setRevenueBreakdown(revenueBreakdown);
         response.setPeriod(period);
         response.setLastUpdated(LocalDateTime.now());
 
@@ -126,5 +130,33 @@ public class DashboardService {
      */
     private Integer countLowStockProducts(Integer threshold) {
         return productRepository.countLowStockProducts(threshold);
+    }
+
+    /**
+     * Calculate revenue breakdown with sales, cost, and profit analysis
+     * 
+     * @param startDate Start of date range
+     * @param endDate   End of date range
+     * @return Revenue breakdown DTO
+     */
+    private RevenueBreakdownDto calculateRevenueBreakdown(LocalDateTime startDate, LocalDateTime endDate) {
+        // Calculate total sales (revenue)
+        BigDecimal totalSales = orderRepository.sumRevenueByDateRange(startDate, endDate);
+
+        // Calculate total cost (purchase price × quantity)
+        BigDecimal totalCost = orderRepository.sumCostByDateRange(startDate, endDate);
+
+        // Calculate profit
+        BigDecimal totalProfit = totalSales.subtract(totalCost);
+
+        // Calculate profit margin percentage
+        BigDecimal profitMargin = BigDecimal.ZERO;
+        if (totalSales.compareTo(BigDecimal.ZERO) > 0) {
+            profitMargin = totalProfit
+                    .divide(totalSales, 4, RoundingMode.HALF_UP)
+                    .multiply(new BigDecimal("100"));
+        }
+
+        return new RevenueBreakdownDto(totalSales, totalCost, totalProfit, profitMargin);
     }
 }

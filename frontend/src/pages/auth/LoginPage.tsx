@@ -75,7 +75,7 @@ export function LoginPage() {
                 </form>
 
                 <div className="login-link-group">
-                    Chưa có tài khoản? <Link to="/register" className="primary-link">Đăng ký ngay</Link>
+                    Chưa có tài khoản? <Link to="/auth/register" className="primary-link">Đăng ký ngay</Link>
                 </div>
                 <div className="login-link-group back-home">
                     <Link to="/" className="secondary-link">← Về trang chủ</Link>
