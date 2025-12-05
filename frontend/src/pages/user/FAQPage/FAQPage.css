@@ -1,0 +1,179 @@
+/* FAQ Page Container */
+.faq-page {
+    background-color: #f9fafb;
+    padding: 0 20px;
+}
+
+/* Header Section */
+/* === HEADER SECTION MỚI === */
+.faq-header {
+    /* Thay đổi đường dẫn ảnh của bạn ở đây */
+    background-image: url('../../../assets/images/Gemini_Generated_Image_11anrd11anrd11an.png');
+    
+    /* Các thuộc tính căn chỉnh ảnh nền quan trọng */
+    background-size: cover;       /* Ảnh phủ kín khung */
+    background-position: center;  /* Căn giữa ảnh */
+    background-repeat: no-repeat;
+    
+    /* Nếu ảnh của bạn vẫn hơi sáng, có thể bỏ comment dòng dưới để thêm một lớp phủ đen mỏng */
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../../../assets/images/faq-header-new.jpg'); */
+
+    padding: 100px 20px; /* Tăng padding trên dưới một chút để thoáng hơn */
+    text-align: center;
+    color: white;
+    position: relative;
+    /* overflow: hidden;  <- Không cần thiết nữa nếu bỏ shapes */
+    margin-bottom: 40px;
+    border-radius: 0 0 20px 20px;
+    
+    /* Thêm một chút shadow cho cả khối header để nổi bật trên nền trắng bên dưới */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.faq-header-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-title {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: white;
+    font-weight: 800;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.faq-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.95;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Decorative Shapes - Subtle glow effect */
+.faq-header-shapes .shape {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(14, 168, 155, 0.2);
+    filter: blur(40px);
+}
+
+.faq-header-shapes .shape-1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    left: -100px;
+}
+
+.faq-header-shapes .shape-2 {
+    width: 400px;
+    height: 400px;
+    bottom: -150px;
+    right: -100px;
+}
+
+/* Main Content Container */
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* FAQ List - Overriding Accordion Styles */
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Target the AccordionItem within FAQ page to style it as a card */
+.faq-list .accordion-item {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.faq-list .accordion-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+    border-color: var(--color-secondary-0);
+}
+
+.faq-list .accordion-header {
+    background-color: white;
+    padding: 20px 24px;
+    border-bottom: none;
+}
+
+.faq-list .accordion-header:hover {
+    background-color: #f9fafb;
+}
+
+.faq-list .accordion-title {
+    font-size: 1.1rem;
+    color: var(--color-primary-1);
+    font-weight: 600;
+}
+
+.faq-list .accordion-icon {
+    color: var(--color-secondary-0);
+    background-color: rgba(14, 168, 155, 0.1);
+    /* Light teal background */
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.8rem;
+}
+
+.faq-list .accordion-item.open .accordion-content {
+    border-top: 1px solid #f0f0f0;
+    padding: 0 24px 24px 24px;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+/* Contact Prompt Section */
+.faq-contact-prompt {
+    margin-top: 60px;
+    text-align: center;
+    background-color: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.faq-contact-prompt h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: var(--color-primary-1);
+}
+
+.faq-contact-prompt p {
+    color: #6b7280;
+    margin-bottom: 24px;
+}
+
+.btn-contact {
+    display: inline-block;
+    background-color: var(--color-secondary-0);
+    color: white;
+    padding: 12px 32px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(14, 168, 155, 0.2);
+}
+
+.btn-contact:hover {
+    background-color: var(--color-secondary-1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(14, 168, 155, 0.3);
+}

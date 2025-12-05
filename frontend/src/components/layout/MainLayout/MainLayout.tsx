@@ -7,15 +7,9 @@ import { Logo } from "../../ui/logo/Logo.tsx";
 import { logoutUser } from "../../../store/slices/Auth/authSlice.ts";
 import Footer from '../Footer/Footer.tsx';
 import React, { useState } from 'react'; // Import useState
+import { useEffect } from 'react';
+import { CartIcon, UserIcon, PhoneIcon } from '../../ui/icon/icon.tsx';
 
-// 1. Tạo component Icon Giỏ hàng (SVG)
-const CartIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="9" cy="21" r="1"></circle>
-        <circle cx="20" cy="21" r="1"></circle>
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-    </svg>
-);
 
 // 2. Component Search Bar
 function SearchBar() {
@@ -56,6 +50,7 @@ function PublicNavLinks() {
         <>
             <NavLink to="/" className="nav-link">Trang chủ</NavLink>
             <NavLink to="/products" className="nav-link">Sản phẩm</NavLink>
+            <NavLink to="/Contact" className="nav-link">Liên hệ</NavLink>
         </>
     )
 }
