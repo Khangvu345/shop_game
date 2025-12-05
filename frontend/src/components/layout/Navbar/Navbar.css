@@ -1,9 +1,7 @@
-/* src/components/layout/Navbar/Navbar.css */
-
 .navbar-horizontal {
     display: grid;
     grid-template-areas: "navbar-logo navbar-nav navbar-search navbar-actions";
-    grid-template-columns: auto auto 1fr auto; 
+    grid-template-columns: auto auto 1fr auto;
     width: 100%;
     height: 70px; /* Tăng nhẹ chiều cao để thoáng hơn */
     padding: 0 2rem; 

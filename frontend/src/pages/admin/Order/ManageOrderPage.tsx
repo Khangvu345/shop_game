@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks.ts';
 import { fetchAdminOrders } from '../../../store/slices/OrderBlock/orderSlice.ts';
 import { AdminTable } from '../../../components/features/admin/AdminTable/AdminTable.tsx';
+import { AdminPageHeader } from '../../../components/features/admin/AdminPageHeader/AdminPageHeader.tsx';
+import '../../../components/features/admin/AdminPageHeader/AdminPageHeader.css';
 import { Pagination } from '../../../components/ui/pagination/Pagination.tsx';
 import { Select } from '../../../components/ui/input/Select.tsx';
 import { Input } from '../../../components/ui/input/Input.tsx';
@@ -74,92 +76,92 @@ export function ManageOrderPage() {
             key: 'status',
             render: (item) => (
                 <span style={{
-            color: getStatusColor(item.status),
-            fontWeight: 'bold',
-            border: `1px solid ${getStatusColor(item.status)}`,
-            padding: '2px 8px',
-            borderRadius: '12px',
-            fontSize: '0.85rem'
-        }}>
-    {item.status}
-    </span>
-)
-},
-    {
-        title: 'Thanh toán',
+                    color: getStatusColor(item.status),
+                    fontWeight: 'bold',
+                    border: `1px solid ${getStatusColor(item.status)}`,
+                    padding: '2px 8px',
+                    borderRadius: '12px',
+                    fontSize: '0.85rem'
+                }}>
+                    {item.status}
+                </span>
+            )
+        },
+        {
+            title: 'Thanh toán',
             key: 'paymentStatus',
-        render: (item) => (
-        <span style={{ color: item.paymentStatus === 'PAID' ? 'green' : 'orange' }}>
-        {item.paymentStatus}
-        </span>
-    )
-    }
-];
+            render: (item) => (
+                <span style={{ color: item.paymentStatus === 'PAID' ? 'green' : 'orange' }}>
+                    {item.paymentStatus}
+                </span>
+            )
+        }
+    ];
 
     return (
-        <div style={{ padding: '20px' }}>
-    <h2 style={{ marginBottom: '20px' }}>Quản Lý Đơn Hàng</h2>
+        <div className="admin-page-container">
+            <AdminPageHeader title="Quản Lý Đơn Hàng" />
 
-    {/* FILTER BAR */}
-    <div style={{
-        display: 'flex', gap: '15px', marginBottom: '20px',
-            background: '#fff', padding: '15px', borderRadius: '8px', border: '1px solid #eee',
-            flexWrap: 'wrap', alignItems: 'flex-end'
-    }}>
-    <div style={{ width: '200px' }}>
-    <Select
-        label="Trạng thái"
-    value={filters.status}
-    onChange={(e) => handleFilterChange('status', e.target.value)}
-    options={[
-            { label: 'Tất cả', value: '' },
-    { label: 'Chờ xử lý (Pending)', value: 'PENDING' },
-    { label: 'Đã xác nhận (Confirmed)', value: 'CONFIRMED' },
-    { label: 'Đang giao (Shipped)', value: 'SHIPPED' },
-    { label: 'Hoàn thành (Completed)', value: 'COMPLETED' },
-    { label: 'Đã hủy (Cancelled)', value: 'CANCELLED' },
-]}
-    />
-    </div>
-    <div style={{ width: '200px' }}>
-    <Input
-        label="Từ ngày"
-    type="date"
-    value={filters.fromDate}
-    onChange={(e) => handleFilterChange('fromDate', e.target.value)}
-    />
-    </div>
-    <div style={{ width: '200px' }}>
-    <Input
-        label="Đến ngày"
-    type="date"
-    value={filters.toDate}
-    onChange={(e) => handleFilterChange('toDate', e.target.value)}
-    />
-    </div>
-    <Button onClick={() => setFilters({ status: '', fromDate: '', toDate: '', page: 0 })} color="0">
-        Xóa lọc
-    </Button>
-    </div>
+            {/* FILTER BAR */}
+            <div style={{
+                display: 'flex', gap: '15px', marginBottom: '20px',
+                background: '#fff', padding: '15px', borderRadius: '8px', border: '1px solid #eee',
+                flexWrap: 'wrap', alignItems: 'flex-end'
+            }}>
+                <div style={{ width: '200px' }}>
+                    <Select
+                        label="Trạng thái"
+                        value={filters.status}
+                        onChange={(e) => handleFilterChange('status', e.target.value)}
+                        options={[
+                            { label: 'Tất cả', value: '' },
+                            { label: 'Chờ xử lý (Pending)', value: 'PENDING' },
+                            { label: 'Đã xác nhận (Confirmed)', value: 'CONFIRMED' },
+                            { label: 'Đang giao (Shipped)', value: 'SHIPPED' },
+                            { label: 'Hoàn thành (Completed)', value: 'COMPLETED' },
+                            { label: 'Đã hủy (Cancelled)', value: 'CANCELLED' },
+                        ]}
+                    />
+                </div>
+                <div style={{ width: '200px' }}>
+                    <Input
+                        label="Từ ngày"
+                        type="date"
+                        value={filters.fromDate}
+                        onChange={(e) => handleFilterChange('fromDate', e.target.value)}
+                    />
+                </div>
+                <div style={{ width: '200px' }}>
+                    <Input
+                        label="Đến ngày"
+                        type="date"
+                        value={filters.toDate}
+                        onChange={(e) => handleFilterChange('toDate', e.target.value)}
+                    />
+                </div>
+                <Button onClick={() => setFilters({ status: '', fromDate: '', toDate: '', page: 0 })} color="0">
+                    Xóa lọc
+                </Button>
+            </div>
 
-    <AdminTable<IOrder>
-    columns={columns}
-    data={data || []}
-    isLoading={status === 'loading'}
-    rowKey={(item) => item.orderId}
-    onEdit={(item) => navigate(`/admin/orders/${item.orderId}`)} // Xem chi tiết
-    />
+            <AdminTable<IOrder>
+                columns={columns}
+                data={data || []}
+                isLoading={status === 'loading'}
+                rowKey={(item) => item.orderId}
+                onEdit={(item) => navigate(`/admin/orders/${item.orderId}`)} // Xem chi tiết
+            />
 
-    {pagination && pagination.totalPages > 1 && (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-        <Pagination
-            totalRows={pagination.total}
-        limit={10}
-        currentPage={filters.page + 1}
-        onPageChange={handlePageChange}
-        />
+            {pagination && pagination.totalPages > 1 && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                    <Pagination
+                        totalRows={pagination.total}
+                        limit={10}
+                        currentPage={filters.page + 1}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
+            )}
         </div>
-    )}
-    </div>
-);
+    );
 }

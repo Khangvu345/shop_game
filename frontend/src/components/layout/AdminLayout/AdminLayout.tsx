@@ -8,10 +8,6 @@ import { useAppDispatch, useAppSelector } from "../../../store/hooks.ts";
 import { logoutUser } from "../../../store/slices/Auth/authSlice.ts";
 
 function AdminNavLinks() {
-
-
-
-
     return (
         <>
             <NavLink to="dashboard" className="admin-nav-link">Bảng điều khiển</NavLink>
@@ -49,9 +45,6 @@ function AdminActionBar() {
 export function AdminLayout() {
     return (
         <div className={'admin-container'}>
-            <header className={'admin-header'}>
-                <h1>Quản li cơ sở dữ liệu</h1>
-            </header>
             <aside className={'admin-sidebar'}>
                 <Navbar styleNav={"-vertical"} links={<AdminNavLinks />} actions={<AdminActionBar />}></Navbar>
             </aside>
