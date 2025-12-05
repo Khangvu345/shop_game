@@ -37,6 +37,7 @@ export function AppRoutes() {
                     <Route path='checkout' element={<CheckoutPage/>}/>
                     <Route path='my-orders' element={<OrderHistoryPage/>}/>
                     <Route path='my-orders/:id' element={<OrderDetailPage/>}/>
+                    <Route path='profile' element={<UserProfilePage/>} />
                 </Route>
             </Route>
             <Route path="/auth" element={<AuthRoute/>}>
