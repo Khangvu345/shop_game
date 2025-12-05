@@ -33,25 +33,22 @@ export function CheckoutPage() {
     });
 
     const subTotal = cartItems.reduce((sum, item) => sum + (item.product.listPrice * item.quantity), 0);
-    const shippingFee = 30000; // Phí ship giả định
+    const shippingFee = 30000;
     const grandTotal = subTotal + shippingFee;
 
     useEffect(() => {
-        if (user) {
+
             setFormData(prev => ({
                 ...prev,
-                receiverName: user.fullName || '',
-                phone: user.phone || '',
-            }));
-        }
-        if (address.data){
-            setFormData(prev => ({
-                ...prev,
+                receiverName: user?.fullName || '',
+                phone: user?.phone || '',
                 city: address.data?.city || '',
                 ward: address.data?.ward || '',
                 street: address.data?.line1  || '',
             }));
-        }
+
+
+
     }, [user, address]);
 
     useEffect(() => {
