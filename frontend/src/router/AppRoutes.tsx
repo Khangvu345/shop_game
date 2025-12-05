@@ -9,13 +9,11 @@ import {AdminLayout} from "../components/layout/AdminLayout/AdminLayout.tsx";
 import {ManageProductsPage} from "../pages/admin/ManageProductsPage.tsx";
 import {ManageCategoriesPage} from "../pages/admin/ManageCategoriesPage.tsx";
 import {ManageSupplierPage} from "../pages/admin/ManageSupplierPage.tsx";
-import {LoginPage} from "../pages/auth/LoginPage.tsx";
 import {AdminRoute, AuthRoute, LoggedInRoute} from "./ProtectedRoute.tsx";
 import {CheckoutPage} from "../pages/user/CheckOut/CheckOut.tsx";
 import {OrderHistoryPage} from "../pages/user/OrderHistoryPage/OrderHistoryPage.tsx";
 import {OrderDetailPage} from "../pages/user/OrderDetail/OrderDetailPage.tsx";
 import {DashboardPage} from "../pages/admin/Dashboard/DashboardPage.tsx";
-import {RegisterPage} from "../pages/auth/RegisterPage.tsx";
 import {ManageGoodsReceiptPage} from "../pages/admin/GoodsReceipt/ManageGoodsReceiptPage.tsx";
 import {CreateGoodsReceiptPage} from "../pages/admin/GoodsReceipt/CreateGoodsReceiptPage.tsx";
 import {GoodsReceiptDetailPage} from "../pages/admin/GoodsReceipt/GoodsReceiptDetailPage.tsx";
@@ -25,6 +23,7 @@ import { UserProfilePage } from '../pages/user/UserProfilePage/UserProfilePage';
 import { ManageCustomersPage } from '../pages/admin/ManageCustomersPage';
 import { ManageStockMovementPage } from '../pages/admin/ManageStockMovementPage';
 
+import { AuthPage } from '../pages/auth/AuthPage.tsx';
 
 export function AppRoutes() {
     return (
@@ -38,12 +37,11 @@ export function AppRoutes() {
                     <Route path='checkout' element={<CheckoutPage/>}/>
                     <Route path='my-orders' element={<OrderHistoryPage/>}/>
                     <Route path='my-orders/:id' element={<OrderDetailPage/>}/>
-                    <Route path="profile" element={<UserProfilePage />} />
                 </Route>
             </Route>
             <Route path="/auth" element={<AuthRoute/>}>
-                <Route path={'login'} element={<LoginPage/>} />
-                <Route path={'register'} element={<RegisterPage/>} /> {/* Thêm dòng này */}
+                <Route path={'login'} element={<AuthPage />} />
+                <Route path={'register'} element={<AuthPage />} /> {/* Thêm dòng này */}
             </Route>
             <Route element={<AdminRoute/>}>
                 <Route path='/admin' element={<AdminLayout />}>
