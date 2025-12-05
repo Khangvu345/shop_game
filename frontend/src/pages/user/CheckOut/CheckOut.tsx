@@ -5,11 +5,9 @@ import { placeOrder } from '../../../store/slices/OrderBlock/orderSlice';
 import { clearCart } from '../../../store/slices/cartSlice';
 import { Button } from '../../../components/ui/button/Button';
 import { Input } from '../../../components/ui/input/Input';
-import { Select } from '../../../components/ui/input/Select';
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import type { ICreateOrderPayload } from '../../../types';
 import './CheckOut.css';
-import {Spinner} from "../../../components/ui/loading/Spinner";
 import {fetchMyAddress, fetchMyProfile} from "../../../store/slices/AccountBlock/customerSlice.tsx";
 
 export function CheckoutPage() {
