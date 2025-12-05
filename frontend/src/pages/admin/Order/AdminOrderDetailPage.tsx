@@ -19,7 +19,7 @@ export function AdminOrderDetailPage() {
 
     const handleUpdateStatus = async (newStatus: string) => {
         if (!id) return;
-        if (window.confirm(`Bạn có chắc muốn chuyển trạng thái sang ${newStatus}?`)) {
+        if (window.confirm(`Xác nhận?`)) {
             await dispatch(updateOrderStatusThunk({
                 id,
                 payload: { status: newStatus }
@@ -28,32 +28,39 @@ export function AdminOrderDetailPage() {
         }
     };
 
+    const createShipment = () => {
+        handleUpdateStatus('SHIPPED')
+    }
+
     if (!currentOrder) return <div style={{padding:'20px'}}>{status === 'loading' ? <Spinner/> : 'Không tìm thấy đơn hàng'}</div>;
 
     const address = (currentOrder as any).shippingAddress || currentOrder.address;
 
     // --- LOGIC HIỂN THỊ NÚT BẤM ---
     const renderActionButtons = () => {
-        const s = currentOrder.status;
-        // Workflow: PENDING -> CONFIRMED -> PREPARING -> SHIPPED -> DELIVERED -> COMPLETED
+        const orderStatus = currentOrder.status;
+        const paymentStatus = currentOrder.paymentStatus
         return (
             <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                {s === 'PENDING' && (
+                {orderStatus === 'PENDING' && (
                     <>
                         <Button onClick={() => handleUpdateStatus('CONFIRMED')} color="1">Xác nhận đơn</Button>
                         <Button onClick={() => handleUpdateStatus('CANCELLED')} style={{background:'#ef4444', borderColor:'#ef4444'}}>Hủy đơn</Button>
                     </>
                 )}
-                {s === 'CONFIRMED' && (
+                {orderStatus === 'CONFIRMED' && (
                     <Button onClick={() => handleUpdateStatus('PREPARING')} color="1">Chuẩn bị hàng</Button>
                 )}
-                {s === 'PREPARING' && (
-                    <Button onClick={() => handleUpdateStatus('SHIPPED')} color="1">Bắt đầu giao hàng</Button>
+                {orderStatus === 'PREPARING' && (
+                    <Button onClick={() => createShipment()} color="1">Tạo vận đơn</Button>
                 )}
-                {s === 'SHIPPED' && (
-                    <Button onClick={() => handleUpdateStatus('DELIVERED')} color="1">Đã giao hàng</Button>
+                {orderStatus === 'SHIPPED' && (
+                    <Button color="1">Đơn vị vận chuyển đang chuyển hàng</Button>
                 )}
-                {s === 'DELIVERED' && (
+                {orderStatus === 'DELIVERED' && (paymentStatus === 'COD_PENDING' || paymentStatus === 'FAILED') && (
+                    <Button onClick={() => handleUpdateStatus('COMPLETED')} color="1">Khách hàng đã thanh toán</Button>
+                )}
+                {orderStatus === 'DELIVERED' && (paymentStatus === 'COD_COLLECTED' || paymentStatus === 'PAID') &&(
                     <Button onClick={() => handleUpdateStatus('COMPLETED')} color="1">Hoàn tất đơn hàng</Button>
                 )}
                 {/* Các trạng thái cuối: COMPLETED, CANCELLED, RETURNED không có nút tiếp theo */}

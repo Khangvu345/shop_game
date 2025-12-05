@@ -22,7 +22,7 @@ import {AdminOrderDetailPage} from "../pages/admin/Order/AdminOrderDetailPage.ts
 import { UserProfilePage } from '../pages/user/UserProfilePage/UserProfilePage';
 import { ManageCustomersPage } from '../pages/admin/ManageCustomersPage';
 import { ManageStockMovementPage } from '../pages/admin/ManageStockMovementPage';
-
+import { ManageShipmentPage} from "../pages/admin/ManageShipmentPage.tsx";
 import { AuthPage } from '../pages/auth/AuthPage.tsx';
 
 export function AppRoutes() {
@@ -58,6 +58,7 @@ export function AppRoutes() {
                     <Route path='orders/:id' element={<AdminOrderDetailPage />} />
                     <Route path='users' element={<ManageCustomersPage />} />
                     <Route path='stock-movements' element={<ManageStockMovementPage />} />
+                    <Route path='shipments' element={<ManageShipmentPage />} />
                 </Route>
             </Route>
         </Routes>    );
