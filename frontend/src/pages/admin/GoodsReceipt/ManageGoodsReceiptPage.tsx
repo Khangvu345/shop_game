@@ -75,6 +75,7 @@ export function ManageGoodsReceiptPage() {
                 rowKey={(item) => item.receiptId}
                 // Nút sửa đóng vai trò xem chi tiết
                 onEdit={(item) => navigate(`/admin/goods-receipts/${item.receiptId}`)}
+                editButtonText="Xem"
             />
 
             {pagination && pagination.totalPages > 1 && (

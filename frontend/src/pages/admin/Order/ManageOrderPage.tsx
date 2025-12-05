@@ -150,6 +150,7 @@ export function ManageOrderPage() {
                 isLoading={status === 'loading'}
                 rowKey={(item) => item.orderId}
                 onEdit={(item) => navigate(`/admin/orders/${item.orderId}`)} // Xem chi tiết
+                editButtonText="Xem"
             />
 
             {pagination && pagination.totalPages > 1 && (
