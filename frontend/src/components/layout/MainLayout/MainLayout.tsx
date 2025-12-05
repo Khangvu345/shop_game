@@ -87,9 +87,8 @@ function ActionBar() {
         return (
             <>
                 {CartButton}
-                <Button onClick={() => { navigate('/my-orders'); }}>
-                    Profile
-                </Button>
+                <Button onClick={() => {navigate('/profile');
+                }}>Profile</Button>
                 <Button onClick={handleLogout}>Đăng xuất</Button>
             </>
         )

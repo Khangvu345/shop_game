@@ -23,7 +23,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     @Transactional
-    public void restoreStockForReturnedOrder(Long orderId) {
+    public void restoreStockForReturnedOrder(String orderId) {
         log.info("Bắt đầu hoàn trả stock cho đơn hàng ID: {}", orderId);
 
         // Verify order exists

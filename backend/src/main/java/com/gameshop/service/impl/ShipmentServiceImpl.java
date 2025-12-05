@@ -35,7 +35,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Override
     @Transactional
     public ShipmentResponse createShipment(CreateShipmentRequest req) {
-        Long orderId = req.orderId();
+        String orderId = req.orderId();
 
         // 1. Kiểm tra tồn tại + lấy status bằng 1 query duy nhất
         OrderStatus currentStatus = orderRepository.getOrderStatusById(orderId)
@@ -86,7 +86,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.setStatus(req.status());
         shipmentRepository.saveAndFlush(shipment);
 
-        Long orderId = shipment.getOrderId();
+        String orderId = shipment.getOrderId();
 
         switch (req.status()) {
             case Shipped -> orderRepository.updateOrderStatus(orderId, OrderStatus.SHIPPED);
@@ -114,14 +114,14 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
-    public ShipmentResponse getShipmentByOrderId(Long orderId) {
+    public ShipmentResponse getShipmentByOrderId(String orderId) {
         return shipmentRepository.findByOrderId(orderId)
                 .map(this::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Đơn hàng chưa có vận đơn"));
     }
 
     @Override
-    public PageResponse<ShipmentResponse> getAllShipments(Pageable pageable, Long orderId, String status) {
+    public PageResponse<ShipmentResponse> getAllShipments(Pageable pageable, String orderId, String status) {
         Page<Shipment> page;
 
         if (orderId != null) {

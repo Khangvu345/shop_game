@@ -37,4 +37,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
      * Đếm số account theo role
      */
     long countByRole(Account.Role role);
+
+    /**
+     * Tìm account theo party ID
+     */
+    Optional<Account> findByPartyId(Long partyId);
 }

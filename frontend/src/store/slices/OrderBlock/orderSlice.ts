@@ -1,10 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import {type ICancelOrderRequest, orderApi} from "../../../api/OrderBlock/orderApi.ts";
+import {
+    type IAdminOrderFilter,
+    type ICancelOrderRequest,
+    type IUpdateOrderStatusRequest,
+    orderApi
+} from "../../../api/OrderBlock/orderApi.ts";
 import type { IOrder, ICreateOrderPayload, IApiState } from "../../../types";
 
 interface OrderState extends IApiState<IOrder[]> {
     currentOrder: IOrder | null;
-    // Thêm state riêng cho lịch sử mua hàng để tránh xung đột với Admin
+
     myOrders: {
         data: IOrder[];
         pagination: {
@@ -16,6 +21,18 @@ interface OrderState extends IApiState<IOrder[]> {
         status: 'idle' | 'loading' | 'succeeded' | 'failed';
         error: string | null;
     };
+
+    adminOrders: {
+        data: IOrder[];
+        pagination: {
+            page: number;
+            limit: number;
+            total: number;
+            totalPages: number;
+        };
+        status: 'idle' | 'loading' | 'succeeded' | 'failed';
+        error: string | null;
+    }
 }
 
 const initialState: OrderState = {
@@ -26,6 +43,13 @@ const initialState: OrderState = {
     myOrders: {
         data: [],
         pagination: { page: 0, limit: 5, total: 0, totalPages: 0 },
+        status: 'idle',
+        error: null
+    },
+
+    adminOrders: {
+        data: [],
+        pagination: { page: 0, limit: 10, total: 0, totalPages: 0 },
         status: 'idle',
         error: null
     }
@@ -43,7 +67,6 @@ export const placeOrder = createAsyncThunk(
     }
 );
 
-// --- Thunk MỚI: Lấy lịch sử đơn hàng ---
 export const fetchMyOrders = createAsyncThunk(
     'orders/fetchMyOrders',
     async (params: { page: number; size: number }, { rejectWithValue }) => {
@@ -66,7 +89,6 @@ export const fetchOrderDetail = createAsyncThunk(
     }
 );
 
-// --- Thunk MỚI: Hủy đơn hàng ---
 export const cancelOrderThunk = createAsyncThunk(
     'orders/cancel',
     async ({ id, payload }: { id: number | string; payload: ICancelOrderRequest }, { rejectWithValue }) => {
@@ -78,6 +100,40 @@ export const cancelOrderThunk = createAsyncThunk(
     }
 );
 
+
+export const fetchAdminOrders = createAsyncThunk(
+    'orders/fetchAdminOrders',
+    async (filter: IAdminOrderFilter, { rejectWithValue }) => {
+        try {
+            return await orderApi.getAllOrders(filter);
+        } catch (error: any) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const fetchAdminOrderDetail = createAsyncThunk(
+    'orders/fetchAdminDetail',
+    async (id: number | string, { rejectWithValue }) => {
+        try {
+            return await orderApi.getAdminOrderDetail(id);
+        } catch (error: any) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+// 2. Cập nhật trạng thái
+export const updateOrderStatusThunk = createAsyncThunk(
+    'orders/updateStatus',
+    async ({ id, payload }: { id: number | string, payload: IUpdateOrderStatusRequest }, { rejectWithValue }) => {
+        try {
+            return await orderApi.updateStatus(id, payload);
+        } catch (error: any) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
 const orderSlice = createSlice({
     name: 'orders',
     initialState,
@@ -154,6 +210,48 @@ const orderSlice = createSlice({
         builder.addCase(cancelOrderThunk.rejected, (state, action) => {
             state.status = 'failed';
             state.error = action.payload as string;
+        });
+
+        builder.addCase(fetchAdminOrders.pending, (state) => {
+            state.adminOrders.status = 'loading';
+        });
+        builder.addCase(fetchAdminOrders.fulfilled, (state, action) => {
+            state.adminOrders.status = 'succeeded';
+            state.adminOrders.data = action.payload.content;
+            state.adminOrders.pagination = {
+                page: action.payload.currentPage,
+                limit: action.payload.pageSize,
+                total: action.payload.totalElements,
+                totalPages: action.payload.totalPages
+            };
+        });
+        builder.addCase(fetchAdminOrders.rejected, (state, action) => {
+            state.adminOrders.status = 'failed';
+            state.adminOrders.error = action.payload as string;
+        });
+
+        builder.addCase(fetchAdminOrderDetail.pending, (state) => {
+            state.status = 'loading';
+            state.error = null;
+        });
+        builder.addCase(fetchAdminOrderDetail.fulfilled, (state, action) => {
+            state.status = 'succeeded';
+            state.currentOrder = action.payload;
+        });
+        builder.addCase(fetchAdminOrderDetail.rejected, (state, action) => {
+            state.status = 'failed';
+            state.error = action.payload as string;
+        });
+
+
+        // --- Admin Update Status ---
+        builder.addCase(updateOrderStatusThunk.fulfilled, (state, action) => {
+            state.currentOrder = action.payload; // Cập nhật chi tiết
+            // Cập nhật trong danh sách nếu có
+            const index = state.adminOrders.data.findIndex(o => o.orderId === action.payload.orderId);
+            if (index !== -1) {
+                state.adminOrders.data[index] = action.payload;
+            }
         });
     },
 });

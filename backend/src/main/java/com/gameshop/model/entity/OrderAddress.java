@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class OrderAddress {
 
     @Id
-    @Column(name = "order_id")
-    private Long id; // Shared PK với Order
+    @Column(name = "order_id", length = 20)
+    private String id; // Shared PK với Order
 
     @OneToOne
     @MapsId

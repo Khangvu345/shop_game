@@ -171,7 +171,7 @@ CREATE TABLE review_moderation (
 -- ORDER MANAGEMENT
 
 CREATE TABLE `order` (
-    order_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    order_id VARCHAR(20) PRIMARY KEY,
     customer_id BIGINT NOT NULL,
     status ENUM('PENDING','CONFIRMED','PREPARING','SHIPPED','DELIVERED','COMPLETED','CANCELLED','RETURNED') NOT NULL DEFAULT 'PENDING', -- Trạng thái đơn hàng mapping với backend
     payment_method ENUM ('COD', 'VNPAY') NOT NULL DEFAULT 'COD', -- Giữ lại 2 phương thức thanh toán hiện có
@@ -201,7 +201,7 @@ CREATE TABLE `order` (
 ) ENGINE=InnoDB;
 
 CREATE TABLE order_line (
-    order_id BIGINT,
+    order_id VARCHAR(20),
     line_no INT,
     product_id BIGINT NOT NULL,
     quantity INT NOT NULL, -- kết thúc sửa
@@ -213,7 +213,7 @@ CREATE TABLE order_line (
 ) ENGINE=InnoDB;
 
 CREATE TABLE order_address (
-    order_id BIGINT PRIMARY KEY,  
+    order_id VARCHAR(20) PRIMARY KEY,  
     receiver_name VARCHAR(150) NOT NULL,
     receiver_phone VARCHAR(30) NOT NULL,
     line1 VARCHAR(200) NOT NULL,
@@ -226,17 +226,17 @@ CREATE TABLE order_address (
 
 CREATE TABLE payment (
     payment_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    order_id BIGINT NOT NULL,
+    order_id VARCHAR(20) NOT NULL,
     method VARCHAR(50) NOT NULL,
     amount DECIMAL(12,2) NOT NULL,
     paid_at DATETIME,
-    status ENUM('Pending', 'Authorized', 'Captured', 'Failed', 'Refunded') NOT NULL,
+    status ENUM('PENDING', 'PAID', 'COD_PENDING', 'COD_COLLECTED', 'FAILED', 'REFUNDED') NOT NULL DEFAULT 'PENDING',
     FOREIGN KEY (order_id) REFERENCES `order`(order_id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE shipment (
     shipment_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    order_id BIGINT NOT NULL,
+    order_id VARCHAR(20) NOT NULL,
     carrier VARCHAR(100),
     tracking_no VARCHAR(120),
     estimated_delivery DATETIME,
@@ -262,7 +262,7 @@ CREATE TABLE stock_movement (
     reason ENUM('GoodsReceipt', 'Sale', 'Return', 'DamagedAdjustment', 'StocktakeAdjustment', 'ManualAdjustment') NOT NULL,
     occurred_at DATETIME NOT NULL,
     reference_no VARCHAR(120),
-    order_id BIGINT,
+    order_id VARCHAR(20),
     FOREIGN KEY (product_id) REFERENCES product(product_id) ON DELETE CASCADE,
     FOREIGN KEY (warehouse_id) REFERENCES warehouse(warehouse_id) ON DELETE RESTRICT,
     FOREIGN KEY (order_id) REFERENCES `order`(order_id) ON DELETE SET NULL,
@@ -291,5 +291,12 @@ CREATE TABLE goods_receipt_line (
     FOREIGN KEY (product_id) REFERENCES product(product_id) ON DELETE RESTRICT,
     FOREIGN KEY (warehouse_id) REFERENCES warehouse(warehouse_id) ON DELETE RESTRICT
 ) ENGINE=InnoDB;
+-- Bảng mới lưu id order
+CREATE TABLE order_sequence (
+    sequence_date DATE PRIMARY KEY,
+    last_sequence INT NOT NULL DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

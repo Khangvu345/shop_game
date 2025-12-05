@@ -8,34 +8,34 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record OrderResponse(
-        Long orderId,
-        Long customerId,
-        String customerName,
-        AddressDto shippingAddress,
-        List<OrderItemDto> items,
-        BigDecimal subTotal,
-        BigDecimal grandTotal,
-        OrderStatus status,
-        PaymentStatus paymentStatus,
-        PaymentMethod paymentMethod,
-        LocalDateTime cancelledAt,
-        String cancelReason,
-        String cancelledBy,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt) {
-    public record AddressDto(
-            String recipientName,
-            String phone,
-            String street,
-            String ward,
-            String city) {
-    }
+                String orderId,
+                Long customerId,
+                String customerName,
+                AddressDto shippingAddress,
+                List<OrderItemDto> items,
+                BigDecimal subTotal,
+                BigDecimal grandTotal,
+                OrderStatus status,
+                PaymentStatus paymentStatus,
+                PaymentMethod paymentMethod,
+                LocalDateTime cancelledAt,
+                String cancelReason,
+                String cancelledBy,
+                LocalDateTime createdAt,
+                LocalDateTime updatedAt) {
+        public record AddressDto(
+                        String recipientName,
+                        String phone,
+                        String street,
+                        String ward,
+                        String city) {
+        }
 
-    public record OrderItemDto(
-            Long productId,
-            String productName,
-            Integer quantity,
-            BigDecimal price,
-            BigDecimal lineTotal) {
-    }
+        public record OrderItemDto(
+                        Long productId,
+                        String productName,
+                        Integer quantity,
+                        BigDecimal price,
+                        BigDecimal lineTotal) {
+        }
 }
