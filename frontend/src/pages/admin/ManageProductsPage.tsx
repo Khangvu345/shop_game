@@ -110,65 +110,60 @@ export function ManageProductsPage() {
 
     // 3. Render Custom Filters
     const renderFilters = () => (
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center', padding: '1rem', backgroundColor: '#f9f9f9', borderRadius: '8px' }}>
+        <>
             {/* Search Input */}
-            <div style={{ flex: 1, minWidth: '200px' }}>
-                <input
-                    type="text"
-                    placeholder="Tìm kiếm theo tên..."
-                    value={keyword}
-                    onChange={(e) => setKeyword(e.target.value)}
-                    style={{
-                        width: '100%',
-                        padding: '8px 12px',
-                        borderRadius: '4px',
-                        border: '1px solid #ddd',
-                        fontSize: '14px'
-                    }}
-                />
-            </div>
+            <input
+                type="text"
+                placeholder="Tìm kiếm sản phẩm theo tên hoặc Mã SP..."
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                style={{
+                    flex: 1,
+                    minWidth: '200px',
+                    padding: '10px 14px',
+                    borderRadius: '6px',
+                    border: '1px solid #ddd',
+                    fontSize: '14px'
+                }}
+            />
 
             {/* Category Select */}
-            <div style={{ width: '200px' }}>
-                <select
-                    value={filterCategoryId}
-                    onChange={(e) => setFilterCategoryId(e.target.value)}
-                    style={{
-                        width: '100%',
-                        padding: '8px 12px',
-                        borderRadius: '4px',
-                        border: '1px solid #ddd',
-                        fontSize: '14px'
-                    }}
-                >
-                    <option value="">-- Tất cả danh mục --</option>
-                    {categories?.map((c) => (
-                        <option key={c.categoryId} value={c.categoryId}>
-                            {c.categoryName}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            <select
+                value={filterCategoryId}
+                onChange={(e) => setFilterCategoryId(e.target.value)}
+                style={{
+                    width: '180px',
+                    padding: '10px 14px',
+                    borderRadius: '6px',
+                    border: '1px solid #ddd',
+                    fontSize: '14px'
+                }}
+            >
+                <option value="">-- Tất cả danh mục --</option>
+                {categories?.map((c) => (
+                    <option key={c.categoryId} value={c.categoryId}>
+                        {c.categoryName}
+                    </option>
+                ))}
+            </select>
 
             {/* Status Select */}
-            <div style={{ width: '200px' }}>
-                <select
-                    value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
-                    style={{
-                        width: '100%',
-                        padding: '8px 12px',
-                        borderRadius: '4px',
-                        border: '1px solid #ddd',
-                        fontSize: '14px'
-                    }}
-                >
-                    <option value="">-- Tất cả trạng thái --</option>
-                    <option value="Active">Đang kinh doanh</option>
-                    <option value="Inactive">Ngừng kinh doanh</option>
-                </select>
-            </div>
-        </div>
+            <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                style={{
+                    width: '160px',
+                    padding: '10px 14px',
+                    borderRadius: '6px',
+                    border: '1px solid #ddd',
+                    fontSize: '14px'
+                }}
+            >
+                <option value="">-- Tất cả trạng thái --</option>
+                <option value="Active">Đang kinh doanh</option>
+                <option value="Inactive">Ngừng kinh doanh</option>
+            </select>
+        </>
     );
 
     // Prepare extra params for fetchAll

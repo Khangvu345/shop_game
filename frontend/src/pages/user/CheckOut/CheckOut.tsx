@@ -5,10 +5,10 @@ import { placeOrder } from '../../../store/slices/OrderBlock/orderSlice';
 import { clearCart } from '../../../store/slices/cartSlice';
 import { Button } from '../../../components/ui/button/Button';
 import { Input } from '../../../components/ui/input/Input';
-import { Select } from '../../../components/ui/input/Select';
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import type { ICreateOrderPayload } from '../../../types';
-import './CheckOut.css'; // Đừng quên import file CSS mới
+import './CheckOut.css';
+import {fetchMyAddress, fetchMyProfile} from "../../../store/slices/AccountBlock/customerSlice.tsx";
 
 export function CheckoutPage() {
     const formatCurrency = (amount: number) =>
@@ -33,18 +33,25 @@ export function CheckoutPage() {
     });
 
     const subTotal = cartItems.reduce((sum, item) => sum + (item.product.listPrice * item.quantity), 0);
-    const shippingFee = 30000;
+    const shippingFee = 0;
     const grandTotal = subTotal + shippingFee;
 
     useEffect(() => {
-        if (user) {
-            setFormData(prev => ({
-                ...prev,
-                recipientName: user.fullName || '',
-                phone: user.phone || ''
-            }));
-        }
-    }, [user]);
+        dispatch(fetchMyProfile());
+        dispatch(fetchMyAddress());
+    }, [dispatch]);
+
+
+    useEffect(() => {
+        setFormData(prev => ({
+            ...prev,
+            receiverName: user?.fullName || '',
+            phone: user?.phone || '',
+            city: address.data?.city || '',
+            ward: address.data?.ward || '',
+            street: address.data?.line1  || '',
+        }));
+    }, [user, address]);
 
     useEffect(() => {
         if (cartItems.length === 0) {

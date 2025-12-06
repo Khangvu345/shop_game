@@ -7,12 +7,12 @@ import { Logo } from "../../ui/logo/Logo.tsx";
 import { logoutUser } from "../../../store/slices/Auth/authSlice.ts";
 import Footer from '../Footer/Footer.tsx';
 // Import các Icon mới
-import { 
-    CartIcon, 
-    UserIcon, 
-    PhoneIcon, 
-    LogOutIcon, 
-    LoginIcon 
+import {
+    CartIcon,
+    UserIcon,
+    PhoneIcon,
+    LogOutIcon,
+    LoginIcon
 } from '../../ui/icon/icon.tsx';
 import './MainLayout.css' // Đảm bảo CSS đã được update
 
@@ -24,15 +24,15 @@ function SearchBar() {
     const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             console.log("Searching for:", keyword);
-            // navigate(`/products?search=${keyword}`);
+            navigate(`/products?keyword=${encodeURIComponent(keyword)}`);
         }
     };
 
     return (
-        <input 
-            type="text" 
-            className="search-input" 
-            placeholder="Tìm kiếm sản phẩm..." 
+        <input
+            type="text"
+            className="search-input"
+            placeholder="Tìm kiếm sản phẩm..."
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             onKeyDown={handleSearch}
@@ -43,7 +43,7 @@ function SearchBar() {
 function NavLogo() {
     return (
         <Link to="/" className="nav-logo">
-            <Logo size={'medium'} style={{height: '50px', width: 'auto'}}></Logo>
+            <Logo size={'medium'} style={{ height: '50px', width: 'auto' }}></Logo>
         </Link>
     )
 }
@@ -94,7 +94,7 @@ function ActionBar() {
                     <Link to={'/profile'} className="action-icon-btn" title="Tài khoản cá nhân">
                         <UserIcon />
                     </Link>
-                    
+
                     <button onClick={handleLogout} className="action-icon-btn" title="Đăng xuất">
                         <LogOutIcon />
                     </button>
@@ -115,11 +115,11 @@ export function MainLayout() {
     return (
         <div className="main-container">
             <header className="main-header">
-                <Navbar 
-                    logo={<NavLogo />} 
-                    links={<PublicNavLinks />} 
+                <Navbar
+                    logo={<NavLogo />}
+                    links={<PublicNavLinks />}
                     search={<SearchBar />}
-                    actions={<ActionBar />} 
+                    actions={<ActionBar />}
                 />
             </header>
 

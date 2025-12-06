@@ -7,7 +7,7 @@ import { Card } from '../../../components/ui/card/Card';
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import { Modal } from '../../../components/ui/Modal/Modal';
 import { Input } from '../../../components/ui/input/Input';
-
+import './OrderDetailPage.css';
 export function OrderDetailPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
@@ -188,7 +188,11 @@ export function OrderDetailPage() {
 
                         <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
                             <span>Tạm tính:</span>
-                            <span>{formatCurrency(currentOrder.subtotal || currentOrder.subtotal)}</span>
+                            <span>{formatCurrency(currentOrder.subTotal)}</span>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+                            <span>Giảm giá:</span>
+                            <span>{formatCurrency(currentOrder.discountAmount || 0)}</span>
                         </div>
                         {/* Nếu có phí ship hay giảm giá thì thêm vào đây */}
 
