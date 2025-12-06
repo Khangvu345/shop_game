@@ -1,17 +1,39 @@
-.products-list-page-container{
+/* frontend/src/pages/user/ProductListPage/ProductListPage.css */
+
+.products-list-page-container {
     display: grid;
-    grid-template-areas:
-        "products-list-sidebar products-list-content";
-    grid-template-columns: 1.5fr 7fr;
-}
-
-.page-sidebar{
-    grid-area: products-list-sidebar;
+    /* Sidebar 250px, phần còn lại tự giãn */
+    grid-template-columns: 250px 1fr;
+    grid-template-areas: "products-list-sidebar products-list-content";
+    gap: 40px; /* Tăng khoảng cách giữa sidebar và list cho thoáng */
     
+    /* Giới hạn chiều rộng nhỏ hơn để Card không bị phóng to quá mức */
+    max-width: 1300px; 
+    margin: 0 auto; /* Căn giữa trang */
+    
+    /* Cách lề trên dưới 40px, trái phải 20px để không sát màn hình */
+    padding: 40px 20px;
+    min-height: 80vh;
 }
 
-.product-page-content{
+.page-sidebar {
+    grid-area: products-list-sidebar;
+}
+
+.product-page-content {
     grid-area: products-list-content;
-    padding: var(--spacing-lg);
-    margin: 0 200px;
+    width: 100%;
+}
+
+/* Responsive cho Tablet/Mobile */
+@media (max-width: 992px) {
+    .products-list-page-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .page-sidebar {
+        margin-bottom: 20px;
+    }
 }
