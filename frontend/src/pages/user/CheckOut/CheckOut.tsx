@@ -11,6 +11,7 @@ import './CheckOut.css';
 import {fetchMyAddress, fetchMyProfile} from "../../../store/slices/AccountBlock/customerSlice.tsx";
 
 export function CheckoutPage() {
+
     const formatCurrency = (amount: number) =>
         new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
@@ -19,13 +20,12 @@ export function CheckoutPage() {
 
     const cartItems = useAppSelector((state) => state.cart.items);
     const { profile, address } = useAppSelector(state => state.customer);
-    const { status, error } = useAppSelector((state) => state.orders);
+    const { status ,error } = useAppSelector((state) => state.orders);
 
-    const user = profile.data;
 
     const [formData, setFormData] = useState({
-        recipientName: user?.fullName || '',
-        phone: user?.phone || '',
+        recipientName: profile.data?.fullName || '',
+        phone: profile.data?.phone || '',
         city: address.data?.city || '',
         ward: address.data?.ward || '',
         street: address.data?.line1 || '',
@@ -39,25 +39,23 @@ export function CheckoutPage() {
     useEffect(() => {
         dispatch(fetchMyProfile());
         dispatch(fetchMyAddress());
-    }, [dispatch]);
-
-
-    useEffect(() => {
         setFormData(prev => ({
             ...prev,
-            receiverName: user?.fullName || '',
-            phone: user?.phone || '',
+            recipientName: profile.data?.fullName || '',
+            phone: profile.data?.phone || '',
             city: address.data?.city || '',
             ward: address.data?.ward || '',
             street: address.data?.line1  || '',
         }));
-    }, [user, address]);
+    }, [dispatch,profile, address]);
+
 
     useEffect(() => {
         if (cartItems.length === 0) {
-            navigate('/products');
+            navigate('/my-orders');
         }
     }, [cartItems, navigate]);
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -87,9 +85,8 @@ export function CheckoutPage() {
         const resultAction = await dispatch(placeOrder(orderPayload));
 
         if (placeOrder.fulfilled.match(resultAction)) {
+            navigate('/my-orders');
             dispatch(clearCart());
-            // Điều hướng hoặc hiển thị thông báo thành công ở đây nếu cần
-            navigate('/my-orders'); 
         } else {
             alert("Đặt hàng thất bại: " + resultAction.payload);
         }
@@ -98,7 +95,7 @@ export function CheckoutPage() {
     return (
         <div className="checkout-page-wrapper">
             <div className="container checkout-layout">
-                
+
                 {/* CỘT TRÁI: FORM ĐIỀN THÔNG TIN */}
                 <div className="checkout-section-left">
                     <div className="checkout-header">
@@ -107,7 +104,7 @@ export function CheckoutPage() {
                     </div>
 
                     <form id="checkoutForm" onSubmit={handleSubmit} className="modern-form">
-                        
+
                         <div className="form-group-row">
                             <Input
                                 label="Họ tên người nhận" name="recipientName"
@@ -146,7 +143,7 @@ export function CheckoutPage() {
                             <h3>Phương thức thanh toán</h3>
                             <div className="payment-options">
                                 <label className={`payment-option ${formData.paymentMethod === 'COD' ? 'active' : ''}`}>
-                                    <input 
+                                    <input
                                         type="radio" name="paymentMethod" value="COD"
                                         checked={formData.paymentMethod === 'COD'}
                                         onChange={handleChange}
@@ -159,7 +156,7 @@ export function CheckoutPage() {
                                 </label>
 
                                 <label className={`payment-option ${formData.paymentMethod === 'VNPAY' ? 'active' : ''}`}>
-                                    <input 
+                                    <input
                                         type="radio" name="paymentMethod" value="VNPAY"
                                         checked={formData.paymentMethod === 'VNPAY'}
                                         onChange={handleChange}
@@ -184,9 +181,9 @@ export function CheckoutPage() {
                             {cartItems.map(item => (
                                 <div key={item.product.productId} className="order-item">
                                     <div className="item-image-wrapper">
-                                        <img 
-                                            src={item.product.productImageUrl || 'https://placehold.co/60'} 
-                                            alt={item.product.productName} 
+                                        <img
+                                            src={item.product.productImageUrl || 'https://placehold.co/60'}
+                                            alt={item.product.productName}
                                         />
                                         <span className="item-quantity-badge">{item.quantity}</span>
                                     </div>
@@ -226,7 +223,7 @@ export function CheckoutPage() {
                         >
                             {status === 'loading' ? <Spinner type="spinner2" /> : 'ĐẶT HÀNG NGAY'}
                         </Button>
-                        
+
                         <p className="secure-note">🔒 Thông tin thanh toán được bảo mật an toàn</p>
                     </div>
                 </div>

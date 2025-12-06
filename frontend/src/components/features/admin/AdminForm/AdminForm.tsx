@@ -125,9 +125,9 @@ export const AdminForm = <T extends Record<string, any>>({
     };
 
     return (
-        <form className={"form-container"} onSubmit={handleSubmit}>
+        <form className={"admin-form-container"} onSubmit={handleSubmit}>
             {/* Grid Layout 2 cột */}
-            <div className={'form-colum-container'}>
+            <div className={'admin-form-colum-container'}>
                 {fields.map((field) => (
                     <div key={String(field.name)} style={{ gridColumn: field.colSpan === 2 ? 'span 2' : 'span 1' }}>
                         {renderField(field)}
