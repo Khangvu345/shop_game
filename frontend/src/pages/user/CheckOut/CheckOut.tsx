@@ -41,7 +41,7 @@ export function CheckoutPage() {
         dispatch(fetchMyAddress());
         setFormData(prev => ({
             ...prev,
-            receiverName: profile.data?.fullName || '',
+            recipientName: profile.data?.fullName || '',
             phone: profile.data?.phone || '',
             city: address.data?.city || '',
             ward: address.data?.ward || '',
