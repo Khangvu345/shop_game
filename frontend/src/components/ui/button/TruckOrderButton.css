@@ -91,8 +91,7 @@
     box-shadow: 15px 0 0 var(--white), 30px 0 0 var(--white), 45px 0 0 var(--white), 60px 0 0 var(--white), 75px 0 0 var(--white), 90px 0 0 var(--white), 105px 0 0 var(--white), 120px 0 0 var(--white), 135px 0 0 var(--white), 150px 0 0 var(--white), 165px 0 0 var(--white), 180px 0 0 var(--white), 195px 0 0 var(--white), 210px 0 0 var(--white), 225px 0 0 var(--white), 240px 0 0 var(--white), 255px 0 0 var(--white), 270px 0 0 var(--white), 285px 0 0 var(--white), 300px 0 0 var(--white), 315px 0 0 var(--white), 330px 0 0 var(--white);
 }
 
-.order-truck-btn .back,
-.order-truck-btn .box {
+.order-truck-btn .back, .order-truck-btn .box {
     --start: var(--white);
     --stop: var(--grey-light);
     border-radius: 2px;
@@ -110,8 +109,7 @@
     transform: translateX(24px);
 }
 
-.order-truck-btn .truck:before,
-.order-truck-btn .truck:after {
+.order-truck-btn .truck:before, .order-truck-btn .truck:after {
     --r: -90deg;
     content: '';
     height: 2px;
@@ -151,8 +149,7 @@
     left: 60px;
 }
 
-.order-truck-btn .truck .front:before,
-.order-truck-btn .truck .front:after {
+.order-truck-btn .truck .front:before, .order-truck-btn .truck .front:after {
     content: '';
     position: absolute;
     display: block;
@@ -188,8 +185,7 @@
     transform-origin: 0 50%;
 }
 
-.order-truck-btn .truck .front .window:before,
-.order-truck-btn .truck .front .window:after {
+.order-truck-btn .truck .front .window:before, .order-truck-btn .truck .front .window:after {
     content: '';
     position: absolute;
     right: 0;
@@ -254,8 +250,7 @@
     top: 21px;
 }
 
-.order-truck-btn .box:before,
-.order-truck-btn .box:after {
+.order-truck-btn .box:before, .order-truck-btn .box:after {
     content: '';
     top: 10px;
     position: absolute;
@@ -276,145 +271,88 @@
 
 /* ----------- PHẦN CHỈNH SỬA CHO HOVER ----------- */
 
-/* Chỉ khi có class .animate (lúc bấm) thì mới chạy hiệu ứng */
+/* Khi Hover HOẶC khi có class .animate (lúc bấm) thì đều chạy hiệu ứng */
 
+.order-truck-btn:hover .default,
 .order-truck-btn.animate .default {
     --o: 0;
     transition-delay: 0s;
 }
 
+.order-truck-btn:hover .success,
 .order-truck-btn.animate .success {
     --offset: 0;
     --o: 1;
     /* Giảm delay xuống nếu muốn hiện chữ nhanh hơn khi hover */
-    transition-delay: 7s;
+    transition-delay: 7s; 
 }
 
+.order-truck-btn:hover .success svg,
 .order-truck-btn.animate .success svg {
     transition-delay: 7.3s;
 }
 
+.order-truck-btn:hover .truck,
 .order-truck-btn.animate .truck {
     animation: truck 10s ease forwards;
 }
 
+.order-truck-btn:hover .truck:before,
 .order-truck-btn.animate .truck:before {
     animation: door1 2.4s ease forwards 0.3s;
 }
 
+.order-truck-btn:hover .truck:after,
 .order-truck-btn.animate .truck:after {
     animation: door2 2.4s ease forwards 0.6s;
 }
 
-.order-truck-btn.animate .truck .light:before,
-.order-truck-btn.animate .truck .light:after {
+.order-truck-btn:hover .truck .light:before, .order-truck-btn:hover .truck .light:after,
+.order-truck-btn.animate .truck .light:before, .order-truck-btn.animate .truck .light:after {
     animation: light 10s ease forwards;
 }
 
+.order-truck-btn:hover .box,
 .order-truck-btn.animate .box {
     animation: box 10s ease forwards;
 }
 
+.order-truck-btn:hover .lines,
 .order-truck-btn.animate .lines {
     animation: lines 10s ease forwards;
 }
 
 /* Keyframes giữ nguyên */
 @keyframes truck {
-
-    10%,
-    30% {
-        transform: translateX(-164px);
-    }
-
-    40% {
-        transform: translateX(-104px);
-    }
-
-    60% {
-        transform: translateX(-224px);
-    }
-
-    75%,
-    100% {
-        transform: translateX(24px);
-    }
+    10%, 30% { transform: translateX(-164px); }
+    40% { transform: translateX(-104px); }
+    60% { transform: translateX(-224px); }
+    75%, 100% { transform: translateX(24px); }
 }
 
 @keyframes lines {
-
-    0%,
-    30% {
-        opacity: 0;
-        transform: scaleY(0.7) translateX(0);
-    }
-
-    35%,
-    65% {
-        opacity: 1;
-    }
-
-    70% {
-        opacity: 0;
-    }
-
-    100% {
-        transform: scaleY(0.7) translateX(-400px);
-    }
+    0%, 30% { opacity: 0; transform: scaleY(0.7) translateX(0); }
+    35%, 65% { opacity: 1; }
+    70% { opacity: 0; }
+    100% { transform: scaleY(0.7) translateX(-400px); }
 }
 
 @keyframes light {
-
-    0%,
-    30% {
-        opacity: 0;
-        transform: perspective(2px) rotateY(-15deg) scaleX(0.88);
-    }
-
-    40%,
-    100% {
-        opacity: 1;
-        transform: perspective(2px) rotateY(-15deg) scaleX(0.94);
-    }
+    0%, 30% { opacity: 0; transform: perspective(2px) rotateY(-15deg) scaleX(0.88); }
+    40%, 100% { opacity: 1; transform: perspective(2px) rotateY(-15deg) scaleX(0.94); }
 }
 
 @keyframes door1 {
-
-    30%,
-    50% {
-        transform: rotate(32deg);
-    }
+    30%, 50% { transform: rotate(32deg); }
 }
 
 @keyframes door2 {
-
-    30%,
-    50% {
-        transform: rotate(-32deg);
-    }
+    30%, 50% { transform: rotate(-32deg); }
 }
 
 @keyframes box {
-
-    8%,
-    10% {
-        transform: translateX(40px);
-        opacity: 1;
-    }
-
-    25% {
-        transform: translateX(112px);
-        opacity: 1;
-    }
-
-    26% {
-        transform: translateX(112px);
-        opacity: 0;
-    }
-
-    27%,
-    100% {
-        transform: translateX(0px);
-        opacity: 0;
-    }
+    8%, 10% { transform: translateX(40px); opacity: 1; }
+    25% { transform: translateX(112px); opacity: 1; }
+    26% { transform: translateX(112px); opacity: 0; }
+    27%, 100% { transform: translateX(0px); opacity: 0; }
 }
