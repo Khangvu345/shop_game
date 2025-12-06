@@ -7,7 +7,7 @@ import { Card } from '../../../components/ui/card/Card';
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import { Modal } from '../../../components/ui/Modal/Modal';
 import { Input } from '../../../components/ui/input/Input';
-
+import './OrderDetailPage.css';
 export function OrderDetailPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
