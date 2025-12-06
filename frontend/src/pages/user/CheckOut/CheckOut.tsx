@@ -7,6 +7,7 @@ import { Button } from '../../../components/ui/button/Button';
 import { Input } from '../../../components/ui/input/Input';
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import type { ICreateOrderPayload } from '../../../types';
+import { TruckOrderButton } from '../../../components/ui/button/TruckOrderButton.tsx';
 import './CheckOut.css';
 import {fetchMyAddress, fetchMyProfile} from "../../../store/slices/AccountBlock/customerSlice.tsx";
 
