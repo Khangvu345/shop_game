@@ -145,7 +145,7 @@ const dispatch = useAppDispatch();
                             className="promo-video"
                             poster="/assets/images/BannerHompage.png" // (Tùy chọn) Ảnh hiển thị khi video chưa load
                         >
-                            <source src="/assets/videos/playstation-5-pro-console-launch-trailer-1440-publer.io.mp4" type="video/mp4" />
+                            <source src="assets/videos/playstation.mp4" type="video/mp4" />
                             Trình duyệt của bạn không hỗ trợ thẻ video.
                         </video>
                     </div>
