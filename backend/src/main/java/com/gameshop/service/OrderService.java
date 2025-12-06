@@ -264,7 +264,7 @@ public class OrderService {
                 stockMovementService.createMovement(
                         line.getProduct().getProductId(),
                         line.getQuantity(), // Positive = restore stock
-                        StockMovementReason.Return,
+                        StockMovementReason.ManualAdjustment, // Admin hủy đơn lí do hủy thủ công
                         "ADMIN-CANCEL-ORDER-" + orderId,
                         orderId);
             }
