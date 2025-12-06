@@ -29,12 +29,14 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
                         @Param("status") OrderStatus status);
 
         /**
-         * Đếm số lượng đơn hàng của khách hàng
+         * Đếm số lượng orders đã thanh toán của khách hàng
          * 
          * @param customerId ID khách hàng
-         * @return Tổng số đơn hàng
+         * @return Số lượng orders đã thanh toán
          */
-        Long countByCustomerId(Long customerId);
+        @Query("SELECT COUNT(o) FROM Order o WHERE o.customer.id = :customerId " +
+                        "AND (o.paymentStatus = 'PAID' OR o.paymentStatus = 'COD_COLLECTED')")
+        Long countByCustomerId(@Param("customerId") Long customerId);
 
         /**
          * Tính tổng tiền khách hàng đã chi tiêu
