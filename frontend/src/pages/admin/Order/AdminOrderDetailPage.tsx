@@ -159,7 +159,7 @@ export function AdminOrderDetailPage() {
                     <Card>
                         <h3>Thanh toán</h3>
                         <p><strong>Phương thức:</strong> {currentOrder.paymentMethod}</p>
-                        <p><strong>Trạng thái:</strong> <span style={{fontWeight:'bold', color: currentOrder.paymentStatus === 'PAID' ? 'green' : 'orange'}}>{currentOrder.paymentStatus}</span></p>
+                        <p><strong>Trạng thái:</strong> <span style={{fontWeight:'bold', color: currentOrder.paymentStatus === 'COD_COLLECTED' ? 'green' : 'orange'}}>{currentOrder.paymentStatus}</span></p>
                     </Card>
                 </div>
             </div>

@@ -45,10 +45,10 @@ export function ManageShipmentPage() {
                 id: selectedShipment.shipmentId,
                 payload: { status: 'Shipped' }
             })).unwrap();
+            alert("Đã chuyển trạng thái đang giao (Shipped)!");
 
             dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
 
-            alert("Đã chuyển trạng thái đang giao (Shipped)!");
             setIsModalOpen(false);
         } catch (error) {
             console.log(error)
@@ -77,10 +77,9 @@ export function ManageShipmentPage() {
                 id: selectedShipment.shipmentId,
                 payload: { status: 'Delivered' }
             })).unwrap();
-
+            alert("Giao hàng thành công & đã thu tiền!");
             dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
 
-            alert("Đã giao hàng & Cập nhật trạng thái đã thu tiền (COD Collected)!");
             setIsModalOpen(false);
         } catch (error) {
             console.error(error);
@@ -148,8 +147,18 @@ export function ManageShipmentPage() {
             )}
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={`Cập nhật vận đơn #${selectedShipment?.trackingNo}`}>
-                <div style={{minWidth: '400px', display: 'flex', flexDirection: 'column', gap: '15px'}}>
-                    <p>Trạng thái hiện tại: <strong>{selectedShipment?.status}</strong></p>
+                <div style={{minWidth: '400px', display: 'flex', flexDirection: 'column', gap: '15px', backgroundColor: "white"}}>
+
+                    {selectedShipment  && (
+                        <div>
+                            <p>Mã đơn hàng: <strong>{selectedShipment?.orderId}</strong></p>
+                            <p>Mã vận đơn: <strong>{selectedShipment?.trackingNo}</strong></p>
+                            <p>Đơn vị vận chuyển: <strong>{selectedShipment?.carrier}</strong></p>
+                            <p>Ghi chú: <strong>{selectedShipment?.notes}</strong></p>
+                            <p>Trạng thái hiện tại: <strong style={{ color: getStatusColor(selectedShipment?.status),}}>{selectedShipment?.status}</strong></p>
+                        </div>
+
+                    )}
 
                     {/* Nút bấm chuyển trạng thái */}
                     {selectedShipment?.status === 'Ready' && (
