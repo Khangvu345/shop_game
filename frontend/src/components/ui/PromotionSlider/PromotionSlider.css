@@ -1,0 +1,140 @@
+/* Container chính, giới hạn chiều rộng và căn giữa */
+.slider-container {
+  width: 100%;
+  max-width: 1100px; /* Độ rộng tối đa của slider */
+  margin: 2rem auto; /* Canh giữa màn hình */
+  position: relative;
+  overflow: hidden; /* Ẩn các ảnh bị tràn ra ngoài */
+  border-radius: 15px; /* Bo góc khung slider */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Đổ bóng */
+}
+
+/* Thanh trượt chứa tất cả các slide nằm ngang */
+.slider-track {
+  display: flex;
+  width: 100%;
+  height: 400px; /* Chiều cao cố định của banner */
+  transition: transform 0.5s ease-out; /* Hiệu ứng trượt mượt mà */
+}
+
+/* Từng slide đơn lẻ */
+.slide {
+  min-width: 100%; /* Mỗi slide chiếm trọn chiều rộng khung */
+  position: relative;
+}
+
+/* Ảnh trong slide */
+.slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Giữ tỉ lệ ảnh, cắt bớt phần thừa nếu cần */
+}
+
+/* Lớp phủ đen mờ và chữ (Overlay) */
+.slide-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 40px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent); /* Màu chuyển từ đen sang trong suốt */
+  color: white;
+  box-sizing: border-box;
+}
+
+.slide-title {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.slide-desc {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  color: #e0e0e0;
+}
+
+.slide-btn {
+  padding: 10px 25px;
+  background-color: #007bff; /* Màu xanh chủ đạo */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.slide-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Nút điều hướng (Mũi tên trái phải) */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.3);
+  border: none;
+  color: white;
+  padding: 15px;
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+  z-index: 10;
+}
+
+.nav-btn:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.prev-btn {
+  left: 20px;
+}
+
+.next-btn {
+  right: 20px;
+}
+
+/* Dấu chấm chỉ số (Dots indicators) */
+.dots-container {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.dot.active {
+  background-color: white;
+  transform: scale(1.2);
+}
+
+/* Responsive cho màn hình nhỏ (Mobile) */
+@media (max-width: 768px) {
+  .slider-track {
+    height: 250px;
+  }
+  .slide-title {
+    font-size: 1.5rem;
+  }
+  .slide-content {
+    padding: 20px;
+  }
+}

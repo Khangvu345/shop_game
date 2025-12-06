@@ -9,6 +9,7 @@ import { Button } from '../../../components/ui/button/Button.tsx';
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import trailerVideo from '/assets/videos/playstation-5-pro-tralerr.io.mp4';
 import './HomePage.css'
+import PromotionSlider from '../../../components/ui/PromotionSlider/PromotionSlider.tsx';
 
 // Mock Data cho Danh mục (Icon giả lập bằng text/emoji vì chưa có file svg cụ thể)
 const categories = [
@@ -179,19 +180,9 @@ export function HomePage() {
 
             {/* 5. BANNER KHUYẾN MÃI (ƯU ĐÃI LỄ HỘI LỚN) */}
             <section
-                className="promo-banner-section"
+                className="slider-section"
             >
-
-                {/* Lớp overlay chứa nội dung (sử dụng CSS bạn cung cấp) */}
-                <div className="promo-overlay">
-                    <div className="promo-content-inner">
-                        <h2>ƯU ĐÃI LỄ HỘI LỚN!</h2>
-                        <p>Giảm giá lên tới 50% cho các trò chơi và phụ kiện chọn lọc. Đừng bỏ lỡ!</p>
-                        <Link to="/products">
-                            <Button className="promo-button">Xem ưu đãi</Button>
-                        </Link>
-                    </div>
-                </div>
+            <PromotionSlider />
             </section>
 
             {/* 6. TIN TỨC & CẬP NHẬT */}

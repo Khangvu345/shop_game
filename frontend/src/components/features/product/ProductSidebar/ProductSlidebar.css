@@ -1,109 +1,127 @@
+/* frontend/src/components/features/product/ProductSidebar/ProductSlidebar.css */
 
-/* Sidebar ngoài cùng */
+/* Sidebar mặc định (Desktop) */
 .page-sidebar {
-    margin: 1rem 15px 0 15px;
-    padding: 20px 10px 10px var(--spacing-md);
-    background-color: var(--color-primary-0); 
-    max-width: 300px;
-    border-right: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    min-height: 80vh;
-    height: auto; 
+    padding: 20px;
+    background-color: #ffffff; /* Nền trắng cho sạch */
+    
+    /* Desktop: Cố định chiều rộng và chiều cao */
+    width: 100%;
+    max-width: 100%; /* Sẽ do container cha quy định kích thước */
+    min-height: 80vh; 
+    
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: none; /* Bỏ shadow đậm đà, dùng border nhẹ nhàng hơn */
 }
 
 /* Tiêu đề Bộ Lọc */
 .page-sidebar h3 {
     color: var(--color-primary-1); 
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    margin-bottom: 5px;
-    border-bottom: 1px solid var(--color-primary-2);
-    padding-bottom: 5px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-/*  Nhóm Bộ Lọc (Loại sản phẩm, Mức giá)  */
+/* Nhóm Bộ Lọc */
 .filter-group {
     display: flex;
     flex-direction: column;
-    justify-items: left;
-    align-items: start;
-    padding: 10px 0; 
-    border-bottom: 1px solid var(--color-primary-2); 
+    padding: 15px 0; 
+    border-bottom: 1px solid #f3f4f6; 
 }
 
 .filter-group:last-of-type {
     border-bottom: none; 
 }
 
-/* Tiêu đề nhóm (Loại sản phẩm, Mức giá) */
 .filter-group h4 {
     color: var(--color-primary-1);
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-/* Định kiểu cho các mục nhập (checkbox/radio) và nhãn */
+/* Checkbox & Radio Labels */
 .filter-group label {
     display: flex;
     align-items: center;
-    vertical-align: middle;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     cursor: pointer;
-    white-space: nowrap;
-    font-size: 0.8rem;
-    color: var(--color-primary-1);
+    font-size: 0.9rem;
+    color: #4b5563; /* Màu xám đậm */
+    transition: color 0.2s;
 }
 
-/* Định kiểu cho checkbox và radio */
+.filter-group label:hover {
+    color: var(--color-secondary-0);
+}
+
+/* Input Styles */
 .filter-group input[type="checkbox"],
 .filter-group input[type="radio"] {
     appearance: none; 
     width: 18px;
     height: 18px;
-    border: 2px solid var(--color-primary-3); 
-    border-radius: 3px; 
-    margin-right: 5px;
+    border: 2px solid #d1d5db; 
+    border-radius: 4px; 
+    margin-right: 8px;
     cursor: pointer;
     position: relative;
-    top: -1px; 
+    transition: all 0.2s;
 }
 
-/* Custom style cho CHECKBOX khi được chọn */
-.filter-group input[type="checkbox"]:checked {
+.filter-group input[type="checkbox"]:checked,
+.filter-group input[type="radio"]:checked {
     background-color: var(--color-secondary-0); 
     border-color: var(--color-secondary-0);
 }
 
 .filter-group input[type="checkbox"]:checked::before {
     content: '\2713'; 
-    color: var(--color-primary-0);
-    font-size: 14px;
+    color: white;
+    font-size: 12px;
     position: absolute;
-    top: -2px;
-    left: 2px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .filter-group input[type="radio"] {
-    border-radius: 50%; 
+    border-radius: 50%;
 }
 
-.filter-group input[type="radio"]:checked {
-    border: 6px solid var(--color-secondary-0); 
-    background-color: var(--color-primary-0); 
-}
-
-/* Nút Xóa Bộ Lọc */
-
+/* Button Xóa bộ lọc */
 .page-sidebar .btn-secondary {
-    margin-top: 3px;
-    margin-left: 0px;
-    align-self: flex-start;
-    width: auto;
-    border-radius: 7px;
-    text-align: center;
-    transition: all 0.3s ease;
+    margin-top: 15px;
+    width: 100%; /* Nút full width cho dễ bấm */
+    padding: 8px;
+    font-size: 0.9rem;
 }
 
+/* --- RESPONSIVE MOBILE/TABLET --- */
+@media (max-width: 992px) {
+    .page-sidebar {
+        /* Mobile: Sidebar nằm ngang, bỏ chiều cao tối thiểu */
+        min-height: auto; 
+        height: auto;
+        margin: 0 0 20px 0;
+        
+        /* Layout bên trong sidebar trên mobile có thể chia 2 cột nếu muốn */
+        display: grid;
+        grid-template-columns: 1fr; /* Hoặc 1fr 1fr nếu muốn chia đôi bộ lọc */
+        gap: 10px;
+    }
+
+    .filter-group {
+        padding: 10px 0;
+        border-bottom: 1px dashed #e5e7eb;
+    }
+}

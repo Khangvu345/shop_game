@@ -2,16 +2,13 @@
 
 .products-list-page-container {
     display: grid;
-    /* Sidebar 250px, phần còn lại tự giãn */
-    grid-template-columns: 250px 1fr;
+    /* Desktop: Sidebar 260px cố định, Content tự giãn */
+    grid-template-columns: 260px 1fr;
     grid-template-areas: "products-list-sidebar products-list-content";
-    gap: 40px; /* Tăng khoảng cách giữa sidebar và list cho thoáng */
+    gap: 30px;
     
-    /* Giới hạn chiều rộng nhỏ hơn để Card không bị phóng to quá mức */
-    max-width: 1300px; 
-    margin: 0 auto; /* Căn giữa trang */
-    
-    /* Cách lề trên dưới 40px, trái phải 20px để không sát màn hình */
+    max-width: 1200px; /* Giữ độ rộng vừa phải cho đẹp */
+    margin: 0 auto;
     padding: 40px 20px;
     min-height: 80vh;
 }
@@ -25,15 +22,30 @@
     width: 100%;
 }
 
-/* Responsive cho Tablet/Mobile */
+/* --- RESPONSIVE --- */
+
+/* Tablet & Mobile (Màn hình < 992px) */
 @media (max-width: 992px) {
     .products-list-page-container {
-        grid-template-columns: 1fr;
+        display: flex; /* Chuyển sang Flex column để xếp chồng lên nhau */
+        flex-direction: column;
         gap: 20px;
-        padding: 20px;
+        padding: 20px 0px; /* Giảm padding cho đỡ tốn diện tích */
     }
     
+    /* Sidebar lúc này sẽ nằm ngang trên cùng */
     .page-sidebar {
-        margin-bottom: 20px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+@media (max-width: 576px) {
+    .products-list-page-container {
+        display: flex; /* Chuyển sang Flex column để xếp chồng lên nhau */
+        flex-direction: column;
+        padding: 10px 0 !important;
+    }
+    .product-page-content {
+        padding: 0 !important;
     }
 }
