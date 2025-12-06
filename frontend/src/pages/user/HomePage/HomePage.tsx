@@ -180,11 +180,24 @@ export function HomePage() {
 
             {/* 5. BANNER KHUYẾN MÃI (ƯU ĐÃI LỄ HỘI LỚN) */}
             <section
-                className="slider-section"
+                className="slider-section container"
+                style={{ marginTop: '3rem', marginBottom: '3rem' }}
             >
-            <PromotionSlider />
-            </section>
+            <h2
+            style={{
+                textAlign: 'center',
+                marginBottom: '1.5rem',
+                fontWeight: 600,
+                fontSize: '2.3rem',
+                letterSpacing: '-0.5px',
+            }}
+            >
+            CÁC SỰ KIỆN SẮP TỚI
+            </h2>
 
+
+                <PromotionSlider />
+            </section>
             {/* 6. TIN TỨC & CẬP NHẬT */}
             <section className="news-section container">
                 <h2>TIN TỨC & CẬP NHẬT MỚI NHẤT</h2>
