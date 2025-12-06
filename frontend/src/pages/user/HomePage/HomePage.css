@@ -538,9 +538,9 @@
 /* --- VIDEO TRAILER SECTION (FULL SCREEN MODE) --- */
 .video-trailer-section {
     width: 100%;
-    height: 100%;
+
     padding: 0;      /* Xóa khoảng cách trên dưới */
-    margin: 2rem 0;  /* Giữ khoảng cách với các section khác */
+    margin: 0;  /* Giữ khoảng cách với các section khác */
     background-color: #000;
     position: relative;
     overflow: hidden;
@@ -552,7 +552,7 @@
     /* Chọn 1 trong 2 kiểu chiều cao dưới đây: */
     
     /* Kiểu 1: Chiều cao cố định (Ví dụ 500px - 700px) - Khuyên dùng cho Web bán hàng */
-    height: 600px; 
+    height: 100vh; 
 
     /* Kiểu 2: Full màn hình thiết bị (100% chiều cao cửa sổ trình duyệt) */
     /* height: 100vh; */

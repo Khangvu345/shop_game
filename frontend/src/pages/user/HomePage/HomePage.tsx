@@ -16,11 +16,11 @@ const categories = [
         id: 1,
         name: 'Consoles',
         icon: 'https://res.cloudinary.com/ddehnsjtw/image/upload/v1764779169/Sony_Unveils_PlayStation_5_Game_Console___WERD_zgljzx.jpg',
-        link: '/products?category=1'
+        link: '/products?categoryId=1'
     },
-    { id: 2, name: 'Thiết bị cầm tay', icon: 'https://res.cloudinary.com/ddehnsjtw/image/upload/v1764779382/Game_Control_Glyph_Icon_Vector_Game_Icons_Control_Icons_Controller_Clipart_PNG_and_Vector_with_Transparent_Background_for_Free_Download_jeu9yu.jpg', link: '/products?category=3' },
-    { id: 3, name: 'Phụ kiện', icon: '🎧', link: '/products?category=3' },
-    { id: 4, name: 'Trò chơi', icon: '💿', link: '/products?category=2' },
+    { id: 2, name: 'Thiết bị cầm tay', icon: 'https://res.cloudinary.com/ddehnsjtw/image/upload/v1764779382/Game_Control_Glyph_Icon_Vector_Game_Icons_Control_Icons_Controller_Clipart_PNG_and_Vector_with_Transparent_Background_for_Free_Download_jeu9yu.jpg', link: '/products?categoryId=3' },
+    { id: 3, name: 'Phụ kiện', icon: '🎧', link: '/products?categoryId=3' },
+    { id: 4, name: 'Trò chơi', icon: '💿', link: '/products?categoryId=2' },
 ];
 
 
@@ -67,7 +67,7 @@ export function HomePage() {
         if (videoRef.current) {
             // Thử chạy video
             const playPromise = videoRef.current.play();
-            
+
             // Xử lý trường hợp trình duyệt chặn Autoplay (nếu có)
             if (playPromise !== undefined) {
                 playPromise.catch((error) => {
@@ -152,17 +152,17 @@ export function HomePage() {
             </section>
 
             {/*4 --- VIDEO TRAILER SECTION (LOCAL FILE) --- */}
-<section className="video-trailer-section">
+            <section className="video-trailer-section">
                 {/* 1. Bỏ div 'container' để video tràn ra 2 bên lề */}
                 {/* 2. Đã xóa thẻ <h2>TRAILER NỔI BẬT</h2> */}
                 <div className="video-wrapper">
-                    <video 
+                    <video
                         ref={videoRef}
-                        width="100%" 
-                        height="100%" 
+                        width="100%"
+                        height="100%"
                         // 3. Đã xóa thuộc tính 'controls' để người dùng không chỉnh được
-                        muted 
-                        loop 
+                        muted
+                        loop
                         autoPlay
                         playsInline
                         className="promo-video"
@@ -171,7 +171,7 @@ export function HomePage() {
                         <source src={trailerVideo} type="video/mp4" />
                         Trình duyệt của bạn không hỗ trợ thẻ video.
                     </video>
-                    
+
                     {/* (Tùy chọn) Thêm một lớp phủ mờ để chặn hoàn toàn thao tác click chuột phải/trái vào video */}
                     <div className="video-overlay"></div>
                 </div>
