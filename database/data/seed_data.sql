@@ -8,7 +8,7 @@
 --   - Admin account (tài khoản quản trị)
 --   - Suppliers (nhà cung cấp)
 --
--- LƯU Ý:
+-- LƯU Ý:r
 --   - File này KHÔNG chứa dữ liệu mẫu/test
 --   - File này KHÔNG chứa categories và products (xem data.sql)
 --   - Import file này SAU khi chạy schema.sql
