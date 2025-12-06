@@ -18,14 +18,11 @@ export function ManageShipmentPage() {
     const [selectedShipment, setSelectedShipment] = useState<IShipment | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // State cho form update
-    const [statusForm, setStatusForm] = useState<{ status: TShipmentStatus, notes: string }>({
+    const [statusForm, setStatusForm] = useState<{ status: TShipmentStatus}>({
         status: 'Shipped' ,
-        notes: ''
     });
 
     useEffect(() => {
-        // Backend page start 0
         dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
     }, [dispatch, currentPage]);
 
@@ -43,7 +40,6 @@ export function ManageShipmentPage() {
         setSelectedShipment(item);
         setStatusForm({
             status: item.status as TShipmentStatus,
-            notes: item.notes || ''
         });
         setIsModalOpen(true);
     };
@@ -60,7 +56,6 @@ export function ManageShipmentPage() {
         setIsModalOpen(false);
     };
 
-    // Định nghĩa cột
     const columns: IColumn<IShipment>[] = [
         { title: 'ID', key: 'shipmentId' },
         {
@@ -106,7 +101,7 @@ export function ManageShipmentPage() {
                 data={data || []}
                 isLoading={status === 'loading'}
                 rowKey={(item) => item.shipmentId}
-                onEdit={handleEdit} // Nút sửa sẽ mở modal cập nhật trạng thái
+                onEdit={handleEdit}
             />
 
             {pagination && pagination.totalPages > 1 && (
@@ -123,31 +118,9 @@ export function ManageShipmentPage() {
             {/* MODAL UPDATE STATUS */}
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={`Cập nhật vận đơn #${selectedShipment?.trackingNo}`}>
                 <div style={{minWidth: '400px', display: 'flex', flexDirection: 'column', gap: '15px'}}>
-                    <div>
-                        <label className="form-label">Trạng thái vận chuyển</label>
-                        <Select
-                            value={statusForm.status}
-                            onChange={(e) => setStatusForm({...statusForm, status: e.target.value as TShipmentStatus})}
-                            options={[
-                                { label: 'Đang chuẩn bị (Preparing)', value: 'PREPARING' },
-                                { label: 'Đang giao hàng (Shipped)', value: 'SHIPPED' },
-                                { label: 'Giao thành công (Delivered)', value: 'DELIVERED' },
-                                { label: 'Hoàn trả (Returned)', value: 'RETURNED' },
-                                { label: 'Đã hủy (Cancelled)', value: 'CANCELLED' },
-                            ]}
-                        />
-                    </div>
-
-                    <div>
-                        <label className="form-label">Ghi chú</label>
-                        <Input
-                            value={statusForm.notes}
-                            onChange={(e) => setStatusForm({...statusForm, notes: e.target.value})}
-                            placeholder="Ví dụ: Khách hẹn giao lại..."
-                        />
-                    </div>
-
                     <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px'}}>
+
+
                         <Button color="0" onClick={() => setIsModalOpen(false)}>Hủy</Button>
                         <Button onClick={handleUpdateSubmit} disabled={status === 'loading'}>
                             {status === 'loading' ? <Spinner/> : 'Lưu Thay Đổi'}

@@ -22,11 +22,10 @@ export function CheckoutPage() {
     const { profile, address } = useAppSelector(state => state.customer);
     const { status ,error } = useAppSelector((state) => state.orders);
 
-    const user = profile.data
 
     const [formData, setFormData] = useState({
-        recipientName: user?.fullName || '',
-        phone: user?.phone || '',
+        recipientName: profile.data?.fullName || '',
+        phone: profile.data?.phone || '',
         city: address.data?.city || '',
         ward: address.data?.ward || '',
         street: address.data?.line1  || '',
@@ -40,19 +39,16 @@ export function CheckoutPage() {
     useEffect(() => {
         dispatch(fetchMyProfile());
         dispatch(fetchMyAddress());
-    }, [dispatch]);
-
-
-    useEffect(() => {
         setFormData(prev => ({
             ...prev,
-            receiverName: user?.fullName || '',
-            phone: user?.phone || '',
+            receiverName: profile.data?.fullName || '',
+            phone: profile.data?.phone || '',
             city: address.data?.city || '',
             ward: address.data?.ward || '',
             street: address.data?.line1  || '',
         }));
-    }, [user, address]);
+    }, [dispatch,profile, address]);
+
 
     useEffect(() => {
         if (cartItems.length === 0) {
@@ -152,7 +148,7 @@ export function CheckoutPage() {
                     <div style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '1rem' }}>
                         {cartItems.map(item => (
                             <div key={item.product.productId} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-                                <img src={item.product.productImageUrl} style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} />
+                                <img src={item.product.productImageUrl} alt={item.product.productName} style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} />
                                 <div style={{ flex: 1 }}>
                                     <div style={{ fontSize: '0.9rem', fontWeight: 500 }}>{item.product.productName}</div>
                                     <div style={{ fontSize: '0.85rem', color: '#666' }}>
