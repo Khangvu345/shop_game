@@ -178,6 +178,15 @@ public class OrderService {
     public OrderListResponse getAllOrders(OrderStatus status, PaymentStatus paymentStatus,
             Long customerId, LocalDateTime fromDate, LocalDateTime toDate,
             int page, int size, String sortBy) {
+
+        // Điều chỉnh ngày kết thúc nếu là ngày đầu tiên
+        final LocalDateTime effectiveToDate;
+        if (toDate != null && toDate.toLocalTime().equals(java.time.LocalTime.MIN)) {
+            effectiveToDate = toDate.with(java.time.LocalTime.MAX);
+        } else {
+            effectiveToDate = toDate;
+        }
+
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy != null ? sortBy : "createdAt");
         Pageable pageable = PageRequest.of(page, size, sort);
 
@@ -196,8 +205,8 @@ public class OrderService {
             if (fromDate != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), fromDate));
             }
-            if (toDate != null) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("createdAt"), toDate));
+            if (effectiveToDate != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("createdAt"), effectiveToDate));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
