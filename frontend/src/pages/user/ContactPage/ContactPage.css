@@ -198,7 +198,7 @@
 /* --- Right Column: Form --- */
 .contact-form {
     padding: 60px;
-    background: white;
+    background: transparent ;
 }
 
 .form-header {
