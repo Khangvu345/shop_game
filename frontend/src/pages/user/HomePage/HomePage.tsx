@@ -129,8 +129,30 @@ const dispatch = useAppDispatch();
                 </div>
             </section>
 
+            {/*4 --- VIDEO TRAILER SECTION (LOCAL FILE) --- */}
+            <section className="video-trailer-section">
+                <div className="container">
+                    <h2 style={{ color: '#fff', marginBottom: '30px' }}>TRAILER NỔI BẬT</h2>
+                    <div className="video-wrapper">
+                        <video 
+                            width="100%" 
+                            height="100%" 
+                            controls 
+                            autoPlay 
+                            muted 
+                            loop 
+                            playsInline
+                            className="promo-video"
+                            poster="/assets/images/BannerHompage.png" // (Tùy chọn) Ảnh hiển thị khi video chưa load
+                        >
+                            <source src="../../../assets/videos/playstation-5-pro-console-launch-trailer-1440-publer.io.mp4" type="video/mp4" />
+                            Trình duyệt của bạn không hỗ trợ thẻ video.
+                        </video>
+                    </div>
+                </div>
+            </section>
 
-            {/* 4. BANNER KHUYẾN MÃI (ƯU ĐÃI LỄ HỘI LỚN) */}
+            {/* 5. BANNER KHUYẾN MÃI (ƯU ĐÃI LỄ HỘI LỚN) */}
             <section 
                 className="promo-banner-section"
             >
@@ -147,7 +169,7 @@ const dispatch = useAppDispatch();
                 </div>
             </section>
 
-            {/* 5. TIN TỨC & CẬP NHẬT */}
+            {/* 6. TIN TỨC & CẬP NHẬT */}
             <section className="news-section container">
                 <h2>TIN TỨC & CẬP NHẬT MỚI NHẤT</h2>
                 <div className="news-grid">
