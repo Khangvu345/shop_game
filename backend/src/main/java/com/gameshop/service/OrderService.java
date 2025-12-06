@@ -249,6 +249,18 @@ public class OrderService {
             }
         }
 
+        // Restore stock when admin cancels order
+        if (request.status() == OrderStatus.CANCELLED) {
+            for (OrderLine line : order.getOrderLines()) {
+                stockMovementService.createMovement(
+                        line.getProduct().getProductId(),
+                        line.getQuantity(), // Positive = restore stock
+                        StockMovementReason.Return,
+                        "ADMIN-CANCEL-ORDER-" + orderId,
+                        orderId);
+            }
+        }
+
         order.setStatus(request.status());
         orderRepo.save(order);
 
