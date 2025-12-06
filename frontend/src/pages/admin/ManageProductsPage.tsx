@@ -5,7 +5,7 @@ import {
     fetchProducts,
     addProduct,
     editProduct,
-    deleteProduct
+    deleteProduct, resetProductState
 } from "../../store/slices/ProductBlock/productSlice.ts";
 import { fetchCategories } from "../../store/slices/ProductBlock/categorySlice.ts";
 import { AdminManage } from "../../components/features/admin/AdminManager/AdminManage.tsx";
@@ -20,6 +20,7 @@ export function ManageProductsPage() {
     const [keyword, setKeyword] = useState('');
     const [filterCategoryId, setFilterCategoryId] = useState<string>('');
     const [filterStatus, setFilterStatus] = useState<string>('');
+    dispatch(resetProductState())
 
     useEffect(() => {
         if (!categories || categories.length === 0) {

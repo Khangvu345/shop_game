@@ -20,6 +20,11 @@ export interface IUpdateOrderStatusRequest {
     note?: string;
 }
 
+export interface IUpdatePaymentStatusRequest {
+    paymentStatus: string
+    note: string
+}
+
 export interface IAdminOrderFilter {
     page?: number;
     size?: number;
@@ -72,8 +77,8 @@ export class OrderApi extends BaseApi<IOrder> {
         return response.data;
     }
 
-    async updatePaymentStatus(orderId: number | string, paymentStatus: string): Promise<IOrder> {
-        const response = await axiosClient.put<IOrder>(`/orders/${orderId}/payment-status`, { paymentStatus });
+    async updatePaymentStatus(orderId: number | string, payload: IUpdatePaymentStatusRequest): Promise<IOrder> {
+        const response = await axiosClient.put<IOrder>(`/orders/${orderId}/payment-status`,  payload );
         return response.data;
     }
 

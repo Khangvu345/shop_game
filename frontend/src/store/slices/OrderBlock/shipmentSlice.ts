@@ -29,14 +29,6 @@ const shipmentReducer = (state: any, action: any) => {
 
     // Xử lý thêm logic cho updateStatus
     if (action.type === updateShipmentStatus.fulfilled.type) {
-        // Cập nhật item trong danh sách data
-        const updatedItem = action.payload as IShipment;
-        if (newState.data) {
-            const index = newState.data.findIndex((item: IShipment) => item.shipmentId === updatedItem.shipmentId);
-            if (index !== -1) {
-                newState.data[index] = updatedItem;
-            }
-        }
         newState.status = 'succeeded';
     }
 
