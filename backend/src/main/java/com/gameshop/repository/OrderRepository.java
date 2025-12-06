@@ -42,7 +42,9 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
          * @param customerId ID khách hàng
          * @return Tổng tiền (NULL nếu chưa có đơn hàng)
          */
-        @Query("SELECT COALESCE(SUM(o.grandTotal), 0) FROM Order o WHERE o.customer.id = :customerId")
+        @Query("SELECT COALESCE(SUM(o.grandTotal), 0) FROM Order o " +
+                        "WHERE o.customer.id = :customerId " +
+                        "AND (o.paymentStatus = 'PAID' OR o.paymentStatus = 'COD_COLLECTED')")
         BigDecimal getTotalSpentByCustomerId(@Param("customerId") Long customerId);
 
         /**
