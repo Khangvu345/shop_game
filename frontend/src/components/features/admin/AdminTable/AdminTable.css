@@ -1,0 +1,80 @@
+.admin-table-wrapper {
+    overflow-x: auto;
+    background-color: var(--admin-bg-container);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.admin-table thead {
+    background-color: var(--admin-bg-container);
+}
+
+.admin-table th {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--admin-text-secondary);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-table tbody tr {
+    height: 70px;
+    border-bottom: 1px solid var(--admin-border-subtle);
+    transition: background-color 0.15s ease;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #fafafa;
+}
+
+.admin-table td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+    color: var(--admin-text-primary);
+}
+
+.admin-table-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: var(--admin-radius-sm);
+}
+
+.admin-table-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.admin-table-btn-edit,
+.admin-table-btn-delete {
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+    border-radius: var(--admin-radius-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--admin-text-secondary);
+    background-color: transparent;
+    border: 1px solid var(--admin-border-medium);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-table-btn-edit:hover {
+    background-color: var(--admin-active-bg);
+    border-color: var(--admin-primary);
+    color: var(--admin-primary);
+}
+
+.admin-table-btn-delete:hover {
+    background-color: #fee;
+    border-color: #f44;
+    color: #f44;
+}

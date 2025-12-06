@@ -1,0 +1,41 @@
+/* ========================================
+   ADMIN DESIGN SYSTEM
+   Isolated from customer UI
+   ======================================== */
+
+:root {
+    /* Admin Color Palette */
+    --admin-primary: #00ddff;
+    --admin-primary-hover: #00c4e6;
+    --admin-nav-hover: #0891b2;
+    --admin-bg-page: #f8f9fa;
+    --admin-bg-container: #ffffff;
+    --admin-border-light: #e5e7eb;
+    --admin-border-medium: #d1d5db;
+    --admin-border-subtle: #f0f0f0;
+    --admin-text-primary: #333333;
+    --admin-text-secondary: #888888;
+    --admin-text-tertiary: #999999;
+    --admin-active-bg: #f3f4f6;
+
+    /* Border Radius */
+    --admin-radius-sm: 5px;
+    /* Buttons, inputs */
+    --admin-radius-md: 8px;
+    /* Containers */
+
+    /* Layout Dimensions */
+    --admin-header-height: 77px;
+    --admin-sidebar-width: 250px;
+
+    /* Typography */
+    --admin-font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Admin-specific reset/base styles */
+.admin-container,
+.admin-container *,
+.admin-container *::before,
+.admin-container *::after {
+    font-family: var(--admin-font-family);
+}

@@ -3,6 +3,8 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { fetchDashboardStats, setFilter } from '../../../store/slices/AdminBlock/dashboardSlice';
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import { Select } from '../../../components/ui/input/Select';
+import { AdminPageHeader } from '../../../components/features/admin/AdminPageHeader/AdminPageHeader';
+import '../../../components/features/admin/AdminPageHeader/AdminPageHeader.css';
 import {
     Chart as ChartJS,
     ArcElement,
@@ -96,33 +98,27 @@ export function DashboardPage() {
     if (error) return <div className="error-text">Lỗi tải thống kê: {error}</div>;
 
     return (
-        <div className="dashboard-container">
-            {/* HEADER & FILTERS */}
-            <div className="dashboard-header">
-                <div>
-                    <h2 style={{ margin: 0 }}>Tổng Quan Kinh Doanh</h2>
-                    <p style={{ color: '#666', margin: '5px 0 0' }}>
-                        Dữ liệu tháng {filter.month}/{filter.year}
-                    </p>
-                </div>
+        <div className="admin-page-container">
+            {/* HEADER - 3 columns only */}
+            <AdminPageHeader title="Tổng Quan Kinh Doanh" />
 
-                <div className="dashboard-filters">
-                    <Select
-                        value={filter.month}
-                        onChange={handleMonthChange}
-                        options={Array.from({ length: 12 }, (_, i) => ({ label: `Tháng ${i + 1}`, value: i + 1 }))}
-                        style={{ width: '120px' }}
-                    />
-                    <Select
-                        value={filter.year}
-                        onChange={handleYearChange}
-                        options={[
-                            { label: '2024', value: 2024 },
-                            { label: '2025', value: 2025 },
-                        ]}
-                        style={{ width: '100px' }}
-                    />
-                </div>
+            {/* ACTION BAR - Filters */}
+            <div className="admin-action-bar">
+                <Select
+                    value={filter.month}
+                    onChange={handleMonthChange}
+                    options={Array.from({ length: 12 }, (_, i) => ({ label: `Tháng ${i + 1}`, value: i + 1 }))}
+                    style={{ width: '120px' }}
+                />
+                <Select
+                    value={filter.year}
+                    onChange={handleYearChange}
+                    options={[
+                        { label: '2024', value: 2024 },
+                        { label: '2025', value: 2025 },
+                    ]}
+                    style={{ width: '100px' }}
+                />
             </div>
 
             {/* STAT CARDS */}

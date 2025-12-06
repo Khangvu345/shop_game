@@ -5,7 +5,7 @@ import categoryReducer from './slices/ProductBlock/categorySlice.ts';
 import supplierReducer from './slices/ProductBlock/supplierSilce.ts';
 import authReducer from "./slices/Auth/authSlice.ts";
 import orderSlice from "./slices/OrderBlock/orderSlice.ts";
-import shipmentSlice from "./slices/OrderBlock/shipmentSlice.tsx";
+import shipmentSlice from "./slices/OrderBlock/shipmentSlice.ts";
 import dashboardReducer from './slices/AdminBlock/dashboardSlice';
 import goodsReceiptSlice from "./slices/InventoryBlock/goodsReceiptSlice.ts";
 import customerSlice from "./slices/AccountBlock/customerSlice.tsx";

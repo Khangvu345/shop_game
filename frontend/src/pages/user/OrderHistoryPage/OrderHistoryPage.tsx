@@ -97,8 +97,7 @@ export function OrderHistoryPage() {
                             gap: '10px'
                         }}>
                             <div>
-                                <span style={{ fontWeight: 'bold', marginRight: '10px' }}>Đơn hàng #{order.orderId}</span>
-                                <span style={{ fontSize: '0.9rem', color: '#666' }}>
+                                <span style={{ fontWeight: 'bold', marginRight: '10px' }}>
                                     Đặt ngày: {new Date(order.createdAt || order.orderDate).toLocaleDateString('vi-VN')}
                                 </span>
                             </div>

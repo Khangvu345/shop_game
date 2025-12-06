@@ -8,29 +8,26 @@
 /* === HEADER SECTION MỚI === */
 .faq-header {
     /* Thay đổi đường dẫn ảnh của bạn ở đây */
-    background-image: url('../../../assets/images/Gemini_Generated_Image_11anrd11anrd11an.png');
-
+    background-image: url('../../../assets/images/faq.png');
+    
     /* Các thuộc tính căn chỉnh ảnh nền quan trọng */
-    background-size: cover;
-    /* Ảnh phủ kín khung */
-    background-position: center;
-    /* Căn giữa ảnh */
+    background-size: cover;       /* Ảnh phủ kín khung */
+    background-position: center;  /* Căn giữa ảnh */
     background-repeat: no-repeat;
-
+    
     /* Nếu ảnh của bạn vẫn hơi sáng, có thể bỏ comment dòng dưới để thêm một lớp phủ đen mỏng */
     /* background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../../../assets/images/faq-header-new.jpg'); */
 
-    padding: 100px 20px;
-    /* Tăng padding trên dưới một chút để thoáng hơn */
+    padding: 100px 20px; /* Tăng padding trên dưới một chút để thoáng hơn */
     text-align: center;
     color: white;
     position: relative;
     /* overflow: hidden;  <- Không cần thiết nữa nếu bỏ shapes */
     margin-bottom: 40px;
     border-radius: 0 0 20px 20px;
-
+    
     /* Thêm một chút shadow cho cả khối header để nổi bật trên nền trắng bên dưới */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
 .faq-header-content {

@@ -8,10 +8,6 @@ import { useAppDispatch, useAppSelector } from "../../../store/hooks.ts";
 import { logoutUser } from "../../../store/slices/Auth/authSlice.ts";
 
 function AdminNavLinks() {
-
-
-
-
     return (
         <>
             <NavLink to="dashboard" className="admin-nav-link">Bảng điều khiển</NavLink>
@@ -20,8 +16,10 @@ function AdminNavLinks() {
             <NavLink to="categories" className="admin-nav-link">Quản lí danh mục</NavLink>
             <NavLink to="suppliers" className="admin-nav-link">Quản lí nhà cung cấp</NavLink>
             <NavLink to="orders" className="admin-nav-link">Quản lí đơn hàng</NavLink>
+            <NavLink to="shipments" className="admin-nav-link">Quản vận chuyển</NavLink>
             <NavLink to="stock-movements" className="admin-nav-link" >Lịch sử biến động kho</NavLink>
             <NavLink to="goods-receipts" className="admin-nav-link">Nhập hàng</NavLink>
+
         </>
     )
 }
@@ -40,8 +38,8 @@ function AdminActionBar() {
     };
     return (
         <>
-            <Button>Cài đặt</Button>
-            <Button onClick={handleLogout}>Đăng xuất</Button>
+            <Button className="btn-admin-secondary">Cài đặt</Button>
+            <Button onClick={handleLogout} className="btn-admin-primary">Đăng xuất</Button>
         </>
     )
 }
@@ -49,9 +47,6 @@ function AdminActionBar() {
 export function AdminLayout() {
     return (
         <div className={'admin-container'}>
-            <header className={'admin-header'}>
-                <h1>Quản li cơ sở dữ liệu</h1>
-            </header>
             <aside className={'admin-sidebar'}>
                 <Navbar styleNav={"-vertical"} links={<AdminNavLinks />} actions={<AdminActionBar />}></Navbar>
             </aside>

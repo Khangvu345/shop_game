@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchCustomers } from '../../store/slices/AccountBlock/customerSlice';
 import { AdminTable } from '../../components/features/admin/AdminTable/AdminTable';
+import { AdminPageHeader } from '../../components/features/admin/AdminPageHeader/AdminPageHeader';
+import '../../components/features/admin/AdminPageHeader/AdminPageHeader.css';
 import { Pagination } from '../../components/ui/pagination/Pagination';
 import { Input } from '../../components/ui/input/Input';
 import { Button } from '../../components/ui/button/Button';
@@ -72,8 +74,8 @@ export function ManageCustomersPage() {
     ];
 
     return (
-        <div style={{ padding: '20px' }}>
-            <h2 style={{ marginBottom: '20px' }}>Quản Lý Khách Hàng</h2>
+        <div className="admin-page-container">
+            <AdminPageHeader title="Quản Lý Khách Hàng" />
 
             {/* Filter Bar */}
             <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
@@ -81,7 +83,7 @@ export function ManageCustomersPage() {
                     placeholder="Tìm kiếm theo tên, email, sđt..."
                     value={keyword}
                     onChange={handleSearch}
-                    style={{width: '300px'}}
+                    style={{ width: '300px' }}
                 />
             </div>
 
@@ -108,8 +110,8 @@ export function ManageCustomersPage() {
             {/* Detail Modal */}
             <Modal isOpen={isDetailOpen} onClose={() => setIsDetailOpen(false)} title="Chi tiết khách hàng">
                 {selectedCustomer && (
-                    <div style={{minWidth: '500px'}}>
-                        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px'}}>
+                    <div style={{ minWidth: '500px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
                             <Card>
                                 <h4>Thông tin cá nhân</h4>
                                 <p><strong>ID:</strong> {selectedCustomer.id}</p>
@@ -126,7 +128,7 @@ export function ManageCustomersPage() {
                                 <p><strong>Tổng chi tiêu:</strong> {selectedCustomer.totalSpent.toLocaleString()} đ</p>
                             </Card>
                         </div>
-                        <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <Button color="0" onClick={() => setIsDetailOpen(false)}>Đóng</Button>
                         </div>
                     </div>

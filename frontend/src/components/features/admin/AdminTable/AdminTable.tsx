@@ -15,6 +15,7 @@ interface AdminTableProps<T> {
 
     onEdit?: (item: T) => void;
     onDelete?: (item: T) => void;
+    editButtonText?: string;  // Tùy chỉnh text nút edit (mặc định: "Sửa")
 }
 
 export function AdminTable<T extends object>({
@@ -23,7 +24,8 @@ export function AdminTable<T extends object>({
     isLoading,
     rowKey,
     onEdit,
-    onDelete
+    onDelete,
+    editButtonText = "Sửa"  // Giá trị mặc định
 }: AdminTableProps<T>) {
 
     if (isLoading) {
@@ -36,73 +38,50 @@ export function AdminTable<T extends object>({
     if (!data || data.length === 0) return <div>Chưa có dữ liệu</div>;
 
     return (
-        <div className="card" style={{ overflowX: 'auto', padding: 0 }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.95rem' }}>
-
-                {/* --- HEADER --- */}
+        <div className="admin-table-wrapper">
+            <table className="admin-table">
                 <thead>
-                    <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #e9ecef' }}>
+                    <tr>
                         {columns.map((col, index) => (
-                            <th
-                                key={String(col.key) + index}
-                                style={{
-                                    padding: '12px 16px',
-                                    textAlign: 'left',
-                                    fontWeight: 600,
-                                    color: '#495057',
-                                    whiteSpace: 'nowrap'
-                                }}
-                            >
+                            <th key={String(col.key) + index}>
                                 {col.title.toUpperCase()}
                             </th>
                         ))}
-
-                        {/* Cột thao tác (chỉ hiện nếu có truyền onEdit hoặc onDelete) */}
                         {(onEdit || onDelete) && (
-                            <th style={{ padding: '12px 16px', textAlign: 'right', fontWeight: 600, color: '#495057', width: '120px' }}>
+                            <th style={{ textAlign: 'right', width: '120px' }}>
                                 THAO TÁC
                             </th>
                         )}
                     </tr>
                 </thead>
-
-                {/* --- BODY --- */}
                 <tbody>
                     {data.map((item) => (
-                        <tr
-                            key={rowKey(item)}
-                            style={{ borderBottom: '1px solid #e9ecef' }}
-                            // Hiệu ứng hover (nếu bạn có class hover trong CSS)
-                            className="table-row-hover"
-                        >
-                            {/* Lặp qua các cột để vẽ dữ liệu */}
+                        <tr key={rowKey(item)}>
                             {columns.map((col, colIndex) => (
-                                <td key={colIndex} style={{ padding: '12px 16px', verticalAlign: 'middle', color: '#333' }}>
+                                <td key={colIndex}>
                                     {col.render
-                                        ? col.render(item) // Nếu có hàm render riêng -> dùng nó
-                                        : (item[col.key] as React.ReactNode) // Nếu không -> hiển thị giá trị thô
+                                        ? col.render(item)
+                                        : (item[col.key] as React.ReactNode)
                                     }
                                 </td>
                             ))}
-
-                            {/* Vẽ các nút thao tác */}
                             {(onEdit || onDelete) && (
-                                <td style={{ padding: '12px 16px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                                <td className="admin-table-actions">
                                     {onEdit && (
-                                        <Button
-                                            style={{ marginRight: '0.5rem', padding: '0.3rem 0.8rem', fontSize: '0.85rem' }}
+                                        <button
+                                            className="admin-table-btn-edit"
                                             onClick={() => onEdit(item)}
                                         >
-                                            Sửa
-                                        </Button>
+                                            {editButtonText}
+                                        </button>
                                     )}
                                     {onDelete && (
-                                        <Button
-                                            style={{ padding: '0.3rem 0.8rem', fontSize: '0.85rem' }}
+                                        <button
+                                            className="admin-table-btn-delete"
                                             onClick={() => onDelete(item)}
                                         >
                                             Xóa
-                                        </Button>
+                                        </button>
                                     )}
                                 </td>
                             )}

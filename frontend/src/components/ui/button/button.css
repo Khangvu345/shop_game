@@ -50,3 +50,20 @@
     color: var(--color-primary-0);
     border-color: var(--color-secondary-1);
 }
+/* Admin Primary Button */
+.btn-admin-primary {
+    background-color: var(--admin-primary);
+    color: white;
+    border-radius: var(--admin-radius-sm);
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-admin-primary:hover {
+    background-color: var(--admin-primary-hover);
+    transform: translateY(-1px);
+}

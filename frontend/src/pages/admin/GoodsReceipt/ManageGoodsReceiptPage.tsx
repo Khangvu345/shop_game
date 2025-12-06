@@ -6,6 +6,8 @@ import { AdminTable } from '../../../components/features/admin/AdminTable/AdminT
 import { Button } from '../../../components/ui/button/Button.tsx';
 import { Pagination } from '../../../components/ui/pagination/Pagination.tsx';
 import type { IColumn, IGoodsReceipt } from '../../../types';
+import '../../../assets/styles/admin.css';
+import '../../../components/features/admin/AdminPageHeader/AdminPageHeader.css';
 
 export function ManageGoodsReceiptPage() {
     const dispatch = useAppDispatch();
@@ -39,10 +41,31 @@ export function ManageGoodsReceiptPage() {
     ];
 
     return (
-        <div style={{padding: '20px'}}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                <h2>Quản Lý Nhập Hàng</h2>
-                <Button onClick={() => navigate('/admin/goods-receipts/create')}>+ Nhập Hàng Mới</Button>
+        <div className="admin-page-container">
+            {/* HEADER - 2 column grid: Admin | Title */}
+            <div className="admin-page-header">
+                <span className="admin-logo-header">Admin</span>
+                <h2 className="admin-page-title">Quản Lý Nhập Hàng</h2>
+            </div>
+
+            {/* ACTION BAR - Button */}
+            <div className="admin-action-bar">
+                <div style={{ flex: 1 }}></div>
+                <Button
+                    onClick={() => navigate('/admin/goods-receipts/create')}
+                    style={{
+                        background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+                        color: '#fff',
+                        fontWeight: 600,
+                        padding: '0.75rem 1.5rem',
+                        borderRadius: '6px',
+                        border: 'none',
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap'
+                    }}
+                >
+                    + Nhập Hàng Mới
+                </Button>
             </div>
 
             <AdminTable<IGoodsReceipt>
@@ -52,6 +75,7 @@ export function ManageGoodsReceiptPage() {
                 rowKey={(item) => item.receiptId}
                 // Nút sửa đóng vai trò xem chi tiết
                 onEdit={(item) => navigate(`/admin/goods-receipts/${item.receiptId}`)}
+                editButtonText="Xem"
             />
 
             {pagination && pagination.totalPages > 1 && (
