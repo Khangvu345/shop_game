@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { placeOrder } from '../../../store/slices/OrderBlock/orderSlice';
@@ -9,6 +9,8 @@ import { Spinner } from '../../../components/ui/loading/Spinner';
 import type { ICreateOrderPayload } from '../../../types';
 import './CheckOut.css';
 import {fetchMyAddress, fetchMyProfile} from "../../../store/slices/AccountBlock/customerSlice.tsx";
+import {AddressSelector} from "../../../components/ui/input/AddressSelector.tsx";
+import {customerApi} from "../../../api/AccountBlock/customerApi.ts";
 
 export function CheckoutPage() {
 
@@ -17,18 +19,21 @@ export function CheckoutPage() {
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    dispatch(fetchMyProfile());
+    dispatch(fetchMyAddress());
 
     const cartItems = useAppSelector((state) => state.cart.items);
-    const { profile, address } = useAppSelector(state => state.customer);
-    const { status ,error } = useAppSelector((state) => state.orders);
+    const { user } = useAppSelector((state) => state.auth);
+    const { status, error } = useAppSelector((state) => state.orders);
 
+    const isOrderSuccess = useRef(false);
 
     const [formData, setFormData] = useState({
-        recipientName: profile.data?.fullName || '',
-        phone: profile.data?.phone || '',
-        city: address.data?.city || '',
-        ward: address.data?.ward || '',
-        street: address.data?.line1 || '',
+        recipientName: '',
+        phone: '',
+        city: '',
+        ward: '',
+        street: '',
         paymentMethod: 'COD'
     });
 
@@ -36,29 +41,51 @@ export function CheckoutPage() {
     const shippingFee = 0;
     const grandTotal = subTotal + shippingFee;
 
-    useEffect(() => {
-        dispatch(fetchMyProfile());
-        dispatch(fetchMyAddress());
-        setFormData(prev => ({
-            ...prev,
-            recipientName: profile.data?.fullName || '',
-            phone: profile.data?.phone || '',
-            city: address.data?.city || '',
-            ward: address.data?.ward || '',
-            street: address.data?.line1  || '',
-        }));
-    }, [dispatch,profile, address]);
 
 
     useEffect(() => {
-        if (cartItems.length === 0) {
-            navigate('/my-orders');
+        if (user) {
+            const loadDefaultAddress = async () => {
+                try {
+                    const address = await customerApi.getDefaultAddress();
+                    const profile = await customerApi.getProfile()
+                    if (profile && address) {
+                        setFormData(prev => ({
+                            ...prev,
+                            recipientName: profile.fullName,
+                            phone: profile.phone,
+                            city: address.city || '',
+                            ward: address.ward || '',
+                            street: address.line1 || '',
+
+                        }));
+                    }
+                } catch (err) {
+                    console.log("Chưa có địa chỉ mặc định hoặc lỗi tải địa chỉ");
+                }
+            };
+            loadDefaultAddress();
+        }
+    }, [user]);
+
+
+    useEffect(() => {
+        if (cartItems.length === 0 && !isOrderSuccess.current) {
+            navigate('/products');
         }
     }, [cartItems, navigate]);
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleLocationChange = (data: { city: string; ward: string }) => {
+        setFormData(prev => ({
+            ...prev,
+            city: data.city,
+            ward: data.ward
+        }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -85,8 +112,10 @@ export function CheckoutPage() {
         const resultAction = await dispatch(placeOrder(orderPayload));
 
         if (placeOrder.fulfilled.match(resultAction)) {
-            navigate('/my-orders');
+            isOrderSuccess.current = true;
             dispatch(clearCart());
+            alert("Đặt hàng thành công!");
+            navigate('/my-orders');
         } else {
             alert("Đặt hàng thất bại: " + resultAction.payload);
         }
@@ -119,15 +148,10 @@ export function CheckoutPage() {
                         </div>
 
                         <div className="form-group-row">
-                            <Input
-                                label="Tỉnh / Thành phố" name="city"
-                                value={formData.city} onChange={handleChange} required
-                                placeholder="Nhập Tỉnh/Thành"
-                            />
-                            <Input
-                                label="Quận / Huyện / Phường" name="ward"
-                                value={formData.ward} onChange={handleChange} required
-                                placeholder="Nhập Phường/Xã"
+                            <AddressSelector
+                                initialCity={formData.city}
+                                initialWard={formData.ward}
+                                onChange={handleLocationChange}
                             />
                         </div>
 
