@@ -9,6 +9,7 @@ import { Select } from '../../../components/ui/input/Select';
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import type { ICreateOrderPayload } from '../../../types';
 import './CheckOut.css'; // Đừng quên import file CSS mới
+import { TruckOrderButton } from '../../../components/ui/button/TruckOrderButton';
 
 export function CheckoutPage() {
     const formatCurrency = (amount: number) =>
@@ -209,16 +210,11 @@ export function CheckoutPage() {
 
                         {error && <div className="checkout-error-msg">⚠️ {error}</div>}
 
-                        <Button
+                        {/* --- THAY THẾ BUTTON --- */}
+                        <TruckOrderButton 
                             form="checkoutForm"
-                            type="submit"
-                            className="checkout-submit-btn"
-                            disabled={status === 'loading'}
-                            size="medium"
-                            color="1"
-                        >
-                            {status === 'loading' ? <Spinner type="spinner2" /> : 'ĐẶT HÀNG NGAY'}
-                        </Button>
+                            isLoading={status === 'loading'}
+                        />
                         
                         <p className="secure-note">🔒 Thông tin thanh toán được bảo mật an toàn</p>
                     </div>
