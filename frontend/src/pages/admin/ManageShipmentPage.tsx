@@ -51,7 +51,8 @@ export function ManageShipmentPage() {
             alert("Đã chuyển trạng thái đang giao (Shipped)!");
             setIsModalOpen(false);
         } catch (error) {
-            alert("Lỗi cập nhật trạng thái");
+            console.log(error)
+            dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
         }
     };
 
@@ -59,22 +60,23 @@ export function ManageShipmentPage() {
     const doneSubmit = async () => {
         if (!selectedShipment) return;
 
-        // Hỏi xác nhận cho chắc chắn
         if (!window.confirm("Xác nhận đã giao hàng và đã thu tiền COD?")) return;
 
         try {
+            if (selectedShipment.orderId) {
+                await dispatch(updatePaymentStatusThunk({
+                    id: selectedShipment.orderId,
+                    payload: {
+                        paymentStatus: 'COD_COLLECTED',
+                        note: 'Shipper thu tiền'
+                    }
+                })).unwrap();
+            }
+
             await dispatch(updateShipmentStatus({
                 id: selectedShipment.shipmentId,
                 payload: { status: 'Delivered' }
             })).unwrap();
-
-
-            if (selectedShipment.orderId) {
-                await dispatch(updatePaymentStatusThunk({
-                    id: selectedShipment.orderId,
-                    payload: { paymentStatus: 'COD_COLLECTED' }
-                })).unwrap();
-            }
 
             dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
 
@@ -82,7 +84,7 @@ export function ManageShipmentPage() {
             setIsModalOpen(false);
         } catch (error) {
             console.error(error);
-            alert("Có lỗi xảy ra khi cập nhật!");
+            dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
         }
     };
 
