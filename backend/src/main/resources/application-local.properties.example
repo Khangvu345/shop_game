@@ -18,3 +18,7 @@ spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 logging.level.com.gameshop=DEBUG
 logging.level.org.springframework.web=DEBUG
+
+# VNpay
+vnpay.tmn-code=
+vnpay.hash-secret=
