@@ -1,17 +1,51 @@
-.products-list-page-container{
+/* frontend/src/pages/user/ProductListPage/ProductListPage.css */
+
+.products-list-page-container {
     display: grid;
-    grid-template-areas:
-        "products-list-sidebar products-list-content";
-    grid-template-columns: 1.5fr 7fr;
-}
-
-.page-sidebar{
-    grid-area: products-list-sidebar;
+    /* Desktop: Sidebar 260px cố định, Content tự giãn */
+    grid-template-columns: 260px 1fr;
+    grid-template-areas: "products-list-sidebar products-list-content";
+    gap: 30px;
     
+    max-width: 1200px; /* Giữ độ rộng vừa phải cho đẹp */
+    margin: 0 auto;
+    padding: 40px 20px;
+    min-height: 80vh;
 }
 
-.product-page-content{
+.page-sidebar {
+    grid-area: products-list-sidebar;
+}
+
+.product-page-content {
     grid-area: products-list-content;
-    padding: var(--spacing-lg);
-    margin: 0 200px;
+    width: 100%;
+}
+
+/* --- RESPONSIVE --- */
+
+/* Tablet & Mobile (Màn hình < 992px) */
+@media (max-width: 992px) {
+    .products-list-page-container {
+        display: flex; /* Chuyển sang Flex column để xếp chồng lên nhau */
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px 0px; /* Giảm padding cho đỡ tốn diện tích */
+    }
+    
+    /* Sidebar lúc này sẽ nằm ngang trên cùng */
+    .page-sidebar {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+@media (max-width: 576px) {
+    .products-list-page-container {
+        display: flex; /* Chuyển sang Flex column để xếp chồng lên nhau */
+        flex-direction: column;
+        padding: 10px 0 !important;
+    }
+    .product-page-content {
+        padding: 0 !important;
+    }
 }

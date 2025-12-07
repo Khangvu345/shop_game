@@ -9,6 +9,7 @@ import { Button } from '../../../components/ui/button/Button.tsx';
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import trailerVideo from '/assets/videos/playstation-5-pro-tralerr.io.mp4';
 import './HomePage.css'
+import PromotionSlider from '../../../components/ui/PromotionSlider/PromotionSlider.tsx';
 
 // Mock Data cho Danh mục (Icon giả lập bằng text/emoji vì chưa có file svg cụ thể)
 const categories = [
@@ -98,10 +99,10 @@ export function HomePage() {
             <section className="hero-banner" >
                 <h1>TRẢI NGHIỆM TƯƠNG LAI CỦA TRÒ CHƠI</h1>
                 <p>Khám phá thế giới game nhập vai với PlayStation 5. Đồ họa siêu nét, tải siêu nhanh, phản hồi xúc giác tiên tiến.</p>
-                <button className="shop-now-button">Khám phá các Gói PS5</button>
+                <Link to="/products" className="shop-now-button" >Khám phá các Gói PS5</Link>
             </section>
 
-            {/* 2. SẢN PHẨM NỔI BẬT */}
+            {/* 4. SẢN PHẨM NỔI BẬT */}
             <section className="featured-section container">
                 <h2>SẢN PHẨM NỔI BẬT</h2>
 
@@ -125,33 +126,8 @@ export function HomePage() {
                     </div>
                 )}
             </section>
-
-            {/* 3. KHÁM PHÁ THEO DANH MỤC */}
-            <section className="categories-section container">
-                <h2>KHÁM PHÁ THEO DANH MỤC</h2>
-                <div className="categories-grid">
-                    {categories.map((cat) => (
-                        <Link to={cat.link} key={cat.id} className="category-card">
-
-                            <div className="category-icon">
-                                {cat.icon.startsWith('http') ? (
-                                    <img
-                                        src={cat.icon}
-                                        alt={cat.name}
-                                        style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '8px' }}
-                                    />
-                                ) : (
-                                    cat.icon
-                                )}
-                            </div>
-
-                            <span className="category-name">{cat.name}</span>
-                        </Link>
-                    ))}
-                </div>
-            </section>
-
-            {/*4 --- VIDEO TRAILER SECTION (LOCAL FILE) --- */}
+            
+            {/* 5. VIDEO TRAILER SECTION (LOCAL FILE) */}
             <section className="video-trailer-section">
                 {/* 1. Bỏ div 'container' để video tràn ra 2 bên lề */}
                 {/* 2. Đã xóa thẻ <h2>TRAILER NỔI BẬT</h2> */}
@@ -177,23 +153,52 @@ export function HomePage() {
                 </div>
             </section>
 
-            {/* 5. BANNER KHUYẾN MÃI (ƯU ĐÃI LỄ HỘI LỚN) */}
+            {/* 3. BANNER KHUYẾN MÃI (ƯU ĐÃI LỄ HỘI LỚN) */}
             <section
-                className="promo-banner-section"
+                className="slider-section container"
+                style={{ marginTop: '3rem', marginBottom: '3rem' }}
             >
-
-                {/* Lớp overlay chứa nội dung (sử dụng CSS bạn cung cấp) */}
-                <div className="promo-overlay">
-                    <div className="promo-content-inner">
-                        <h2>ƯU ĐÃI LỄ HỘI LỚN!</h2>
-                        <p>Giảm giá lên tới 50% cho các trò chơi và phụ kiện chọn lọc. Đừng bỏ lỡ!</p>
-                        <Link to="/products">
-                            <Button className="promo-button">Xem ưu đãi</Button>
-                        </Link>
-                    </div>
-                </div>
+                <h2
+                    style={{
+                        textAlign: 'center',
+                        marginBottom: '1.5rem',
+                        fontWeight: 600,
+                        fontSize: '2.3rem',
+                        letterSpacing: '-0.5px',
+                    }}
+                >
+                    CÁC SỰ KIỆN SẮP TỚI
+                </h2>
+                <PromotionSlider />
             </section>
 
+
+
+
+
+            {/* 2. KHÁM PHÁ THEO DANH MỤC */}
+            <section className="categories-section container">
+                <h2>KHÁM PHÁ THEO DANH MỤC</h2>
+                <div className="categories-grid">
+                    {categories.map((cat) => (
+                        <Link to={cat.link} key={cat.id} className="category-card">
+                            <div className="category-icon">
+                                {cat.icon.startsWith('http') ? (
+                                    <img
+                                        src={cat.icon}
+                                        alt={cat.name}
+                                        style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '8px' }}
+                                    />
+                                ) : (
+                                    cat.icon
+                                )}
+                            </div>
+
+                            <span className="category-name">{cat.name}</span>
+                        </Link>
+                    ))}
+                </div>
+            </section>
             {/* 6. TIN TỨC & CẬP NHẬT */}
             <section className="news-section container">
                 <h2>TIN TỨC & CẬP NHẬT MỚI NHẤT</h2>

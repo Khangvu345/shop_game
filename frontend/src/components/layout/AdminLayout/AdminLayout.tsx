@@ -11,12 +11,12 @@ function AdminNavLinks() {
     return (
         <>
             <NavLink to="dashboard" className="admin-nav-link">Bảng điều khiển</NavLink>
-            <NavLink to="users" className="admin-nav-link">Quản lí người dùng</NavLink>
-            <NavLink to="products" className="admin-nav-link">Quản lí sản phẩm</NavLink>
-            <NavLink to="categories" className="admin-nav-link">Quản lí danh mục</NavLink>
-            <NavLink to="suppliers" className="admin-nav-link">Quản lí nhà cung cấp</NavLink>
-            <NavLink to="orders" className="admin-nav-link">Quản lí đơn hàng</NavLink>
-            <NavLink to="shipments" className="admin-nav-link">Quản vận chuyển</NavLink>
+            <NavLink to="users" className="admin-nav-link">Quản lý người dùng</NavLink>
+            <NavLink to="products" className="admin-nav-link">Quản lý sản phẩm</NavLink>
+            <NavLink to="categories" className="admin-nav-link">Quản lý danh mục</NavLink>
+            <NavLink to="suppliers" className="admin-nav-link">Quản lý nhà cung cấp</NavLink>
+            <NavLink to="orders" className="admin-nav-link">Quản lý đơn hàng</NavLink>
+            <NavLink to="shipments" className="admin-nav-link">Quản lý vận đơn</NavLink>
             <NavLink to="stock-movements" className="admin-nav-link" >Lịch sử biến động kho</NavLink>
             <NavLink to="goods-receipts" className="admin-nav-link">Nhập hàng</NavLink>
 

@@ -1,0 +1,83 @@
+/* Container chính, giới hạn chiều rộng và căn giữa */
+.slider-container {
+  width: 100%;
+  max-width: 1100px;
+  /* Độ rộng tối đa của slider */
+  margin: 2rem auto;
+  /* Canh giữa màn hình */
+  position: relative;
+  overflow: hidden;
+  /* Ẩn các ảnh bị tràn ra ngoài */
+  border-radius: 15px;
+  /* Bo góc khung slider */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  /* Đổ bóng */
+}
+
+/* Thanh trượt chứa tất cả các slide nằm ngang */
+.slider-track {
+  display: flex;
+  width: max-content;
+  /* Quan trọng: Chiều rộng phải đủ chứa tất cả slide */
+  /* Remove fixed height to let images define height */
+  animation: scroll 20s linear infinite;
+  /* Animation chạy liên tục */
+}
+
+/* Khi hover vào slider thì dừng animation */
+.slider-container:hover .slider-track {
+  animation-play-state: paused;
+}
+
+/* Từng slide đơn lẻ */
+.slide {
+  width: 1100px;
+  /* Kích thước mỗi slide bằng container */
+  /* Remove height 100% so it fits content */
+  flex-shrink: 0;
+  /* Không bị co lại */
+}
+
+/* Ảnh trong slide */
+.slide-image {
+  width: 100%;
+  height: auto;
+  /* Change to auto to maintain aspect ratio and show 100% */
+  display: block;
+}
+
+/* Định nghĩa keyframes cho animation scroll */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    /* Dịch chuyển -50% vì ta đã nhân đôi số lượng slide, -50% nghĩa là đi hết bộ slide gốc */
+    transform: translateX(-50%);
+  }
+}
+
+/* Responsive cho màn hình nhỏ (Mobile) */
+@media (max-width: 768px) {
+  .slider-track {
+    height: 250px;
+  }
+
+  /* Trên mobile nên điều chỉnh width slide theo màn hình, nhưng animation scroll width fixed sẽ hơi khó.
+       Cách đơn giản nhất cho infinite scroll width fixed là giữ nguyên width slide và cho nó to hơn màn hình
+       hoặc phải dùng javascript để tính width.
+       Ở đây ta giữ width fixed 1100px thì ảnh sẽ to, nhưng vẫn trượt.
+       Nếu muốn responsive hơn thì cần logic phức tạp hơn (VD: width: 100vw).
+       Tuy nhiên, yêu cầu là "dùng css cho nó chuyển động" đơn giản. 
+    */
+  .slide {
+    width: 100vw;
+    /* Slide full màn hình mobile */
+  }
+
+  .slider-container {
+    border-radius: 0;
+    max-width: 100%;
+  }
+}

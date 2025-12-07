@@ -24,14 +24,7 @@ const shipmentSlice = createGenericSlice(
 
 // 3. Mở rộng reducer của Generic Slice để xử lý updateStatus
 const shipmentReducer = (state: any, action: any) => {
-    // Gọi reducer gốc trước
     const newState = shipmentSlice.reducer(state, action);
-
-    // Xử lý thêm logic cho updateStatus
-    if (action.type === updateShipmentStatus.fulfilled.type) {
-        newState.status = 'succeeded';
-    }
-
     return newState;
 };
 
@@ -39,7 +32,7 @@ const shipmentReducer = (state: any, action: any) => {
 export const {
     fetchAll: fetchShipments,
     create: createShipment,
-    // update: updateShipment // Không dùng update thường, dùng updateShipmentStatus ở trên
+    // update: updateShipment
 } = shipmentSlice.actions;
 
 // Export Reducer custom

@@ -9,7 +9,9 @@
     padding: 40px 20px;
     background-color: #f8fafc;
     /* Light background */
-    background: radial-gradient(circle at top left, #f1f5f9, #f8fafc);
+    background-image: url('../../../assets/images/contactus.png');
+    background-repeat: no-repeat;
+    background-position: center;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     color: #334155;
     overflow: hidden;
@@ -196,7 +198,7 @@
 /* --- Right Column: Form --- */
 .contact-form {
     padding: 60px;
-    background: white;
+    background: transparent ;
 }
 
 .form-header {

@@ -13,6 +13,7 @@ import com.gameshop.model.entity.*;
 import com.gameshop.model.enums.OrderStatus;
 import com.gameshop.model.enums.PaymentMethod;
 import com.gameshop.model.enums.PaymentStatus;
+import com.gameshop.model.enums.ProductStatus;
 import com.gameshop.model.enums.StockMovementReason;
 import com.gameshop.repository.AccountRepository;
 import com.gameshop.repository.CustomerRepository;
@@ -113,6 +114,17 @@ public class OrderService {
             Product product = productRepo.findById(itemDto.productId())
                     .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại"));
 
+            // Kiểm tra nếu hàng ở trạng thái inactive
+            if (product.getStatus() == ProductStatus.Inactive) {
+                throw new RuntimeException("Sản phẩm " + product.getName() + " đã ngừng kinh doanh!");
+            }
+
+            // Kiểm tra nếu hàng hết hàng
+            if (product.getStockQuantity() == 0) {
+                throw new RuntimeException("Sản phẩm " + product.getName() + " đã hết hàng!");
+            }
+
+            // Kiểm tra nếu hàng không đủ
             if (product.getStockQuantity() < itemDto.quantity()) {
                 throw new RuntimeException("Sản phẩm " + product.getName() + " không đủ hàng!");
             }
@@ -347,7 +359,8 @@ public class OrderService {
                         line.getProduct().getName(),
                         line.getQuantity(),
                         line.getPrice(),
-                        line.getLineTotal()))
+                        line.getLineTotal(),
+                        line.getProduct().getProductImageUrl()))
                 .collect(Collectors.toList());
 
         OrderResponse.AddressDto addressDto = null;

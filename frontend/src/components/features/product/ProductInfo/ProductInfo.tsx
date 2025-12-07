@@ -9,6 +9,8 @@ interface ProductInfoProps {
     productName: string;
     listPrice: number;
     description?: string;
+    status: string;           // ← Thêm
+    stockQuantity: number;    // ← Thêm
     averageRating: number;
     totalReviews: number;
     quantity: number;
@@ -24,6 +26,8 @@ export function ProductInfo({
     productName,
     listPrice,
     description,
+    status,              // ← Thêm
+    stockQuantity,       // ← Thêm
     averageRating,
     totalReviews,
     quantity,
@@ -31,11 +35,13 @@ export function ProductInfo({
     onAddToCart,
 }: ProductInfoProps) {
     const handleAddToCart = () => {
-        const result = onAddToCart();
-        if (result && result.success) {
-            alert(result.message);
-        }
+        onAddToCart();
     };
+
+    // Kiểm tra trạng thái sản phẩm
+    const isInactive = status === 'Inactive';
+    const isOutOfStock = stockQuantity === 0;
+    const canPurchase = !isInactive && !isOutOfStock;
 
     return (
         <div className="product-info">
@@ -63,20 +69,34 @@ export function ProductInfo({
                         <button
                             className="quantity-btn"
                             onClick={() => onQuantityChange(-1)}
-                            disabled={quantity <= 1}
+                            disabled={quantity <= 1 || !canPurchase}
                         >
                             −
                         </button>
                         <span className="quantity-value">{quantity}</span>
-                        <button className="quantity-btn" onClick={() => onQuantityChange(1)}>
+                        <button
+                            className="quantity-btn"
+                            onClick={() => onQuantityChange(1)}
+                            disabled={!canPurchase}
+                        >
                             +
                         </button>
                     </div>
                 </div>
 
-                <button className="add-to-cart-btn" onClick={handleAddToCart}>
-                    Thêm vào giỏ hàng
-                </button>
+                {isInactive ? (
+                    <button className="add-to-cart-btn disabled" disabled>
+                        Sản phẩm ngừng kinh doanh
+                    </button>
+                ) : isOutOfStock ? (
+                    <button className="add-to-cart-btn disabled" disabled>
+                        Sản phẩm này đã hết hàng
+                    </button>
+                ) : (
+                    <button className="add-to-cart-btn" onClick={handleAddToCart}>
+                        Thêm vào giỏ hàng
+                    </button>
+                )}
             </div>
         </div>
     );
