@@ -8,7 +8,7 @@ import { Input } from '../../../components/ui/input/Input';
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import type { ICreateOrderPayload } from '../../../types';
 import './CheckOut.css';
-import {fetchMyAddress, fetchMyProfile} from "../../../store/slices/AccountBlock/customerSlice.tsx";
+import { fetchMyAddress, fetchMyProfile } from "../../../store/slices/AccountBlock/customerSlice.tsx";
 
 export function CheckoutPage() {
 
@@ -20,7 +20,7 @@ export function CheckoutPage() {
 
     const cartItems = useAppSelector((state) => state.cart.items);
     const { profile, address } = useAppSelector(state => state.customer);
-    const { status ,error } = useAppSelector((state) => state.orders);
+    const { status, error } = useAppSelector((state) => state.orders);
 
 
     const [formData, setFormData] = useState({
@@ -45,9 +45,9 @@ export function CheckoutPage() {
             phone: profile.data?.phone || '',
             city: address.data?.city || '',
             ward: address.data?.ward || '',
-            street: address.data?.line1  || '',
+            street: address.data?.line1 || '',
         }));
-    }, [dispatch,profile, address]);
+    }, [dispatch, profile, address]);
 
 
     useEffect(() => {
