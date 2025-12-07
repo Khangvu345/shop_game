@@ -81,7 +81,7 @@ public class VNPayController {
             OrderResponse order = vnPayService.handleCallback(params);
 
             // Build redirect URL về frontend
-            String redirectUrl = buildFrontendRedirectUrl(order, params.get("vnp_ResponseCode"));
+            String redirectUrl = buildFrontendRedirectUrl(order);
 
             if (redirectUrl == null || redirectUrl.isEmpty()) {
                 throw new RuntimeException("Tạo URL chuyển hướng thất bại");
@@ -144,18 +144,15 @@ public class VNPayController {
      * Build redirect URL về frontend sau khi thanh toán thành công/thất bại
      * 
      * @param order        Order đã được cập nhật payment status
-     * @param responseCode VNPay response code
      * @return Frontend URL
      */
-    private String buildFrontendRedirectUrl(OrderResponse order, String responseCode) {
+    private String buildFrontendRedirectUrl(OrderResponse order) {
         // Frontend sẽ handle hiển thị kết quả thanh toán
-        String baseUrl = "http://localhost:5173/payment/result";
+        String baseUrl = "http://localhost:5173/my-orders";
 
-        return String.format("%s?orderId=%s&responseCode=%s&paymentStatus=%s",
+        return String.format("%s/%s",
                 baseUrl,
-                order.orderId(),
-                responseCode,
-                order.paymentStatus());
+                order.orderId());
     }
 
     /**
