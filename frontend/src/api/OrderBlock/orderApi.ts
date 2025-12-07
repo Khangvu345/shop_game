@@ -39,8 +39,8 @@ export class OrderApi extends BaseApi<IOrder> {
 
     // User
     async placeOrder(payload: ICreateOrderPayload): Promise<IOrder> {
-        const response = await axiosClient.post<IServerResponse<IOrder>>('/orders', payload);
-        return response.data.data;
+        const response = await axiosClient.post<IOrder>('/orders', payload);
+        return response.data;
     }
 
     async getMyOrders(params: { page: number; size: number }): Promise<IOrderListResponse> {
