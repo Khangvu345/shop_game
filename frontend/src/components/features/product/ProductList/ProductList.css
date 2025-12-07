@@ -1,14 +1,36 @@
+/* frontend/src/components/features/product/ProductList/ProductList.css */
+
 .product-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr ;
-    gap: 40px;
-    padding-left: 100px;
-    padding-right: -25x;
+    /* Desktop: 3 cột */
+    grid-template-columns: repeat(3, 1fr);
+    
+    /* Gap: Khoảng cách giữa các card */
+    gap: 24px;
+    
+    width: 100%;
 }
 
-@media (max-width: 768px) {
+/* Laptop nhỏ / Tablet nằm ngang (max-width: 1024px) */
+@media (max-width: 1024px) {
     .product-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(3, 1fr); /* Vẫn cố giữ 3 cột nếu còn chỗ */
+        gap: 16px; /* Giảm gap chút cho đỡ chật */
     }
 }
 
+/* Tablet dọc (max-width: 768px) */
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr); /* Xuống 2 cột */
+        gap: 16px;
+    }
+}
+
+/* Mobile (max-width: 576px) */
+@media (max-width: 576px) {
+    .product-grid {
+        grid-template-columns: 1fr; /* Xuống 1 cột, card to rõ */
+        gap: 20px;
+    }
+}

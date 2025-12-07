@@ -36,7 +36,7 @@
 }
 
 .footer-description {
-  margin-top: 40px;
+  margin-top: 10px;
   font-size: 14px;
   line-height: 1.6;
   color: #ffffff;                   /* Trắng hoàn toàn cho phần mô tả */
@@ -72,7 +72,7 @@
 
 /* Hover: vẫn giữ màu tím đặc trưng nhưng sáng hơn để nổi trên nền xanh */
 .footer-links a:hover {
-  color: #bb86fc;                   /* Tím nhạt (giống Material Design) */
+  color: #000000;                   /* Tím nhạt (giống Material Design) */
   transform: translateX(8px);
 }
 
