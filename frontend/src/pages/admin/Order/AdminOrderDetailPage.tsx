@@ -28,31 +28,44 @@ export function AdminOrderDetailPage() {
     const handleUpdateStatus = async (newStatus: string) => {
         if (!id) return;
         if (window.confirm(`Xác nhận?`)) {
-            await dispatch(updateOrderStatusThunk({
-                id,
-                payload: { status: newStatus }
-            })).unwrap();
-            alert("Cập nhật thành công!");
+            try {
+                // Bước 1: Gọi API cập nhật
+                await dispatch(updateOrderStatusThunk({
+                    id,
+                    payload: { status: newStatus }
+                })).unwrap();
+
+                dispatch(fetchAdminOrderDetail(id));
+
+                alert("Cập nhật thành công!");
+            } catch (error) {
+                alert("Cập nhật thất bại!");
+            }
         }
     };
 
     const handleCreateShipment = async () => {
         if (!shipForm.carrier || !shipForm.trackingNo) return alert("Vui lòng điền đủ thông tin");
-        if (!currentOrder) return;
-        console.log(currentOrder.orderId)
+        if (!currentOrder || !id) return;
 
-        await dispatch(createShipment({
-            orderId: currentOrder.orderId,
-            carrier: shipForm.carrier,
-            trackingNo: shipForm.trackingNo
-        })).unwrap();
+        try {
+            await dispatch(createShipment({
+                orderId: currentOrder.orderId,
+                carrier: shipForm.carrier,
+                trackingNo: shipForm.trackingNo
+            })).unwrap();
 
-        setIsShipModalOpen(false);
-        alert("Đã tạo vận đơn và chuyển trạng thái SHIPPED");
+            dispatch(fetchAdminOrderDetail(id));
+
+            setIsShipModalOpen(false);
+            alert("Đã tạo vận đơn và chuyển trạng thái SHIPPED");
+        } catch (error) {
+            alert("Tạo vận đơn thất bại");
+        }
     };
 
 
-    if (!currentOrder) return <div style={{padding:'20px'}}>{status === 'loading' ? <Spinner/> : 'Không tìm thấy đơn hàng'}</div>;
+    if (!currentOrder) return <div style={{padding:'20px'}}>{orderStatus === 'loading' ? <Spinner/> : 'Không tìm thấy đơn hàng'}</div>;
 
     const address = (currentOrder as any).shippingAddress || currentOrder.address;
 
@@ -146,7 +159,7 @@ export function AdminOrderDetailPage() {
                     <Card>
                         <h3>Thanh toán</h3>
                         <p><strong>Phương thức:</strong> {currentOrder.paymentMethod}</p>
-                        <p><strong>Trạng thái:</strong> <span style={{fontWeight:'bold', color: currentOrder.paymentStatus === 'PAID' ? 'green' : 'orange'}}>{currentOrder.paymentStatus}</span></p>
+                        <p><strong>Trạng thái:</strong> <span style={{fontWeight:'bold', color: currentOrder.paymentStatus === 'COD_COLLECTED' ? 'green' : 'orange'}}>{currentOrder.paymentStatus}</span></p>
                     </Card>
                 </div>
             </div>

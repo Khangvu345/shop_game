@@ -54,11 +54,12 @@ public class GoodsReceiptServiceImpl implements GoodsReceiptService {
     @Override
     public GoodsReceiptResponse createGoodsReceipt(CreateGoodsReceiptRequest request) {
         log.info("Creating goods receipt: invoice={}, supplier={}, items={}",
-                 request.invoiceNumber(), request.supplierId(), request.items().size());
+                request.invoiceNumber(), request.supplierId(), request.items().size());
 
         // 1. Validate supplier
         Supplier supplier = supplierRepository.findById(request.supplierId())
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy nhà cung cấp ID: " + request.supplierId()));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Không tìm thấy nhà cung cấp ID: " + request.supplierId()));
 
         // 2. Validate unique invoice number
         if (goodsReceiptRepository.existsByInvoiceNumber(request.invoiceNumber())) {
@@ -82,7 +83,8 @@ public class GoodsReceiptServiceImpl implements GoodsReceiptService {
         // 5. Process each item
         for (CreateGoodsReceiptRequest.GoodsReceiptItemDto itemDto : request.items()) {
             Product product = productRepository.findById(itemDto.productId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy sản phẩm ID: " + itemDto.productId()));
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException("Không tìm thấy sản phẩm ID: " + itemDto.productId()));
 
             // 6. Calculate weighted average cost
             int oldQty = product.getStockQuantity();
@@ -92,8 +94,9 @@ public class GoodsReceiptServiceImpl implements GoodsReceiptService {
 
             BigDecimal weightedAvgCost = calculateWeightedAverageCost(oldQty, oldCost, newQty, newCost);
 
-            log.info("Weighted average cost calculation: product={}, oldQty={}, oldCost={}, newQty={}, newCost={}, avgCost={}",
-                     product.getProductName(), oldQty, oldCost, newQty, newCost, weightedAvgCost);
+            log.info(
+                    "Weighted average cost calculation: product={}, oldQty={}, oldCost={}, newQty={}, newCost={}, avgCost={}",
+                    product.getProductName(), oldQty, oldCost, newQty, newCost, weightedAvgCost);
 
             // 7. Update product purchase price
             product.setPurchasePrice(weightedAvgCost);
@@ -105,8 +108,7 @@ public class GoodsReceiptServiceImpl implements GoodsReceiptService {
                     itemDto.quantity(),
                     StockMovementReason.GoodsReceipt,
                     request.invoiceNumber(),
-                    null
-            );
+                    null);
 
             // 9. Create goods receipt line
             GoodsReceiptLine line = new GoodsReceiptLine();
@@ -152,6 +154,15 @@ public class GoodsReceiptServiceImpl implements GoodsReceiptService {
             Long supplierId, LocalDateTime fromDate, LocalDateTime toDate,
             int page, int size) {
 
+        // Adjust toDate to end of day if it's midnight (handles date-only inputs from
+        // frontend)
+        final LocalDateTime effectiveToDate;
+        if (toDate != null && toDate.toLocalTime().equals(java.time.LocalTime.MIN)) {
+            effectiveToDate = toDate.with(java.time.LocalTime.MAX);
+        } else {
+            effectiveToDate = toDate;
+        }
+
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "receiptDate"));
 
         Specification<GoodsReceipt> spec = (root, query, criteriaBuilder) -> {
@@ -163,8 +174,8 @@ public class GoodsReceiptServiceImpl implements GoodsReceiptService {
             if (fromDate != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("receiptDate"), fromDate));
             }
-            if (toDate != null) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("receiptDate"), toDate));
+            if (effectiveToDate != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("receiptDate"), effectiveToDate));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
@@ -181,9 +192,9 @@ public class GoodsReceiptServiceImpl implements GoodsReceiptService {
                 receiptPage.getTotalPages(),
                 receiptPage.getTotalElements(),
                 receiptPage.getNumber(),
-                receiptPage.getSize()
-        );
+                receiptPage.getSize());
     }
+
     @Override
     @Transactional
     public GoodsReceiptResponse updateGoodsReceipt(Long id, UpdateGoodsReceiptRequest request) {
@@ -243,7 +254,7 @@ public class GoodsReceiptServiceImpl implements GoodsReceiptService {
      * Formula: (oldQty × oldCost + newQty × newCost) / (oldQty + newQty)
      */
     private BigDecimal calculateWeightedAverageCost(int oldQty, BigDecimal oldCost,
-                                                     int newQty, BigDecimal newCost) {
+            int newQty, BigDecimal newCost) {
         if (oldQty + newQty == 0) {
             return BigDecimal.ZERO;
         }
@@ -261,8 +272,7 @@ public class GoodsReceiptServiceImpl implements GoodsReceiptService {
                 receipt.getSupplier().getSupplierId(),
                 receipt.getSupplier().getName(),
                 receipt.getSupplier().getContactEmail(),
-                receipt.getSupplier().getContactPhone()
-        );
+                receipt.getSupplier().getContactPhone());
 
         List<GoodsReceiptResponse.GoodsReceiptLineDto> lineDtos = receipt.getLines().stream()
                 .map(line -> {
@@ -273,8 +283,7 @@ public class GoodsReceiptServiceImpl implements GoodsReceiptService {
                             line.getProduct().getProductName(),
                             line.getQuantityReceived(),
                             line.getUnitCost(),
-                            lineTotal
-                    );
+                            lineTotal);
                 })
                 .collect(Collectors.toList());
 
@@ -285,7 +294,6 @@ public class GoodsReceiptServiceImpl implements GoodsReceiptService {
                 receipt.getTotalCost(),
                 receipt.getNotes(),
                 receipt.getReceiptDate(),
-                lineDtos
-        );
+                lineDtos);
     }
 }

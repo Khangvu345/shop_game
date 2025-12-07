@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { placeOrder } from '../../../store/slices/OrderBlock/orderSlice';
@@ -10,26 +10,31 @@ import type { ICreateOrderPayload } from '../../../types';
 import { TruckOrderButton } from '../../../components/ui/button/TruckOrderButton.tsx';
 import './CheckOut.css';
 import {fetchMyAddress, fetchMyProfile} from "../../../store/slices/AccountBlock/customerSlice.tsx";
+import {AddressSelector} from "../../../components/ui/input/AddressSelector.tsx";
+import {customerApi} from "../../../api/AccountBlock/customerApi.ts";
 
 export function CheckoutPage() {
+
     const formatCurrency = (amount: number) =>
         new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    dispatch(fetchMyProfile());
+    dispatch(fetchMyAddress());
 
     const cartItems = useAppSelector((state) => state.cart.items);
-    const { profile, address } = useAppSelector(state => state.customer);
+    const { user } = useAppSelector((state) => state.auth);
     const { status, error } = useAppSelector((state) => state.orders);
 
-    const user = profile.data;
+    const isOrderSuccess = useRef(false);
 
     const [formData, setFormData] = useState({
-        recipientName: user?.fullName || '',
-        phone: user?.phone || '',
-        city: address.data?.city || '',
-        ward: address.data?.ward || '',
-        street: address.data?.line1 || '',
+        recipientName: '',
+        phone: '',
+        city: '',
+        ward: '',
+        street: '',
         paymentMethod: 'COD'
     });
 
@@ -37,31 +42,51 @@ export function CheckoutPage() {
     const shippingFee = 0;
     const grandTotal = subTotal + shippingFee;
 
-    useEffect(() => {
-        dispatch(fetchMyProfile());
-        dispatch(fetchMyAddress());
-    }, [dispatch]);
 
 
     useEffect(() => {
-        setFormData(prev => ({
-            ...prev,
-            receiverName: user?.fullName || '',
-            phone: user?.phone || '',
-            city: address.data?.city || '',
-            ward: address.data?.ward || '',
-            street: address.data?.line1  || '',
-        }));
-    }, [user, address]);
+        if (user) {
+            const loadDefaultAddress = async () => {
+                try {
+                    const address = await customerApi.getDefaultAddress();
+                    const profile = await customerApi.getProfile()
+                    if (profile && address) {
+                        setFormData(prev => ({
+                            ...prev,
+                            recipientName: profile.fullName,
+                            phone: profile.phone,
+                            city: address.city || '',
+                            ward: address.ward || '',
+                            street: address.line1 || '',
+
+                        }));
+                    }
+                } catch (err) {
+                    console.log("Chưa có địa chỉ mặc định hoặc lỗi tải địa chỉ");
+                }
+            };
+            loadDefaultAddress();
+        }
+    }, [user]);
+
 
     useEffect(() => {
-        if (cartItems.length === 0) {
+        if (cartItems.length === 0 && !isOrderSuccess.current) {
             navigate('/products');
         }
     }, [cartItems, navigate]);
 
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleLocationChange = (data: { city: string; ward: string }) => {
+        setFormData(prev => ({
+            ...prev,
+            city: data.city,
+            ward: data.ward
+        }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -88,9 +113,10 @@ export function CheckoutPage() {
         const resultAction = await dispatch(placeOrder(orderPayload));
 
         if (placeOrder.fulfilled.match(resultAction)) {
+            isOrderSuccess.current = true;
             dispatch(clearCart());
-            // Điều hướng hoặc hiển thị thông báo thành công ở đây nếu cần
-            navigate('/my-orders'); 
+            alert("Đặt hàng thành công!");
+            navigate('/my-orders');
         } else {
             alert("Đặt hàng thất bại: " + resultAction.payload);
         }
@@ -99,7 +125,7 @@ export function CheckoutPage() {
     return (
         <div className="checkout-page-wrapper">
             <div className="container checkout-layout">
-                
+
                 {/* CỘT TRÁI: FORM ĐIỀN THÔNG TIN */}
                 <div className="checkout-section-left">
                     <div className="checkout-header">
@@ -108,7 +134,7 @@ export function CheckoutPage() {
                     </div>
 
                     <form id="checkoutForm" onSubmit={handleSubmit} className="modern-form">
-                        
+
                         <div className="form-group-row">
                             <Input
                                 label="Họ tên người nhận" name="recipientName"
@@ -123,15 +149,10 @@ export function CheckoutPage() {
                         </div>
 
                         <div className="form-group-row">
-                            <Input
-                                label="Tỉnh / Thành phố" name="city"
-                                value={formData.city} onChange={handleChange} required
-                                placeholder="Nhập Tỉnh/Thành"
-                            />
-                            <Input
-                                label="Quận / Huyện / Phường" name="ward"
-                                value={formData.ward} onChange={handleChange} required
-                                placeholder="Nhập Phường/Xã"
+                            <AddressSelector
+                                initialCity={formData.city}
+                                initialWard={formData.ward}
+                                onChange={handleLocationChange}
                             />
                         </div>
 
@@ -147,7 +168,7 @@ export function CheckoutPage() {
                             <h3>Phương thức thanh toán</h3>
                             <div className="payment-options">
                                 <label className={`payment-option ${formData.paymentMethod === 'COD' ? 'active' : ''}`}>
-                                    <input 
+                                    <input
                                         type="radio" name="paymentMethod" value="COD"
                                         checked={formData.paymentMethod === 'COD'}
                                         onChange={handleChange}
@@ -160,7 +181,7 @@ export function CheckoutPage() {
                                 </label>
 
                                 <label className={`payment-option ${formData.paymentMethod === 'VNPAY' ? 'active' : ''}`}>
-                                    <input 
+                                    <input
                                         type="radio" name="paymentMethod" value="VNPAY"
                                         checked={formData.paymentMethod === 'VNPAY'}
                                         onChange={handleChange}
@@ -185,9 +206,9 @@ export function CheckoutPage() {
                             {cartItems.map(item => (
                                 <div key={item.product.productId} className="order-item">
                                     <div className="item-image-wrapper">
-                                        <img 
-                                            src={item.product.productImageUrl || 'https://placehold.co/60'} 
-                                            alt={item.product.productName} 
+                                        <img
+                                            src={item.product.productImageUrl || 'https://placehold.co/60'}
+                                            alt={item.product.productName}
                                         />
                                         <span className="item-quantity-badge">{item.quantity}</span>
                                     </div>

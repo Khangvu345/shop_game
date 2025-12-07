@@ -5,7 +5,7 @@ import {
     fetchProducts,
     addProduct,
     editProduct,
-    deleteProduct
+    deleteProduct, resetProductState
 } from "../../store/slices/ProductBlock/productSlice.ts";
 import { fetchCategories } from "../../store/slices/ProductBlock/categorySlice.ts";
 import { AdminManage } from "../../components/features/admin/AdminManager/AdminManage.tsx";
@@ -20,6 +20,7 @@ export function ManageProductsPage() {
     const [keyword, setKeyword] = useState('');
     const [filterCategoryId, setFilterCategoryId] = useState<string>('');
     const [filterStatus, setFilterStatus] = useState<string>('');
+    dispatch(resetProductState())
 
     useEffect(() => {
         if (!categories || categories.length === 0) {
@@ -123,8 +124,11 @@ export function ManageProductsPage() {
                     padding: '10px 14px',
                     borderRadius: '6px',
                     border: '1px solid #ddd',
-                    fontSize: '14px'
+                    fontSize: '14px',
+                    transition: 'border-color 0.2s ease'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
             />
 
             {/* Category Select */}
@@ -136,8 +140,12 @@ export function ManageProductsPage() {
                     padding: '10px 14px',
                     borderRadius: '6px',
                     border: '1px solid #ddd',
-                    fontSize: '14px'
+                    fontSize: '14px',
+                    cursor: 'pointer',
+                    transition: 'border-color 0.2s ease'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
             >
                 <option value="">-- Tất cả danh mục --</option>
                 {categories?.map((c) => (
@@ -156,8 +164,12 @@ export function ManageProductsPage() {
                     padding: '10px 14px',
                     borderRadius: '6px',
                     border: '1px solid #ddd',
-                    fontSize: '14px'
+                    fontSize: '14px',
+                    cursor: 'pointer',
+                    transition: 'border-color 0.2s ease'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
             >
                 <option value="">-- Tất cả trạng thái --</option>
                 <option value="Active">Đang kinh doanh</option>

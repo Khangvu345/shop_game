@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
     type IAdminOrderFilter,
     type ICancelOrderRequest,
-    type IUpdateOrderStatusRequest,
+    type IUpdateOrderStatusRequest, type IUpdatePaymentStatusRequest,
     orderApi
 } from "../../../api/OrderBlock/orderApi.ts";
 import type { IOrder, ICreateOrderPayload, IApiState } from "../../../types";
@@ -133,6 +133,18 @@ export const updateOrderStatusThunk = createAsyncThunk(
         }
     }
 );
+
+export const updatePaymentStatusThunk = createAsyncThunk(
+    'orders/updatePaymentStatus',
+    async ({ id, payload }: { id: number | string, payload: IUpdatePaymentStatusRequest }, { rejectWithValue }) => {
+        try {
+            return await orderApi.updatePaymentStatus(id, payload);
+        } catch (error: any) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 const orderSlice = createSlice({
     name: 'orders',
     initialState,
@@ -241,6 +253,14 @@ const orderSlice = createSlice({
 
 
         builder.addCase(updateOrderStatusThunk.fulfilled, (state, action) => {
+            state.currentOrder = action.payload;
+            const index = state.adminOrders.data.findIndex(o => o.orderId === action.payload.orderId);
+            if (index !== -1) {
+                state.adminOrders.data[index] = action.payload;
+            }
+        });
+
+        builder.addCase(updatePaymentStatusThunk.fulfilled, (state, action) => {
             state.currentOrder = action.payload;
             const index = state.adminOrders.data.findIndex(o => o.orderId === action.payload.orderId);
             if (index !== -1) {

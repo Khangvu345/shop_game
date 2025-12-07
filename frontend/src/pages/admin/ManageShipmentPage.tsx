@@ -1,35 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchShipments, updateShipmentStatus } from '../../store/slices/OrderBlock/shipmentSlice';
+// 1. Import action updateOrder để cập nhật thanh toán
+import { updateOrderStatusThunk, updatePaymentStatusThunk } from '../../store/slices/OrderBlock/orderSlice';
 import { AdminTable } from '../../components/features/admin/AdminTable/AdminTable';
+import { AdminPageHeader } from '../../components/features/admin/AdminPageHeader/AdminPageHeader';
+import '../../components/features/admin/AdminPageHeader/AdminPageHeader.css';
 import { Pagination } from '../../components/ui/pagination/Pagination';
 import { Button } from '../../components/ui/button/Button';
 import { Modal } from '../../components/ui/Modal/Modal';
-import { Select } from '../../components/ui/input/Select';
-import { Input } from '../../components/ui/input/Input';
 import { Spinner } from '../../components/ui/loading/Spinner';
-import type { IColumn, IShipment, TShipmentStatus } from '../../types';
+import type { IColumn, IShipment } from '../../types';
 
 export function ManageShipmentPage() {
     const dispatch = useAppDispatch();
-    const { data, status, pagination } = useAppSelector((state: any) => state.shipments); // Đảm bảo store có key 'shipments'
+    const { data, status: shipmentStatus, pagination } = useAppSelector((state: any) => state.shipments);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedShipment, setSelectedShipment] = useState<IShipment | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [searchKeyword, setSearchKeyword] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
+    const [carrierFilter, setCarrierFilter] = useState('');
 
-    // State cho form update
-    const [statusForm, setStatusForm] = useState<{ status: TShipmentStatus, notes: string }>({
-        status: 'Shipped' ,
-        notes: ''
-    });
-
+    // 2. Sửa useEffect: Bỏ selectedShipment?.status ra khỏi dependency để tránh loop hoặc reload không kiểm soát
     useEffect(() => {
-        // Backend page start 0
         dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
     }, [dispatch, currentPage]);
 
-    // Helper: Màu sắc trạng thái
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'Delivered': return 'green';
@@ -41,26 +39,59 @@ export function ManageShipmentPage() {
 
     const handleEdit = (item: IShipment) => {
         setSelectedShipment(item);
-        setStatusForm({
-            status: item.status as TShipmentStatus,
-            notes: item.notes || ''
-        });
         setIsModalOpen(true);
     };
 
-    const handleUpdateSubmit = async () => {
+    // --- XỬ LÝ KHI CHUYỂN TRẠNG THÁI SHIPPED ---
+    const shippedSubmit = async () => {
         if (!selectedShipment) return;
+        try {
+            await dispatch(updateShipmentStatus({
+                id: selectedShipment.shipmentId,
+                payload: { status: 'Shipped' }
+            })).unwrap();
+            alert("Đã chuyển trạng thái đang giao (Shipped)!");
 
-        await dispatch(updateShipmentStatus({
-            id: selectedShipment.shipmentId,
-            payload: statusForm
-        }));
+            dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
 
-        alert("Cập nhật trạng thái vận đơn thành công!");
-        setIsModalOpen(false);
+            setIsModalOpen(false);
+        } catch (error) {
+            console.log(error)
+            dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
+        }
     };
 
-    // Định nghĩa cột
+    // --- XỬ LÝ KHI GIAO THÀNH CÔNG (DELIVERED) & CẬP NHẬT THANH TOÁN ---
+    const doneSubmit = async () => {
+        if (!selectedShipment) return;
+
+        if (!window.confirm("Xác nhận đã giao hàng và đã thu tiền COD?")) return;
+
+        try {
+            if (selectedShipment.orderId) {
+                await dispatch(updatePaymentStatusThunk({
+                    id: selectedShipment.orderId,
+                    payload: {
+                        paymentStatus: 'COD_COLLECTED',
+                        note: 'Shipper thu tiền'
+                    }
+                })).unwrap();
+            }
+
+            await dispatch(updateShipmentStatus({
+                id: selectedShipment.shipmentId,
+                payload: { status: 'Delivered' }
+            })).unwrap();
+            alert("Giao hàng thành công & đã thu tiền!");
+            dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
+
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error(error);
+            dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
+        }
+    };
+
     const columns: IColumn<IShipment>[] = [
         { title: 'ID', key: 'shipmentId' },
         {
@@ -72,12 +103,12 @@ export function ManageShipmentPage() {
         {
             title: 'Mã Vận Đơn',
             key: 'trackingNo',
-            render: (item) => <span style={{fontFamily: 'monospace', background: '#eee', padding: '2px 5px'}}>{item.trackingNo}</span>
+            render: (item) => <span style={{ fontFamily: 'monospace', background: '#eee', padding: '2px 5px' }}>{item.trackingNo}</span>
         },
         {
             title: 'Ngày gửi',
             key: 'shippedAt',
-            render: (item) => new Date(item.shippedAt).toLocaleDateString('vi-VN')
+            render: (item) => item.shippedAt ? new Date(item.shippedAt).toLocaleDateString('vi-VN') : '-'
         },
         {
             title: 'Trạng thái',
@@ -97,16 +128,105 @@ export function ManageShipmentPage() {
         }
     ];
 
+    // Filter data based on search and filters
+    const filteredData = (data || []).filter((shipment: IShipment) => {
+        const matchesSearch = !searchKeyword ||
+            shipment.trackingNo?.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+            shipment.orderId?.toString().includes(searchKeyword);
+        const matchesStatus = !statusFilter || shipment.status === statusFilter;
+        const matchesCarrier = !carrierFilter || shipment.carrier === carrierFilter;
+
+        return matchesSearch && matchesStatus && matchesCarrier;
+    });
+
     return (
-        <div style={{ padding: '20px' }}>
-            <h2 style={{ marginBottom: '20px' }}>Quản Lý Vận Đơn</h2>
+        <div className="admin-page-container">
+            <AdminPageHeader title="Quản Lý Vận Đơn" />
+
+            {/* Filter Bar */}
+            <div style={{
+                marginBottom: '20px',
+                padding: '15px',
+                background: '#fff',
+                borderRadius: '8px',
+                border: '1px solid #eee',
+                display: 'flex',
+                gap: '15px',
+                alignItems: 'center',
+                flexWrap: 'wrap'
+            }}>
+                {/* Search Input */}
+                <input
+                    type="text"
+                    placeholder="Tìm theo mã vận đơn hoặc mã đơn hàng..."
+                    value={searchKeyword}
+                    onChange={(e) => setSearchKeyword(e.target.value)}
+                    style={{
+                        flex: 1,
+                        minWidth: '200px',
+                        padding: '10px 14px',
+                        borderRadius: '6px',
+                        border: '1px solid #ddd',
+                        fontSize: '14px',
+                        transition: 'border-color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
+                />
+
+                {/* Status Select */}
+                <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    style={{
+                        width: '180px',
+                        padding: '10px 14px',
+                        borderRadius: '6px',
+                        border: '1px solid #ddd',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                        transition: 'border-color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
+                >
+                    <option value="">-- Tất cả trạng thái --</option>
+                    <option value="Ready">Ready</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Returned">Returned</option>
+                </select>
+
+                {/* Carrier Select */}
+                <select
+                    value={carrierFilter}
+                    onChange={(e) => setCarrierFilter(e.target.value)}
+                    style={{
+                        width: '180px',
+                        padding: '10px 14px',
+                        borderRadius: '6px',
+                        border: '1px solid #ddd',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                        transition: 'border-color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
+                >
+                    <option value="">-- Tất cả ĐVVC --</option>
+                    <option value="GHN">GHN</option>
+                    <option value="GHTK">GHTK</option>
+                    <option value="Viettel Post">Viettel Post</option>
+                    <option value="VNPost">VNPost</option>
+                </select>
+            </div>
 
             <AdminTable<IShipment>
                 columns={columns}
-                data={data || []}
-                isLoading={status === 'loading'}
+                data={filteredData}
+                isLoading={shipmentStatus === 'loading'}
                 rowKey={(item) => item.shipmentId}
-                onEdit={handleEdit} // Nút sửa sẽ mở modal cập nhật trạng thái
+                onEdit={handleEdit}
             />
 
             {pagination && pagination.totalPages > 1 && (
@@ -120,38 +240,35 @@ export function ManageShipmentPage() {
                 </div>
             )}
 
-            {/* MODAL UPDATE STATUS */}
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={`Cập nhật vận đơn #${selectedShipment?.trackingNo}`}>
-                <div style={{minWidth: '400px', display: 'flex', flexDirection: 'column', gap: '15px'}}>
-                    <div>
-                        <label className="form-label">Trạng thái vận chuyển</label>
-                        <Select
-                            value={statusForm.status}
-                            onChange={(e) => setStatusForm({...statusForm, status: e.target.value as TShipmentStatus})}
-                            options={[
-                                { label: 'Đang chuẩn bị (Preparing)', value: 'PREPARING' },
-                                { label: 'Đang giao hàng (Shipped)', value: 'SHIPPED' },
-                                { label: 'Giao thành công (Delivered)', value: 'DELIVERED' },
-                                { label: 'Hoàn trả (Returned)', value: 'RETURNED' },
-                                { label: 'Đã hủy (Cancelled)', value: 'CANCELLED' },
-                            ]}
-                        />
-                    </div>
+                <div style={{ minWidth: '400px', display: 'flex', flexDirection: 'column', gap: '15px', backgroundColor: "white" }}>
 
-                    <div>
-                        <label className="form-label">Ghi chú</label>
-                        <Input
-                            value={statusForm.notes}
-                            onChange={(e) => setStatusForm({...statusForm, notes: e.target.value})}
-                            placeholder="Ví dụ: Khách hẹn giao lại..."
-                        />
-                    </div>
+                    {selectedShipment && (
+                        <div>
+                            <p>Mã đơn hàng: <strong>{selectedShipment?.orderId}</strong></p>
+                            <p>Mã vận đơn: <strong>{selectedShipment?.trackingNo}</strong></p>
+                            <p>Đơn vị vận chuyển: <strong>{selectedShipment?.carrier}</strong></p>
+                            <p>Ghi chú: <strong>{selectedShipment?.notes}</strong></p>
+                            <p>Trạng thái hiện tại: <strong style={{ color: getStatusColor(selectedShipment?.status), }}>{selectedShipment?.status}</strong></p>
+                        </div>
 
-                    <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px'}}>
-                        <Button color="0" onClick={() => setIsModalOpen(false)}>Hủy</Button>
-                        <Button onClick={handleUpdateSubmit} disabled={status === 'loading'}>
-                            {status === 'loading' ? <Spinner/> : 'Lưu Thay Đổi'}
+                    )}
+
+                    {/* Nút bấm chuyển trạng thái */}
+                    {selectedShipment?.status === 'Ready' && (
+                        <Button onClick={shippedSubmit} disabled={shipmentStatus === 'loading'}>
+                            {shipmentStatus === 'loading' ? <Spinner /> : '📦 Xác nhận đã gửi hàng (Shipped)'}
                         </Button>
+                    )}
+
+                    {selectedShipment?.status === 'Shipped' && (
+                        <Button onClick={doneSubmit} disabled={shipmentStatus === 'loading'} style={{ background: 'green', borderColor: 'green' }}>
+                            {shipmentStatus === 'loading' ? <Spinner /> : '✅ Đã giao & Đã thu tiền (Delivered)'}
+                        </Button>
+                    )}
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                        <Button color="0" onClick={() => setIsModalOpen(false)}>Đóng</Button>
                     </div>
                 </div>
             </Modal>
