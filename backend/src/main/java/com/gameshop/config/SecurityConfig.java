@@ -74,6 +74,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/my-orders").hasRole("CUSTOMER")
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/{id}").hasRole("CUSTOMER")
 
+                        // VNPay payment endpoints
+                        .requestMatchers(HttpMethod.POST, "/api/v1/payments/vnpay/create-payment").hasRole("CUSTOMER")
+                        // VNPay callback - MUST be public (called by VNPay server without
+                        // authentication)
+                        .requestMatchers(HttpMethod.GET, "/api/v1/payments/vnpay/callback").permitAll()
+                        // VNPay fallback callback path (VNPay redirects here instead of full API path)
+                        .requestMatchers(HttpMethod.GET, "/payment/vnpay/callback").permitAll()
+
                         // Admin-only endpoints - Dashboard
                         .requestMatchers("/api/v1/admin/dashboard/**").hasRole("ADMIN")
 

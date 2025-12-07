@@ -78,12 +78,33 @@ export function ManageCustomersPage() {
             <AdminPageHeader title="Quản Lý Khách Hàng" />
 
             {/* Filter Bar */}
-            <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-                <Input
+            <div style={{
+                marginBottom: '20px',
+                padding: '15px',
+                background: '#fff',
+                borderRadius: '8px',
+                border: '1px solid #eee',
+                display: 'flex',
+                gap: '15px',
+                alignItems: 'center',
+                flexWrap: 'wrap'
+            }}>
+                <input
+                    type="text"
                     placeholder="Tìm kiếm theo tên, email, sđt..."
                     value={keyword}
                     onChange={handleSearch}
-                    style={{ width: '300px' }}
+                    style={{
+                        flex: 1,
+                        minWidth: '200px',
+                        padding: '10px 14px',
+                        borderRadius: '6px',
+                        border: '1px solid #ddd',
+                        fontSize: '14px',
+                        transition: 'border-color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
                 />
             </div>
 
@@ -92,7 +113,8 @@ export function ManageCustomersPage() {
                 data={data || []}
                 isLoading={status === 'loading'}
                 rowKey={(item) => item.id}
-                onEdit={handleViewDetail} // Tạm dùng icon Edit để xem chi tiết
+                onEdit={handleViewDetail}
+                editButtonText="Xem"
             />
 
             {/* Pagination */}

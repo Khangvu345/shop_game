@@ -6,9 +6,6 @@ import { AdminTable } from '../../components/features/admin/AdminTable/AdminTabl
 import { AdminPageHeader } from '../../components/features/admin/AdminPageHeader/AdminPageHeader';
 import '../../components/features/admin/AdminPageHeader/AdminPageHeader.css';
 import { Pagination } from '../../components/ui/pagination/Pagination';
-import { Button } from '../../components/ui/button/Button';
-import { Input } from '../../components/ui/input/Input';
-import { Select } from '../../components/ui/input/Select';
 import type { IColumn, IStockMovement, TStockMovementReason } from '../../types';
 
 export function ManageStockMovementPage() {
@@ -109,80 +106,151 @@ export function ManageStockMovementPage() {
 
             {/* --- KHU VỰC BỘ LỌC --- */}
             <div style={{
-                marginBottom: '20px', padding: '15px',
-                background: '#fff', borderRadius: '8px', border: '1px solid #eee',
-                display: 'flex', gap: '20px', alignItems: 'flex-end', flexWrap: 'wrap'
+                marginBottom: '20px',
+                padding: '15px',
+                background: '#fff',
+                borderRadius: '8px',
+                border: '1px solid #eee',
+                display: 'flex',
+                gap: '15px',
+                alignItems: 'center',
+                flexWrap: 'wrap'
             }}>
                 {/* 1. Chọn loại lọc */}
-                <div style={{ minWidth: '200px' }}>
-                    <Select
-                        label="Chế độ xem"
-                        value={filterType}
-                        onChange={(e) => {
-                            setFilterType(e.target.value as any);
-                            // Reset filter khi đổi chế độ
-                            dispatch(setStockFilter({ page: 0, productId: undefined, reason: '' }));
-                        }}
-                        options={[
-                            { label: 'Theo khoảng thời gian', value: 'date' },
-                            { label: 'Theo sản phẩm', value: 'product' },
-                            { label: 'Theo lý do', value: 'reason' }
-                        ]}
-                    />
-                </div>
+                <select
+                    value={filterType}
+                    onChange={(e) => {
+                        setFilterType(e.target.value as any);
+                        dispatch(setStockFilter({ page: 0, productId: undefined, reason: '' }));
+                    }}
+                    style={{
+                        width: '200px',
+                        padding: '10px 14px',
+                        borderRadius: '6px',
+                        border: '1px solid #ddd',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                        transition: 'border-color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
+                >
+                    <option value="date">Theo khoảng thời gian</option>
+                    <option value="product">Theo sản phẩm</option>
+                    <option value="reason">Theo lý do</option>
+                </select>
 
                 {/* 2. Render Input theo loại lọc */}
                 {filterType === 'date' && (
                     <>
-                        <div style={{ width: '150px' }}>
-                            <Input
-                                type="date" label="Từ ngày"
-                                value={filter.startDate || ''}
-                                onChange={(e) => handleFilterChange('startDate', e.target.value)}
-                            />
-                        </div>
-                        <div style={{ width: '150px' }}>
-                            <Input
-                                type="date" label="Đến ngày"
-                                value={filter.endDate || ''}
-                                onChange={(e) => handleFilterChange('endDate', e.target.value)}
-                            />
-                        </div>
+                        <input
+                            type="date"
+                            value={filter.startDate || ''}
+                            onChange={(e) => handleFilterChange('startDate', e.target.value)}
+                            placeholder="Từ ngày"
+                            style={{
+                                width: '160px',
+                                padding: '10px 14px',
+                                borderRadius: '6px',
+                                border: '1px solid #ddd',
+                                fontSize: '14px',
+                                transition: 'border-color 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                            onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
+                        />
+                        <input
+                            type="date"
+                            value={filter.endDate || ''}
+                            onChange={(e) => handleFilterChange('endDate', e.target.value)}
+                            placeholder="Đến ngày"
+                            style={{
+                                width: '160px',
+                                padding: '10px 14px',
+                                borderRadius: '6px',
+                                border: '1px solid #ddd',
+                                fontSize: '14px',
+                                transition: 'border-color 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                            onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
+                        />
                     </>
                 )}
 
                 {filterType === 'product' && (
-                    <div style={{ flex: 1, minWidth: '300px' }}>
-                        <Select
-                            label="Chọn sản phẩm"
-                            value={filter.productId || ''}
-                            onChange={(e) => handleFilterChange('productId', Number(e.target.value))}
-                            options={[
-                                { label: '-- Chọn sản phẩm --', value: '' },
-                                ...(products?.map(p => ({ label: p.productName, value: p.productId })) || [])
-                            ]}
-                        />
-                    </div>
+                    <select
+                        value={filter.productId || ''}
+                        onChange={(e) => handleFilterChange('productId', Number(e.target.value))}
+                        style={{
+                            flex: 1,
+                            minWidth: '300px',
+                            padding: '10px 14px',
+                            borderRadius: '6px',
+                            border: '1px solid #ddd',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            transition: 'border-color 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                        onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
+                    >
+                        <option value="">-- Chọn sản phẩm --</option>
+                        {products?.map(p => (
+                            <option key={p.productId} value={p.productId}>
+                                {p.productName}
+                            </option>
+                        ))}
+                    </select>
                 )}
 
                 {filterType === 'reason' && (
-                    <div style={{ minWidth: '200px' }}>
-                        <Select
-                            label="Chọn lý do"
-                            value={filter.reason || ''}
-                            onChange={(e) => handleFilterChange('reason', e.target.value)}
-                            options={[
-                                { label: '-- Chọn lý do --', value: '' },
-                                { label: 'Nhập hàng (GoodsReceipt)', value: 'GoodsReceipt' },
-                                { label: 'Bán hàng (Sale)', value: 'Sale' },
-                                { label: 'Trả hàng (Return)', value: 'Return' },
-                                { label: 'Điều chỉnh (Manual)', value: 'ManualAdjustment' }
-                            ]}
-                        />
-                    </div>
+                    <select
+                        value={filter.reason || ''}
+                        onChange={(e) => handleFilterChange('reason', e.target.value)}
+                        style={{
+                            width: '220px',
+                            padding: '10px 14px',
+                            borderRadius: '6px',
+                            border: '1px solid #ddd',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            transition: 'border-color 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                        onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
+                    >
+                        <option value="">-- Chọn lý do --</option>
+                        <option value="GoodsReceipt">Nhập hàng (GoodsReceipt)</option>
+                        <option value="Sale">Bán hàng (Sale)</option>
+                        <option value="Return">Trả hàng (Return)</option>
+                        <option value="ManualAdjustment">Điều chỉnh (Manual)</option>
+                    </select>
                 )}
 
-                <Button onClick={() => dispatch(fetchStockMovements(filter))}>Lọc dữ liệu</Button>
+                <button
+                    onClick={() => dispatch(fetchStockMovements(filter))}
+                    style={{
+                        padding: '10px 20px',
+                        borderRadius: '6px',
+                        border: '1px solid #ddd',
+                        background: '#f5f5f5',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                        transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = '#06b6d4';
+                        e.currentTarget.style.color = '#06b6d4';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = '#ddd';
+                        e.currentTarget.style.color = 'inherit';
+                    }}
+                >
+                    Lọc dữ liệu
+                </button>
             </div>
 
             {/* --- BẢNG DỮ LIỆU --- */}

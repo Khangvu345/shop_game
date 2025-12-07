@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchShipments, updateShipmentStatus } from '../../store/slices/OrderBlock/shipmentSlice';
 // 1. Import action updateOrder để cập nhật thanh toán
-import {updateOrderStatusThunk, updatePaymentStatusThunk} from '../../store/slices/OrderBlock/orderSlice';
+import { updateOrderStatusThunk, updatePaymentStatusThunk } from '../../store/slices/OrderBlock/orderSlice';
 import { AdminTable } from '../../components/features/admin/AdminTable/AdminTable';
+import { AdminPageHeader } from '../../components/features/admin/AdminPageHeader/AdminPageHeader';
+import '../../components/features/admin/AdminPageHeader/AdminPageHeader.css';
 import { Pagination } from '../../components/ui/pagination/Pagination';
 import { Button } from '../../components/ui/button/Button';
 import { Modal } from '../../components/ui/Modal/Modal';
@@ -17,6 +19,9 @@ export function ManageShipmentPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedShipment, setSelectedShipment] = useState<IShipment | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [searchKeyword, setSearchKeyword] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
+    const [carrierFilter, setCarrierFilter] = useState('');
 
     // 2. Sửa useEffect: Bỏ selectedShipment?.status ra khỏi dependency để tránh loop hoặc reload không kiểm soát
     useEffect(() => {
@@ -98,7 +103,7 @@ export function ManageShipmentPage() {
         {
             title: 'Mã Vận Đơn',
             key: 'trackingNo',
-            render: (item) => <span style={{fontFamily: 'monospace', background: '#eee', padding: '2px 5px'}}>{item.trackingNo}</span>
+            render: (item) => <span style={{ fontFamily: 'monospace', background: '#eee', padding: '2px 5px' }}>{item.trackingNo}</span>
         },
         {
             title: 'Ngày gửi',
@@ -123,13 +128,102 @@ export function ManageShipmentPage() {
         }
     ];
 
+    // Filter data based on search and filters
+    const filteredData = (data || []).filter((shipment: IShipment) => {
+        const matchesSearch = !searchKeyword ||
+            shipment.trackingNo?.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+            shipment.orderId?.toString().includes(searchKeyword);
+        const matchesStatus = !statusFilter || shipment.status === statusFilter;
+        const matchesCarrier = !carrierFilter || shipment.carrier === carrierFilter;
+
+        return matchesSearch && matchesStatus && matchesCarrier;
+    });
+
     return (
-        <div style={{ padding: '20px' }}>
-            <h2 style={{ marginBottom: '20px' }}>Quản Lý Vận Đơn</h2>
+        <div className="admin-page-container">
+            <AdminPageHeader title="Quản Lý Vận Đơn" />
+
+            {/* Filter Bar */}
+            <div style={{
+                marginBottom: '20px',
+                padding: '15px',
+                background: '#fff',
+                borderRadius: '8px',
+                border: '1px solid #eee',
+                display: 'flex',
+                gap: '15px',
+                alignItems: 'center',
+                flexWrap: 'wrap'
+            }}>
+                {/* Search Input */}
+                <input
+                    type="text"
+                    placeholder="Tìm theo mã vận đơn hoặc mã đơn hàng..."
+                    value={searchKeyword}
+                    onChange={(e) => setSearchKeyword(e.target.value)}
+                    style={{
+                        flex: 1,
+                        minWidth: '200px',
+                        padding: '10px 14px',
+                        borderRadius: '6px',
+                        border: '1px solid #ddd',
+                        fontSize: '14px',
+                        transition: 'border-color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
+                />
+
+                {/* Status Select */}
+                <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    style={{
+                        width: '180px',
+                        padding: '10px 14px',
+                        borderRadius: '6px',
+                        border: '1px solid #ddd',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                        transition: 'border-color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
+                >
+                    <option value="">-- Tất cả trạng thái --</option>
+                    <option value="Ready">Ready</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Returned">Returned</option>
+                </select>
+
+                {/* Carrier Select */}
+                <select
+                    value={carrierFilter}
+                    onChange={(e) => setCarrierFilter(e.target.value)}
+                    style={{
+                        width: '180px',
+                        padding: '10px 14px',
+                        borderRadius: '6px',
+                        border: '1px solid #ddd',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                        transition: 'border-color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
+                >
+                    <option value="">-- Tất cả ĐVVC --</option>
+                    <option value="GHN">GHN</option>
+                    <option value="GHTK">GHTK</option>
+                    <option value="Viettel Post">Viettel Post</option>
+                    <option value="VNPost">VNPost</option>
+                </select>
+            </div>
 
             <AdminTable<IShipment>
                 columns={columns}
-                data={data || []}
+                data={filteredData}
                 isLoading={shipmentStatus === 'loading'}
                 rowKey={(item) => item.shipmentId}
                 onEdit={handleEdit}
@@ -147,15 +241,15 @@ export function ManageShipmentPage() {
             )}
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={`Cập nhật vận đơn #${selectedShipment?.trackingNo}`}>
-                <div style={{minWidth: '400px', display: 'flex', flexDirection: 'column', gap: '15px', backgroundColor: "white"}}>
+                <div style={{ minWidth: '400px', display: 'flex', flexDirection: 'column', gap: '15px', backgroundColor: "white" }}>
 
-                    {selectedShipment  && (
+                    {selectedShipment && (
                         <div>
                             <p>Mã đơn hàng: <strong>{selectedShipment?.orderId}</strong></p>
                             <p>Mã vận đơn: <strong>{selectedShipment?.trackingNo}</strong></p>
                             <p>Đơn vị vận chuyển: <strong>{selectedShipment?.carrier}</strong></p>
                             <p>Ghi chú: <strong>{selectedShipment?.notes}</strong></p>
-                            <p>Trạng thái hiện tại: <strong style={{ color: getStatusColor(selectedShipment?.status),}}>{selectedShipment?.status}</strong></p>
+                            <p>Trạng thái hiện tại: <strong style={{ color: getStatusColor(selectedShipment?.status), }}>{selectedShipment?.status}</strong></p>
                         </div>
 
                     )}
@@ -163,17 +257,17 @@ export function ManageShipmentPage() {
                     {/* Nút bấm chuyển trạng thái */}
                     {selectedShipment?.status === 'Ready' && (
                         <Button onClick={shippedSubmit} disabled={shipmentStatus === 'loading'}>
-                            {shipmentStatus === 'loading' ? <Spinner/> : '📦 Xác nhận đã gửi hàng (Shipped)'}
+                            {shipmentStatus === 'loading' ? <Spinner /> : '📦 Xác nhận đã gửi hàng (Shipped)'}
                         </Button>
                     )}
 
                     {selectedShipment?.status === 'Shipped' && (
-                        <Button onClick={doneSubmit} disabled={shipmentStatus === 'loading'} style={{background: 'green', borderColor: 'green'}}>
-                            {shipmentStatus  === 'loading' ? <Spinner/> : '✅ Đã giao & Đã thu tiền (Delivered)'}
+                        <Button onClick={doneSubmit} disabled={shipmentStatus === 'loading'} style={{ background: 'green', borderColor: 'green' }}>
+                            {shipmentStatus === 'loading' ? <Spinner /> : '✅ Đã giao & Đã thu tiền (Delivered)'}
                         </Button>
                     )}
 
-                    <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px'}}>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
                         <Button color="0" onClick={() => setIsModalOpen(false)}>Đóng</Button>
                     </div>
                 </div>

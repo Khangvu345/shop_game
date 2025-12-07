@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { fetchOrderDetail, cancelOrderThunk, resetOrderState } from '../../../store/slices/OrderBlock/orderSlice';
+import { fetchOrderDetail, cancelOrderThunk } from '../../../store/slices/OrderBlock/orderSlice';
 import { Button } from '../../../components/ui/button/Button';
-import { Card } from '../../../components/ui/card/Card';
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import { Modal } from '../../../components/ui/Modal/Modal';
 import { Input } from '../../../components/ui/input/Input';
 import './OrderDetailPage.css';
+
 export function OrderDetailPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
@@ -16,7 +16,6 @@ export function OrderDetailPage() {
     const { currentOrder, status, error } = useAppSelector((state) => state.orders);
     const { user } = useAppSelector((state) => state.auth);
 
-    // State cho Modal Hủy
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
     const [cancelReason, setCancelReason] = useState('');
 
@@ -24,18 +23,14 @@ export function OrderDetailPage() {
         if (id) {
             dispatch(fetchOrderDetail(id));
         }
-        return () => {
-            // Optional: Reset state khi rời trang
-            // dispatch(resetOrderState());
-        };
     }, [id, dispatch]);
 
+    // Handle Cancel
     const handleCancelSubmit = async () => {
         if (!cancelReason.trim()) {
             alert('Vui lòng nhập lý do hủy đơn');
             return;
         }
-
         if (id && user) {
             await dispatch(cancelOrderThunk({
                 id,
@@ -49,11 +44,10 @@ export function OrderDetailPage() {
         }
     };
 
-    // Format tiền
+    // Format Helpers
     const formatCurrency = (amount: number) =>
         new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
-    // Helper hiển thị trạng thái
     const translateStatus = (status: string) => {
         const map: Record<string, string> = {
             PENDING: 'Chờ xử lý',
@@ -68,169 +62,212 @@ export function OrderDetailPage() {
         return map[status] || status;
     };
 
-    if (status === 'loading' && !currentOrder) return <div style={{display:'flex', justifyContent:'center', padding:'50px'}}><Spinner /></div>;
-    if (error) return <div className="container" style={{color:'red', padding:'20px'}}>Lỗi: {error}</div>;
-    if (!currentOrder) return <div className="container" style={{padding:'20px'}}>Không tìm thấy đơn hàng.</div>;
+    // Stepper Logic: Xác định bước hiện tại (1-4)
+    const getStepStatus = (status: string) => {
+        const steps = ['PENDING', 'CONFIRMED', 'SHIPPED', 'COMPLETED'];
+        if (status === 'DELIVERED') return 3; // Coi như bước 3 (Giao hàng) đã xong
+        if (status === 'CANCELLED' || status === 'RETURNED') return -1;
+        
+        // Tìm vị trí trong mảng steps
+        const index = steps.indexOf(status);
+        // PREPARING nằm giữa CONFIRMED và SHIPPED
+        if (status === 'PREPARING') return 1; 
+        
+        return index > -1 ? index : 0;
+    };
 
-    // Kiểm tra xem có được phép hủy không (Chỉ PENDING hoặc CONFIRMED)
+    if (status === 'loading' && !currentOrder) return <div style={{height:'100vh', display:'flex', justifyContent:'center', alignItems:'center'}}><Spinner /></div>;
+    if (error) return <div className="container" style={{color:'red', padding:'2rem'}}>Error: {error}</div>;
+    if (!currentOrder) return <div className="container" style={{padding:'2rem'}}>Đơn hàng không tồn tại.</div>;
+
+    const currentStep = getStepStatus(currentOrder.status);
     const canCancel = ['PENDING', 'CONFIRMED'].includes(currentOrder.status);
-
-    // Mapping field address (Backend trả về shippingAddress trong OrderResponse)
-    // TypeScript có thể báo lỗi nếu type IOrder chưa update, ta dùng as any tạm hoặc update type
     const address = (currentOrder as any).shippingAddress || currentOrder.address;
 
     return (
-        <div className="container" style={{ padding: '20px 0' }}>
-            {/* HEADER */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <div>
-                    <h2 style={{ margin: 0 }}>Chi tiết đơn hàng #{currentOrder.orderId}</h2>
-                    <p style={{ color: '#666', margin: '5px 0 0' }}>
-                        Đặt ngày: {new Date(currentOrder.createdAt).toLocaleString('vi-VN')}
-                    </p>
-                </div>
-                <div style={{textAlign: 'right'}}>
-                    <div style={{
-                        fontSize: '1.2rem',
-                        fontWeight: 'bold',
-                        color: currentOrder.status === 'CANCELLED' ? 'red' : 'var(--color-secondary-0)'
-                    }}>
-                        {translateStatus(currentOrder.status)}
-                    </div>
-                    {canCancel && (
-                        <Button
-                            onClick={() => setIsCancelModalOpen(true)}
-                            style={{backgroundColor: '#ef4444', borderColor: '#ef4444', marginTop: '10px'}}
-                            size="small"
-                        >
-                            Hủy đơn hàng
-                        </Button>
-                    )}
-                    <Button onClick={() => navigate('/my-orders')} color="0" size="small" style={{marginLeft: '10px'}}>
-                        Quay lại
-                    </Button>
-                </div>
-            </div>
-
-            {/* Cảnh báo nếu đơn đã hủy */}
-            {currentOrder.status === 'CANCELLED' && (
-                <div style={{backgroundColor: '#fee2e2', color: '#b91c1c', padding: '15px', borderRadius: '8px', marginBottom: '20px'}}>
-                    <strong>Đơn hàng đã bị hủy.</strong>
-                    <br/>Lý do: {currentOrder.cancelReason || currentOrder.cancelReason}
-                    <br/>Bởi: {currentOrder.cancelledBy} vào lúc {new Date(currentOrder.cancelledAt!).toLocaleString('vi-VN')}
-                </div>
-            )}
-
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
-                {/* CỘT TRÁI: DANH SÁCH SẢN PHẨM */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                    <Card>
-                        <h3 style={{borderBottom: '1px solid #eee', paddingBottom: '10px', marginBottom: '15px'}}>Sản phẩm</h3>
-                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                            <thead>
-                            <tr style={{borderBottom: '2px solid #eee', textAlign: 'left'}}>
-                                <th style={{padding: '10px'}}>Sản phẩm</th>
-                                <th style={{padding: '10px', textAlign: 'center'}}>SL</th>
-                                <th style={{padding: '10px', textAlign: 'right'}}>Đơn giá</th>
-                                <th style={{padding: '10px', textAlign: 'right'}}>Tổng</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {currentOrder.items?.map((item: any, idx: number) => (
-                                <tr key={idx} style={{borderBottom: '1px solid #eee'}}>
-                                    <td style={{padding: '15px 10px'}}>
-                                        <div style={{fontWeight: 500}}>{item.productName}</div>
-                                        <div style={{fontSize: '0.85rem', color: '#888'}}>ID: {item.productId}</div>
-                                    </td>
-                                    <td style={{padding: '10px', textAlign: 'center'}}>x{item.quantity}</td>
-                                    <td style={{padding: '10px', textAlign: 'right'}}>{formatCurrency(item.price)}</td>
-                                    <td style={{padding: '10px', textAlign: 'right', fontWeight: 'bold'}}>
-                                        {formatCurrency(item.lineTotal)}
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    </Card>
+        <div className="order-detail-wrapper">
+            <div className="container">
+                {/* 1. Breadcrumb */}
+                <div className="od-breadcrumb">
+                    <Link to="/">Trang chủ</Link> <span>/</span>
+                    <Link to="/my-orders">Lịch sử đơn hàng</Link> <span>/</span>
+                    <span style={{color: '#0f172a'}}>#{currentOrder.orderId}</span>
                 </div>
 
-                {/* CỘT PHẢI: THÔNG TIN THANH TOÁN & GIAO HÀNG */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                    <Card>
-                        <h3 style={{borderBottom: '1px solid #eee', paddingBottom: '10px', marginBottom: '15px'}}>Thông tin giao hàng</h3>
-                        {address ? (
-                            <div style={{fontSize: '0.95rem', lineHeight: '1.6'}}>
-                                <strong>{address.recipientName || address.receiverName}</strong><br/>
-                                {address.phone || address.receiverPhone}<br/>
-                                {address.street || address.line1}, {address.ward}, {address.city}
-                            </div>
-                        ) : (
-                            <p>Không có thông tin địa chỉ</p>
-                        )}
-                    </Card>
-
-                    <Card>
-                        <h3 style={{borderBottom: '1px solid #eee', paddingBottom: '10px', marginBottom: '15px'}}>Thanh toán</h3>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
-                            <span style={{color:'#666'}}>Phương thức:</span>
-                            <span style={{fontWeight: 500}}>{currentOrder.paymentMethod}</span>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
-                            <span style={{color:'#666'}}>Trạng thái TT:</span>
-                            <span style={{
-                                color: currentOrder.paymentStatus === 'PAID' ? 'green' : 'orange',
-                                fontWeight: 'bold'
-                            }}>
-                                {currentOrder.paymentStatus}
+                {/* 2. Header: Title & Actions */}
+                <div className="od-header">
+                    <div className="od-title-group">
+                        <h1>Chi tiết đơn hàng</h1>
+                        <div className="od-meta">
+                            <span>Mã: <strong>#{currentOrder.orderId}</strong></span>
+                            <span>|</span>
+                            <span>Ngày đặt: {new Date(currentOrder.createdAt).toLocaleDateString('vi-VN')}</span>
+                            <span>|</span>
+                            <span className={`od-status-badge status-${currentOrder.status.toLowerCase()}`}>
+                                {translateStatus(currentOrder.status)}
                             </span>
                         </div>
-                        <div style={{borderTop: '1px dashed #eee', margin: '10px 0'}}></div>
+                    </div>
+                    
+                    <div style={{display:'flex', gap: '10px'}}>
+                        {canCancel && (
+                            <Button 
+                                onClick={() => setIsCancelModalOpen(true)}
+                                style={{backgroundColor: 'white', color: '#ef4444', border: '1px solid #ef4444'}}
+                            >
+                                Hủy đơn hàng
+                            </Button>
+                        )}
+                        <Button onClick={() => navigate('/my-orders')} color="0">Quay lại</Button>
+                    </div>
+                </div>
 
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
-                            <span>Tạm tính:</span>
-                            <span>{formatCurrency(currentOrder.subTotal)}</span>
+                {/* 3. Stepper (Progress Bar) */}
+                {currentOrder.status !== 'CANCELLED' && currentOrder.status !== 'RETURNED' && (
+                    <div className="od-stepper">
+                        <div className="stepper-container">
+                            {[
+                                { label: 'Đặt hàng', step: 0 },
+                                { label: 'Xác nhận', step: 1 },
+                                { label: 'Giao hàng', step: 2 },
+                                { label: 'Hoàn thành', step: 3 }
+                            ].map((s, idx) => (
+                                <div key={idx} className={`step-item ${currentStep >= idx ? 'active' : ''} ${currentStep > idx ? 'completed' : ''}`}>
+                                    <div className="step-circle">
+                                        {currentStep > idx ? '✓' : idx + 1}
+                                    </div>
+                                    <div className="step-label">{s.label}</div>
+                                </div>
+                            ))}
                         </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
-                            <span>Giảm giá:</span>
-                            <span>{formatCurrency(currentOrder.discountAmount || 0)}</span>
-                        </div>
-                        {/* Nếu có phí ship hay giảm giá thì thêm vào đây */}
+                    </div>
+                )}
 
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '15px', fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--color-secondary-0)'}}>
-                            <span>Tổng cộng:</span>
-                            <span>{formatCurrency(currentOrder.grandTotal)}</span>
+                {/* 4. Cancelled Alert */}
+                {currentOrder.status === 'CANCELLED' && (
+                    <div className="cancelled-alert">
+                        <strong>Đơn hàng đã bị hủy</strong>
+                        <p style={{margin: '5px 0 0', fontSize:'0.9rem'}}>Lý do: {currentOrder.cancelReason} &bull; Bởi: {currentOrder.cancelledBy}</p>
+                    </div>
+                )}
+
+                {/* 5. Main Layout */}
+                <div className="od-layout">
+                    {/* LEFT COLUMN: PRODUCTS */}
+                    <div className="od-section-left">
+                        <div className="od-card">
+                            <div className="od-card-header">
+                                <h3 className="od-card-title">Sản phẩm ({currentOrder.items?.length})</h3>
+                            </div>
+                            <div className="od-product-list">
+                                {currentOrder.items?.map((item: any, idx: number) => (
+                                    <div key={idx} className="od-product-item">
+                                        <div className="od-img-wrapper">
+                                            <img 
+                                                src={item.productImageUrl || item.thumbnailUrl || 'https://placehold.co/100'} 
+                                                alt={item.productName} 
+                                            />
+                                        </div>
+                                        <div className="od-item-info">
+                                            <div className="od-item-name">{item.productName}</div>
+                                            <div className="od-item-meta">Số lượng: x{item.quantity}</div>
+                                            <div className="od-item-meta">Đơn giá: {formatCurrency(item.price)}</div>
+                                        </div>
+                                        <div className="od-item-total">
+                                            {formatCurrency(item.lineTotal)}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            
+                            {/* Summary Footer */}
+                            <div className="od-card-footer">
+                                <div className="od-summary-row">
+                                    <span>Tạm tính</span>
+                                    <span>{formatCurrency(currentOrder.subTotal || 0)}</span>
+                                </div>
+                                <div className="od-summary-row">
+                                    <span>Phí vận chuyển</span>
+                                    <span>{formatCurrency(30000)}</span> {/* Giả định phí ship */}
+                                </div>
+                                <div className="od-summary-total">
+                                    <span className="od-total-label">Tổng cộng</span>
+                                    <span className="od-total-value">{formatCurrency(currentOrder.grandTotal)}</span>
+                                </div>
+                            </div>
                         </div>
-                    </Card>
+                    </div>
+
+                    {/* RIGHT COLUMN: INFO */}
+                    <div className="od-section-right">
+                        {/* Customer Info */}
+                        <div className="od-card">
+                            <div className="od-card-header">
+                                <h3 className="od-card-title">Địa chỉ nhận hàng</h3>
+                            </div>
+                            <div className="info-group">
+                                <div className="info-row">
+                                    <div className="info-label">Người nhận</div>
+                                    <div className="info-content" style={{fontWeight: 700}}>{address?.recipientName}</div>
+                                </div>
+                                <div className="info-row">
+                                    <div className="info-label">Số điện thoại</div>
+                                    <div className="info-content">{address?.phone}</div>
+                                </div>
+                                <div className="info-row">
+                                    <div className="info-label">Địa chỉ</div>
+                                    <div className="info-content">
+                                        {address?.street}<br/>
+                                        {address?.ward}, {address?.city}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Payment Info */}
+                        <div className="od-card">
+                            <div className="od-card-header">
+                                <h3 className="od-card-title">Thanh toán</h3>
+                            </div>
+                            <div className="info-group">
+                                <div className="info-row">
+                                    <div className="info-label">Phương thức</div>
+                                    <div className="info-content">{currentOrder.paymentMethod}</div>
+                                </div>
+                                <div className="info-row">
+                                    <div className="info-label">Trạng thái</div>
+                                    <div className="info-content" style={{
+                                        color: currentOrder.paymentStatus === 'PAID' ? 'green' : '#d97706',
+                                        fontWeight: 700
+                                    }}>
+                                        {currentOrder.paymentStatus === 'PAID' ? 'Đã thanh toán' : 'Chưa thanh toán'}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {/* MODAL HỦY ĐƠN */}
-            <Modal
-                isOpen={isCancelModalOpen}
-                onClose={() => setIsCancelModalOpen(false)}
-                title="Xác nhận hủy đơn hàng"
-            >
+            {/* Cancel Modal */}
+            <Modal isOpen={isCancelModalOpen} onClose={() => setIsCancelModalOpen(false)} title="Hủy Đơn Hàng">
                 <div style={{minWidth: '400px'}}>
-                    <p>Bạn có chắc chắn muốn hủy đơn hàng <strong>#{currentOrder.orderId}</strong> không?</p>
-                    <p style={{fontSize: '0.9rem', color: '#666', marginBottom: '15px'}}>Hành động này không thể hoàn tác.</p>
-
-                    <div className="form-group">
-                        <label className="form-label">Lý do hủy đơn <span style={{color: 'red'}}>*</span></label>
-                        <Input
-                            value={cancelReason}
-                            onChange={(e) => setCancelReason(e.target.value)}
-                            placeholder="VD: Đổi ý, đặt nhầm sản phẩm..."
-                        />
-                    </div>
-
-                    <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px'}}>
+                    <p style={{color: '#64748b', marginBottom: '1.5rem'}}>
+                        Bạn có chắc chắn muốn hủy đơn hàng <strong>#{currentOrder.orderId}</strong> không? Hành động này không thể hoàn tác.
+                    </p>
+                    <Input 
+                        label="Lý do hủy đơn" 
+                        value={cancelReason} 
+                        onChange={(e) => setCancelReason(e.target.value)} 
+                        placeholder="VD: Đặt nhầm, thay đổi địa chỉ..."
+                    />
+                    <div style={{display:'flex', justifyContent:'flex-end', gap:'10px', marginTop:'20px'}}>
                         <Button color="0" onClick={() => setIsCancelModalOpen(false)}>Đóng</Button>
-                        <Button
-                            onClick={handleCancelSubmit}
+                        <Button 
+                            onClick={handleCancelSubmit} 
                             style={{backgroundColor: '#ef4444', borderColor: '#ef4444'}}
-                            disabled={status === 'loading'}
                         >
-                            {status === 'loading' ? <Spinner /> : 'Xác nhận Hủy'}
+                            Xác nhận Hủy
                         </Button>
                     </div>
                 </div>
