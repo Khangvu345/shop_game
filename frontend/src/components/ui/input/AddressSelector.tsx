@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { locationApi, type IPTITLocation } from '../../../api/ThirdParty/locationApi';
+import { locationApi, type IPTITLocation } from '../../../api/ThirdParty/locationApi.ts';
 import { Select } from './Select';
 import { Input } from './Input';
 

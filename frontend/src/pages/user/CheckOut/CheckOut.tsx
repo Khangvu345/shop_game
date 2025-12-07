@@ -25,7 +25,7 @@ export function CheckoutPage() {
 
     const cartItems = useAppSelector((state) => state.cart.items);
     const { user } = useAppSelector((state) => state.auth);
-    const { status, error } = useAppSelector((state) => state.orders);
+    const {currentOrder, status, error } = useAppSelector((state) => state.orders);
 
     const isOrderSuccess = useRef(false);
 
@@ -112,11 +112,12 @@ export function CheckoutPage() {
 
         const resultAction = await dispatch(placeOrder(orderPayload));
 
+
         if (placeOrder.fulfilled.match(resultAction)) {
             isOrderSuccess.current = true;
             dispatch(clearCart());
             alert("Đặt hàng thành công!");
-            navigate('/my-orders');
+            navigate(`/my-orders/${resultAction.payload.orderId}`);
         } else {
             alert("Đặt hàng thất bại: " + resultAction.payload);
         }

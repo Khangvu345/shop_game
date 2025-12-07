@@ -8,7 +8,7 @@ import type {
 import type {ICustomer} from "./people.types.ts";
 
 export interface IOrder {
-    orderId: number;
+    orderId: string;
     customerId: number;
     orderDate: string;
     status: TOrderStatus;
@@ -45,7 +45,7 @@ export interface IShippingAddress {
 }
 
 export interface IOrderItem {
-    orderId?: number;
+    orderId?: string;
     lineNo?: number;
     productId: number;
     quantity: number;
@@ -60,7 +60,7 @@ export interface IOrderItem {
 
 export interface IPayment {
     paymentId: number;
-    orderId: number;
+    orderId: string;
     method: string;
     amount: number;
     paidAt?: string;
@@ -94,7 +94,7 @@ export interface ICreateOrderPayload {
 
 export interface IShipment {
     shipmentId: number;
-    orderId: number;
+    orderId: string;
     carrier: string;
     trackingNo: string;
     status: TShipmentStatus;
@@ -105,7 +105,7 @@ export interface IShipment {
 }
 
 export interface ICreateShipmentPayload {
-    orderId: number;
+    orderId: string;
     carrier: string;
     trackingNo: string;
 }

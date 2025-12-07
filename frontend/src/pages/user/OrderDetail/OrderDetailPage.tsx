@@ -7,6 +7,7 @@ import { Spinner } from '../../../components/ui/loading/Spinner';
 import { Modal } from '../../../components/ui/Modal/Modal';
 import { Input } from '../../../components/ui/input/Input';
 import './OrderDetailPage.css';
+import {vnpayAPI} from "../../../api/PaymentBlock/paymentApi.ts";
 
 export function OrderDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -76,6 +77,28 @@ export function OrderDetailPage() {
         return index > -1 ? index : 0;
     };
 
+    const handleMakePayment = () => {
+        if (!currentOrder) return;
+        vnpayAPI.createPpayment({
+            orderId: currentOrder.orderId,
+            bankCode: '',
+            language: ''
+        })
+            .then(data => {
+                if (data.paymentUrl) {
+                    window.location.href = data.paymentUrl;
+                } else {
+                    alert("Không lấy được link thanh toán. Vui lòng thử lại.");
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Lỗi khi khởi tạo thanh toán.");
+            })
+
+
+    }
+
     if (status === 'loading' && !currentOrder) return <div style={{height:'100vh', display:'flex', justifyContent:'center', alignItems:'center'}}><Spinner /></div>;
     if (error) return <div className="container" style={{color:'red', padding:'2rem'}}>Error: {error}</div>;
     if (!currentOrder) return <div className="container" style={{padding:'2rem'}}>Đơn hàng không tồn tại.</div>;
@@ -143,7 +166,7 @@ export function OrderDetailPage() {
                     </div>
                 )}
 
-                {/* 4. Cancelled Alert */}
+                {/* 4. Canceled Alert */}
                 {currentOrder.status === 'CANCELLED' && (
                     <div className="cancelled-alert">
                         <strong>Đơn hàng đã bị hủy</strong>
@@ -237,12 +260,17 @@ export function OrderDetailPage() {
                                 <div className="info-row">
                                     <div className="info-label">Trạng thái</div>
                                     <div className="info-content" style={{
-                                        color: currentOrder.paymentStatus === 'PAID' ? 'green' : '#d97706',
                                         fontWeight: 700
                                     }}>
-                                        {currentOrder.paymentStatus === 'PAID' ? 'Đã thanh toán' : 'Chưa thanh toán'}
+                                        {currentOrder.paymentStatus}
                                     </div>
                                 </div>
+                                <div className="info-row">
+                                    {currentOrder.paymentStatus === 'FAILED' || currentOrder.paymentStatus === 'PENDING' && (currentOrder.status != 'CANCELLED') &&(
+                                        <Button onClick={() => handleMakePayment()} color="1">Thanh toán</Button>
+                                    )}
+                                </div>
+
                             </div>
                         </div>
                     </div>
