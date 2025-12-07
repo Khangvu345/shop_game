@@ -62,7 +62,7 @@ export function AuthPage() {
         const resultAction = await dispatch(registerUser({
             fullName: registerData.fullName,
             email: registerData.email,
-            phone: registerData.phone,
+            phoneNumber: registerData.phone,
             username: registerData.username,
             password: registerData.password
         }));
