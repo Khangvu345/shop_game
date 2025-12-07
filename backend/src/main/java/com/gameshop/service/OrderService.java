@@ -359,7 +359,8 @@ public class OrderService {
                         line.getProduct().getName(),
                         line.getQuantity(),
                         line.getPrice(),
-                        line.getLineTotal()))
+                        line.getLineTotal(),
+                        line.getProduct().getProductImageUrl()))
                 .collect(Collectors.toList());
 
         OrderResponse.AddressDto addressDto = null;

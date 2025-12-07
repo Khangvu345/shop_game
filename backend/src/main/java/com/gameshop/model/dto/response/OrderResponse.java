@@ -36,6 +36,7 @@ public record OrderResponse(
                         String productName,
                         Integer quantity,
                         BigDecimal price,
-                        BigDecimal lineTotal) {
+                        BigDecimal lineTotal,
+                        String productImageUrl) {
         }
 }

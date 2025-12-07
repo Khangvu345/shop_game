@@ -8,13 +8,7 @@ import { ProductReviews } from '../../../components/features/product/ProductRevi
 
 import './ProductDetailPage.css';
 
-// Mock images cho gallery
-const mockImages = [
-    'https://placehold.co/600x600?text=PS5+Image+1',
-    'https://placehold.co/600x600?text=PS5+Image+2',
-    'https://placehold.co/600x600?text=PS5+Image+3',
-    'https://placehold.co/600x600?text=PS5+Image+4',
-];
+
 
 // Mock reviews data (sẽ thay bằng API sau)
 const mockReviews = [
@@ -106,7 +100,8 @@ export function ProductDetailPage() {
 
     // Prepare data
     const specifications = parseSpecifications(product.description);
-    const images = product.thumbnailUrl ? [product.thumbnailUrl, ...mockImages.slice(1)] : mockImages;
+    // Chỉ sử dụng ảnh chính từ database
+    const images = product.productImageUrl ? [product.productImageUrl] : ['https://placehold.co/600x600?text=No+Image'];
 
     // Tính toán reviews statistics
     const averageRating = mockReviews.reduce((sum, r) => sum + r.rating, 0) / mockReviews.length;
@@ -141,6 +136,8 @@ export function ProductDetailPage() {
                     productName={product.productName}
                     listPrice={product.listPrice}
                     description={product.description}
+                    status={product.status}
+                    stockQuantity={product.stockQuantity}
                     averageRating={averageRating}
                     totalReviews={totalReviews}
                     quantity={quantity}
@@ -155,7 +152,7 @@ export function ProductDetailPage() {
 
                 <div className="accordion">
                     {specifications.length > 0 && (
-                        <AccordionItem title="Thông số kỹ thuật" defaultOpen={true}>
+                        <AccordionItem title="Thông tin cơ bản" defaultOpen={true}>
                             <div className="specifications-grid">
                                 {specifications.map((spec, index) => (
                                     <div key={index} className="spec-item">
@@ -169,7 +166,64 @@ export function ProductDetailPage() {
 
                     <AccordionItem title="Mô tả đầy đủ">
                         <div className="full-description">
-                            {product.description || 'Chưa có mô tả chi tiết cho sản phẩm này.'}
+                            {(() => {
+                                const description = product.description || '';
+                                const lines = description.split('\n').flatMap(line =>
+                                    line.split('-').map(item => item.trim()).filter(item => item.length > 0)
+                                );
+
+                                // Nhóm các dòng theo section (1., 2., 3., ...)
+                                const allSections: { header: string; items: string[] }[] = [];
+                                let currentSection: { header: string; items: string[] } | null = null;
+
+                                lines.forEach(line => {
+                                    // Bỏ qua dòng có dấu ":" (specs)
+                                    if (line.includes(':')) return;
+
+                                    // Header với số thứ tự
+                                    if (/^\d+\.\s/.test(line)) {
+                                        if (currentSection) allSections.push(currentSection);
+                                        currentSection = {
+                                            header: line.replace(/^\d+\.\s/, ''),  // Bỏ số cũ
+                                            items: []
+                                        };
+                                    } else {
+                                        if (currentSection) currentSection.items.push(line);
+                                    }
+                                });
+
+                                if (currentSection) allSections.push(currentSection);
+
+                                // Bỏ section "Thông tin cơ bản"
+                                const sections = allSections.filter((s, idx) =>
+                                    !(idx === 0 && s.header.toLowerCase().includes('thông tin cơ bản'))
+                                );
+
+                                if (sections.length === 0) {
+                                    return 'Chưa có mô tả chi tiết cho sản phẩm này.';
+                                }
+
+                                return (
+                                    <div style={{ lineHeight: '1.8' }}>
+                                        {sections.map((section, idx) => (
+                                            <div key={idx} style={{ marginBottom: '1.5rem' }}>
+                                                <div style={{ fontWeight: 600, marginBottom: '0.5rem' }}>
+                                                    {idx + 1}. {section.header}
+                                                </div>
+                                                {section.items.length > 0 && (
+                                                    <ul style={{ margin: 0, paddingLeft: '40px', listStyleType: 'none' }}>
+                                                        {section.items.map((item, itemIdx) => (
+                                                            <li key={itemIdx} style={{ marginBottom: '0.3rem' }}>
+                                                                - {item}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                );
+                            })()}
                         </div>
                     </AccordionItem>
                 </div>
