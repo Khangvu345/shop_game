@@ -6,9 +6,6 @@ import { AdminTable } from '../../../components/features/admin/AdminTable/AdminT
 import { AdminPageHeader } from '../../../components/features/admin/AdminPageHeader/AdminPageHeader.tsx';
 import '../../../components/features/admin/AdminPageHeader/AdminPageHeader.css';
 import { Pagination } from '../../../components/ui/pagination/Pagination.tsx';
-import { Select } from '../../../components/ui/input/Select.tsx';
-import { Input } from '../../../components/ui/input/Input.tsx';
-import { Button } from '../../../components/ui/button/Button.tsx';
 import type { IColumn, IOrder } from '../../../types';
 
 export function ManageOrderPage() {
@@ -104,44 +101,100 @@ export function ManageOrderPage() {
 
             {/* FILTER BAR */}
             <div style={{
-                display: 'flex', gap: '15px', marginBottom: '20px',
-                background: '#fff', padding: '15px', borderRadius: '8px', border: '1px solid #eee',
-                flexWrap: 'wrap', alignItems: 'flex-end'
+                display: 'flex',
+                gap: '15px',
+                marginBottom: '20px',
+                background: '#fff',
+                padding: '15px',
+                borderRadius: '8px',
+                border: '1px solid #eee',
+                flexWrap: 'wrap',
+                alignItems: 'center'
             }}>
-                <div style={{ width: '200px' }}>
-                    <Select
-                        label="Trạng thái"
-                        value={filters.status}
-                        onChange={(e) => handleFilterChange('status', e.target.value)}
-                        options={[
-                            { label: 'Tất cả', value: '' },
-                            { label: 'Chờ xử lý (Pending)', value: 'PENDING' },
-                            { label: 'Đã xác nhận (Confirmed)', value: 'CONFIRMED' },
-                            { label: 'Đang giao (Shipped)', value: 'SHIPPED' },
-                            { label: 'Hoàn thành (Completed)', value: 'COMPLETED' },
-                            { label: 'Đã hủy (Cancelled)', value: 'CANCELLED' },
-                        ]}
-                    />
-                </div>
-                <div style={{ width: '200px' }}>
-                    <Input
-                        label="Từ ngày"
-                        type="date"
-                        value={filters.fromDate}
-                        onChange={(e) => handleFilterChange('fromDate', e.target.value)}
-                    />
-                </div>
-                <div style={{ width: '200px' }}>
-                    <Input
-                        label="Đến ngày"
-                        type="date"
-                        value={filters.toDate}
-                        onChange={(e) => handleFilterChange('toDate', e.target.value)}
-                    />
-                </div>
-                <Button onClick={() => setFilters({ status: '', fromDate: '', toDate: '', page: 0 })} color="0">
+                {/* Status Select */}
+                <select
+                    value={filters.status}
+                    onChange={(e) => handleFilterChange('status', e.target.value)}
+                    style={{
+                        width: '200px',
+                        padding: '10px 14px',
+                        borderRadius: '6px',
+                        border: '1px solid #ddd',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                        transition: 'border-color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
+                >
+                    <option value="">-- Tất cả trạng thái --</option>
+                    <option value="PENDING">Chờ xử lý (Pending)</option>
+                    <option value="CONFIRMED">Đã xác nhận (Confirmed)</option>
+                    <option value="SHIPPED">Đang giao (Shipped)</option>
+                    <option value="COMPLETED">Hoàn thành (Completed)</option>
+                    <option value="CANCELLED">Đã hủy (Cancelled)</option>
+                </select>
+
+                {/* From Date */}
+                <input
+                    type="date"
+                    value={filters.fromDate}
+                    onChange={(e) => handleFilterChange('fromDate', e.target.value)}
+                    placeholder="Từ ngày"
+                    style={{
+                        width: '180px',
+                        padding: '10px 14px',
+                        borderRadius: '6px',
+                        border: '1px solid #ddd',
+                        fontSize: '14px',
+                        transition: 'border-color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
+                />
+
+                {/* To Date */}
+                <input
+                    type="date"
+                    value={filters.toDate}
+                    onChange={(e) => handleFilterChange('toDate', e.target.value)}
+                    placeholder="Đến ngày"
+                    style={{
+                        width: '180px',
+                        padding: '10px 14px',
+                        borderRadius: '6px',
+                        border: '1px solid #ddd',
+                        fontSize: '14px',
+                        transition: 'border-color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
+                />
+
+                {/* Clear Button */}
+                <button
+                    onClick={() => setFilters({ status: '', fromDate: '', toDate: '', page: 0 })}
+                    style={{
+                        padding: '10px 20px',
+                        borderRadius: '6px',
+                        border: '1px solid #ddd',
+                        background: '#f5f5f5',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                        transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = '#06b6d4';
+                        e.currentTarget.style.color = '#06b6d4';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = '#ddd';
+                        e.currentTarget.style.color = 'inherit';
+                    }}
+                >
                     Xóa lọc
-                </Button>
+                </button>
             </div>
 
             <AdminTable<IOrder>
