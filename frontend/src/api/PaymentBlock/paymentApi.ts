@@ -20,9 +20,9 @@ export interface paymentResponse{
 
 class paymentApi extends BaseApi<paymentResponse> {
     async createPpayment(payload: paymentPayload ): Promise<paymentResponse> {
-        const response = await axiosClient.post<paymentResponse>(`/${this.resource}`, payload);
+        const response = await axiosClient.post<paymentResponse>(`/${this.resource}/create-payment`, payload);
         return response.data;
     }
 }
 
-export const vnpayApi = new paymentApi('payments/vnpay')
+export const vnpayAPI = new paymentApi('payments/vnpay');
