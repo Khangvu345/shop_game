@@ -126,7 +126,7 @@ export function OrderDetailPage() {
                             <span>|</span>
                             <span>Ngày đặt: {new Date(currentOrder.createdAt).toLocaleDateString('vi-VN')}</span>
                             <span>|</span>
-                            <span className={`od-status-badge status-${currentOrder.status.toLowerCase()}`}>
+                            <span className={`od-status-badge status-${currentOrder.status}`}>
                                 {translateStatus(currentOrder.status)}
                             </span>
                         </div>
