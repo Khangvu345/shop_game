@@ -6,6 +6,7 @@ import com.gameshop.model.dto.request.UpdatePaymentStatusRequest;
 import com.gameshop.model.dto.response.OrderResponse;
 import com.gameshop.model.dto.response.VNPayPaymentResponse;
 import com.gameshop.model.entity.Order;
+import com.gameshop.model.enums.OrderStatus;
 import com.gameshop.model.enums.PaymentMethod;
 import com.gameshop.model.enums.PaymentStatus;
 import com.gameshop.repository.OrderRepository;
@@ -245,14 +246,19 @@ public class VNPayService {
      * Validate order trước khi tạo payment URL
      */
     private void validateOrderForPayment(Order order) {
+
         // Phải là VNPAY payment method
         if (order.getPaymentMethod() != PaymentMethod.VNPAY) {
             throw new RuntimeException("Đơn hàng không sử dụng phương thức thanh toán VNPay");
         }
 
         // Payment status phải là PENDING
-        if (order.getPaymentStatus() != PaymentStatus.PENDING) {
+        if (order.getPaymentStatus() != PaymentStatus.PENDING && order.getPaymentStatus() != PaymentStatus.FAILED) {
             throw new RuntimeException("Đơn hàng đã được thanh toán hoặc không ở trạng thái chờ thanh toán");
+        }
+        // Đơn hàng phải chưa bị hủy
+        if (order.getStatus() == OrderStatus.CANCELLED) {
+            throw new RuntimeException("Đơn hàng đã bị hủy");
         }
     }
 
