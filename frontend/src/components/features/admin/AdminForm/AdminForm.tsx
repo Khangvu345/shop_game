@@ -58,16 +58,19 @@ export const AdminForm = <T extends Record<string, any>>({
         }
 
         if (field.type === 'select') {
+            // For select fields, ensure empty string for null/undefined to properly show placeholder option
+            const selectValue = value === null || value === undefined ? '' : value;
+
             return (
                 <Select
                     label={field.label}
-                    value={value}
+                    value={selectValue}
                     options={field.options || []}
                     onChange={(e) => {
                         let val: any = e.target.value;
-                        // Convert to number for categoryId field
-                        if (field.name === 'categoryId') {
-                            val = Number(val);
+                        // Convert to number for ID fields, or null if empty string
+                        if (field.name === 'categoryId' || field.name === 'parentId') {
+                            val = val === '' ? null : Number(val);
                         }
                         handleChange(field.name, val);
                     }}
