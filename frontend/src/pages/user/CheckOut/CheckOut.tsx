@@ -7,6 +7,7 @@ import { Button } from '../../../components/ui/button/Button';
 import { Input } from '../../../components/ui/input/Input';
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import type { ICreateOrderPayload } from '../../../types';
+import { TruckOrderButton } from '../../../components/ui/button/TruckOrderButton.tsx';
 import './CheckOut.css';
 import {fetchMyAddress, fetchMyProfile} from "../../../store/slices/AccountBlock/customerSlice.tsx";
 
@@ -216,16 +217,10 @@ export function CheckoutPage() {
 
                         {error && <div className="checkout-error-msg">⚠️ {error}</div>}
 
-                        <Button
+                        <TruckOrderButton 
                             form="checkoutForm"
-                            type="submit"
-                            className="checkout-submit-btn"
-                            disabled={status === 'loading'}
-                            size="medium"
-                            color="1"
-                        >
-                            {status === 'loading' ? <Spinner type="spinner2" /> : 'ĐẶT HÀNG NGAY'}
-                        </Button>
+                            isLoading={status === 'loading'}
+                        />
                         
                         <p className="secure-note">🔒 Thông tin thanh toán được bảo mật an toàn</p>
                     </div>
