@@ -317,3 +317,49 @@
         display: none; /* Ẩn stepper trên mobile nếu quá chật */
     }
 }
+/* --- Cancel Modal Styles --- */
+.cancel-modal-wrapper {
+    min-width: 450px;
+    padding: 1 rem 1.5rem;
+    background-color: #ffffff;
+}
+
+.cancel-warning-box {
+    background-color: #fef2f2; /* Nền đỏ rất nhạt */
+    border: 1px solid #fee2e2;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.warning-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.cancel-warning-text {
+    color: #991b1b; /* Màu đỏ đậm */
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.cancel-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+}
+
+/* Responsive cho mobile */
+@media (max-width: 500px) {
+    .cancel-modal-wrapper {
+        min-width: 100%;
+        width: 100%;
+    }
+}

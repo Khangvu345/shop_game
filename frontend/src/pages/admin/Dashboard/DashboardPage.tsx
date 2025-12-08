@@ -117,7 +117,7 @@ export function DashboardPage() {
                     value={filter.month}
                     onChange={handleMonthChange}
                     options={Array.from({ length: 12 }, (_, i) => ({ label: `Tháng ${i + 1}`, value: i + 1 }))}
-                    style={{ width: '120px' }}
+                    style={{ width: '140px' }}
                 />
                 <Select
                     value={filter.year}
@@ -126,7 +126,7 @@ export function DashboardPage() {
                         { label: '2024', value: 2024 },
                         { label: '2025', value: 2025 },
                     ]}
-                    style={{ width: '100px' }}
+                    style={{ width: '120px' }}
                 />
             </div>
 
@@ -219,8 +219,8 @@ export function DashboardPage() {
                 {/* Card 8: Cash Flow Ròng */}
                 <div className={`stat-card cash-flow ${stats?.cashFlow?.netCashFlow >= 0 ? 'positive' : 'negative'
                     }`}>
-                    <span className="stat-icon">�</span>
-                    <div className="stat-title">Cash Flow Ròng</div>
+                    <span className="stat-icon">🪙</span>
+                    <div className="stat-title">Dòng tiền Ròng</div>
                     <div className="stat-value">
                         {stats?.cashFlow
                             ? formatCurrency(stats.cashFlow.netCashFlow)

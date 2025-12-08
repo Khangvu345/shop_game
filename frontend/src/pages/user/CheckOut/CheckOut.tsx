@@ -149,7 +149,7 @@ export function CheckoutPage() {
                             />
                         </div>
 
-                        <div className="form-group-row">
+                        <div className="form-full-width">
                             <AddressSelector
                                 initialCity={formData.city}
                                 initialWard={formData.ward}

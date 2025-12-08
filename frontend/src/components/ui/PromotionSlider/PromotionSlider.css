@@ -81,3 +81,16 @@
     max-width: 100%;
   }
 }
+
+@media (max-width: 576px) {
+  .slider-track {
+    height: 200px;
+  }
+  .slide {
+    width: 100vw;
+  }
+  .slider-container {
+    border-radius: 0;
+    max-width: 100%;
+  }
+}
