@@ -409,7 +409,7 @@ public class OrderService {
                 isAllowed = newStatus == OrderStatus.SHIPPED || newStatus == OrderStatus.CANCELLED;
                 break;
             case SHIPPED:
-                isAllowed = newStatus == OrderStatus.DELIVERED;
+                isAllowed = newStatus == OrderStatus.DELIVERED || newStatus == OrderStatus.RETURNED;
                 break;
             case DELIVERED:
                 isAllowed = newStatus == OrderStatus.COMPLETED || newStatus == OrderStatus.RETURNED;
