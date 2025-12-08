@@ -28,7 +28,7 @@ export function Modal({ isOpen, onClose, title, children }:ModalProps){
             padding: '1rem', flexDirection: 'column'
         }}>
             {/* Content */}
-            <div>
+            <div style={{backgroundColor:"white", borderRadius:'10px', padding:'2.5rem'}}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid #eee', paddingBottom: '0.5rem' }}>
                     <h3 style={{ margin: 0 }}>{title}</h3>
                     <Button onClick={onClose} style={{ padding: '0.2rem 0.6rem' }}>X</Button>

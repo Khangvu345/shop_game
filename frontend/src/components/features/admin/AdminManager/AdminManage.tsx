@@ -70,7 +70,7 @@ export function AdminManage<T extends object>({
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState<T | undefined>(undefined);
 
-    // --- 1. FETCH DATA (Có phân trang) ---
+    // --- 1. FETCH DATA ---
     useEffect(() => {
         // Backend Spring Boot dùng page index bắt đầu từ 0
         dispatch(actions.fetchAll({ page: currentPage - 1, size: pageSize, ...extraParams }));
