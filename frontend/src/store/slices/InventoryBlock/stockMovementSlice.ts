@@ -13,8 +13,8 @@ interface StockMovementState extends IApiState<IStockMovement[]> {
 }
 
 const today = new Date();
-const sevenDaysAgo = new Date(today);
-sevenDaysAgo.setDate(today.getDate() - 7);
+const oneYearAgo = new Date(today);
+oneYearAgo.setFullYear(today.getFullYear() - 1);  // 1 năm trước - đủ để load tất cả
 
 const initialState: StockMovementState = {
     data: [],
@@ -23,7 +23,7 @@ const initialState: StockMovementState = {
     filter: {
         page: 0,
         size: 20,
-        startDate: sevenDaysAgo.toISOString().split('T')[0],
+        startDate: oneYearAgo.toISOString().split('T')[0],
         endDate: today.toISOString().split('T')[0],
         reason: ''
     },

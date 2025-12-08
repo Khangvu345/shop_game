@@ -3,10 +3,13 @@ package com.gameshop.service;
 import com.gameshop.model.dto.common.PeriodDto;
 import com.gameshop.model.dto.response.DashboardStatsResponseDto;
 import com.gameshop.model.dto.response.RevenueBreakdownDto;
+import com.gameshop.model.dto.response.CashFlowDto;
+import com.gameshop.model.dto.response.CapitalManagementDto;
 import com.gameshop.model.enums.PeriodType;
 import com.gameshop.repository.CustomerRepository;
 import com.gameshop.repository.OrderRepository;
 import com.gameshop.repository.ProductRepository;
+import com.gameshop.repository.GoodsReceiptRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,7 @@ public class DashboardService {
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
+    private final GoodsReceiptRepository goodsReceiptRepository;
 
     // Low stock threshold constant
     private static final Integer LOW_STOCK_THRESHOLD = 5;
@@ -57,8 +61,18 @@ public class DashboardService {
         Integer newOrders = countNewOrders(startDateTime, endDateTime);
         Integer newCustomers = countNewCustomers(startDateTime, endDateTime);
         Long totalInventory = getTotalInventory();
+
+        // Tính 3 mức hàng tồn kho
+        Integer outOfStockCount = countOutOfStockProducts();
         Integer lowStockCount = countLowStockProducts(LOW_STOCK_THRESHOLD);
+        Integer totalActiveProducts = productRepository.countActiveProducts();
+        Integer safeStockCount = totalActiveProducts - lowStockCount - outOfStockCount;
+
         RevenueBreakdownDto revenueBreakdown = calculateRevenueBreakdown(startDateTime, endDateTime);
+
+        // Tính toán dòng tiền dòng và quản lý vốn
+        CashFlowDto cashFlow = calculateCashFlow(startDateTime, endDateTime);
+        CapitalManagementDto capitalManagement = calculateCapitalManagement(startDateTime, endDateTime);
 
         // Create period DTO
         PeriodDto period = new PeriodDto();
@@ -72,8 +86,12 @@ public class DashboardService {
         response.setNewOrders(newOrders);
         response.setNewCustomers(newCustomers);
         response.setTotalInventory(totalInventory);
+        response.setSafeStockCount(safeStockCount);
         response.setLowStockCount(lowStockCount);
+        response.setOutOfStockCount(outOfStockCount);
         response.setRevenueBreakdown(revenueBreakdown);
+        response.setCashFlow(cashFlow);
+        response.setCapitalManagement(capitalManagement);
         response.setPeriod(period);
         response.setLastUpdated(LocalDateTime.now());
 
@@ -81,7 +99,7 @@ public class DashboardService {
     }
 
     /**
-     * Calculate total revenue from completed/paid orders
+     * Tính tổng doanh thu từ các đơn hàng đã hoàn thành
      * 
      * @param startDate Start of date range
      * @param endDate   End of date range
@@ -92,7 +110,7 @@ public class DashboardService {
     }
 
     /**
-     * Count new orders (PENDING/CONFIRMED) in date range
+     * Đếm số lượng đơn hàng mới (PENDING/CONFIRMED) trong khoảng thời gian
      * 
      * @param startDate Start of date range
      * @param endDate   End of date range
@@ -103,7 +121,7 @@ public class DashboardService {
     }
 
     /**
-     * Count new customer registrations in date range
+     * Đếm số lượng khách hàng mới trong khoảng thời gian
      * 
      * @param startDate Start of date range
      * @param endDate   End of date range
@@ -114,7 +132,7 @@ public class DashboardService {
     }
 
     /**
-     * Get total inventory count (sum of all stock quantities)
+     * Tổng số lượng tồn kho (tổng số lượng tồn kho của tất cả các sản phẩm)
      * 
      * @return Total inventory
      */
@@ -123,7 +141,7 @@ public class DashboardService {
     }
 
     /**
-     * Count products with low stock (below threshold)
+     * Đếm số lượng sản phẩm có tồn kho thấp (dưới ngưỡng)
      * 
      * @param threshold Stock quantity threshold
      * @return Count of low stock products
@@ -133,7 +151,16 @@ public class DashboardService {
     }
 
     /**
-     * Calculate revenue breakdown with sales, cost, and profit analysis
+     * Đếm số lượng sản phẩm hết hàng
+     * 
+     * @return 
+     */
+    private Integer countOutOfStockProducts() {
+        return productRepository.countOutOfStockProducts();
+    }
+
+    /**
+     * Tính toán phân tích doanh thu với các thông tin về doanh thu, chi phí và lợi nhuận
      * 
      * @param startDate Start of date range
      * @param endDate   End of date range
@@ -158,5 +185,54 @@ public class DashboardService {
         }
 
         return new RevenueBreakdownDto(totalSales, totalCost, totalProfit, profitMargin);
+    }
+
+    /**
+     * Tính toán dòng tiền
+     * Thu vào - Chi ra = Dòng tiền ròng
+     * 
+     * @param startDate Start of date range
+     * @param endDate   End of date range
+     * @return Cash flow DTO
+     */
+    private CashFlowDto calculateCashFlow(LocalDateTime startDate, LocalDateTime endDate) {
+        // Thu vào = Doanh thu đã thu (PAID + COD_COLLECTED)
+        BigDecimal cashIn = orderRepository.sumRevenueByDateRange(startDate, endDate);
+
+        // Chi ra = Tổng nhập hàng trong kỳ
+        BigDecimal cashOut = goodsReceiptRepository.sumGoodsReceiptCostByDateRange(startDate, endDate);
+
+        // Dòng tiền ròng = Thu vào - Chi ra
+        BigDecimal netCashFlow = cashIn.subtract(cashOut);
+
+        return new CashFlowDto(cashIn, cashOut, netCashFlow);
+    }
+
+    /**
+     * Tính toán quản lý vốn
+     * Bao gồm: Tổng nhập hàng, Giá trị tồn kho, Vòng quay tồn kho
+     * 
+     * @param startDate Start of date range
+     * @param endDate   End of date range
+     * @return Capital management DTO
+     */
+    private CapitalManagementDto calculateCapitalManagement(LocalDateTime startDate, LocalDateTime endDate) {
+        // Tổng chi phí nhập hàng trong kỳ
+        BigDecimal totalGoodsReceiptCost = goodsReceiptRepository
+                .sumGoodsReceiptCostByDateRange(startDate, endDate);
+
+        // Giá trị tồn kho hiện tại (snapshot - không phụ thuộc thời gian)
+        BigDecimal inventoryValue = productRepository.calculateTotalInventoryValue();
+
+        // Vòng quay tồn kho = COGS / Inventory Value
+        // COGS = Chi phí hàng đã bán trong kỳ
+        BigDecimal cogs = orderRepository.sumCostByDateRange(startDate, endDate);
+        BigDecimal inventoryTurnover = BigDecimal.ZERO;
+
+        if (inventoryValue.compareTo(BigDecimal.ZERO) > 0) {
+            inventoryTurnover = cogs.divide(inventoryValue, 2, RoundingMode.HALF_UP);
+        }
+
+        return new CapitalManagementDto(totalGoodsReceiptCost, inventoryValue, inventoryTurnover);
     }
 }

@@ -15,14 +15,14 @@ export function ManageStockMovementPage() {
     // Lấy danh sách sản phẩm để lọc
     const { data: products } = useAppSelector((state) => state.products);
 
+
     // Local state cho filter input
     const [filterType, setFilterType] = useState<'date' | 'product' | 'reason'>('date');
 
+
     useEffect(() => {
         // Load sản phẩm để fill vào dropdown lọc
-        if (!products || products.length === 0) {
-            dispatch(fetchProducts({}));
-        }
+        dispatch(fetchProducts({size:999}));
         // Load dữ liệu ban đầu
         dispatch(fetchStockMovements(filter));
     }, [dispatch]);
@@ -227,30 +227,6 @@ export function ManageStockMovementPage() {
                         <option value="ManualAdjustment">Điều chỉnh (Manual)</option>
                     </select>
                 )}
-
-                <button
-                    onClick={() => dispatch(fetchStockMovements(filter))}
-                    style={{
-                        padding: '10px 20px',
-                        borderRadius: '6px',
-                        border: '1px solid #ddd',
-                        background: '#f5f5f5',
-                        fontSize: '14px',
-                        cursor: 'pointer',
-                        whiteSpace: 'nowrap',
-                        transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = '#06b6d4';
-                        e.currentTarget.style.color = '#06b6d4';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = '#ddd';
-                        e.currentTarget.style.color = 'inherit';
-                    }}
-                >
-                    Lọc dữ liệu
-                </button>
             </div>
 
             {/* --- BẢNG DỮ LIỆU --- */}

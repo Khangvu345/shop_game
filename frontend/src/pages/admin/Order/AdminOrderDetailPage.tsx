@@ -8,6 +8,7 @@ import { Spinner } from '../../../components/ui/loading/Spinner';
 import {createShipment} from "../../../store/slices/OrderBlock/shipmentSlice.ts";
 import {Modal} from "../../../components/ui/Modal/Modal.tsx";
 import {Input} from "../../../components/ui/input/Input.tsx";
+import {getStatusColor, translateStatus} from "../../../store/utils/statusTranslator.ts";
 
 export function AdminOrderDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -58,7 +59,7 @@ export function AdminOrderDetailPage() {
             dispatch(fetchAdminOrderDetail(id));
 
             setIsShipModalOpen(false);
-            alert("Đã tạo vận đơn và chuyển trạng thái SHIPPED");
+            alert("Đã tạo vận đơn và bàn giao cho đơn vị vận chuyểb");
         } catch (error) {
             alert("Tạo vận đơn thất bại");
         }
@@ -142,7 +143,7 @@ export function AdminOrderDetailPage() {
                     {/* Xử lý đơn hàng */}
                     <Card>
                         <h3>Xử lý đơn hàng</h3>
-                        <p>Trạng thái hiện tại: <strong style={{fontSize:'1.1rem', color:'var(--color-secondary-0)'}}>{currentOrder.status}</strong></p>
+                        <p>Trạng thái hiện tại: <strong style={{fontSize:'1.1rem', color:getStatusColor(currentOrder.status)}}>{translateStatus(currentOrder.status, 'order') }</strong></p>
                         {renderActionButtons()}
                     </Card>
                 </div>
@@ -159,7 +160,7 @@ export function AdminOrderDetailPage() {
                     <Card>
                         <h3>Thanh toán</h3>
                         <p><strong>Phương thức:</strong> {currentOrder.paymentMethod}</p>
-                        <p><strong>Trạng thái:</strong> <span style={{fontWeight:'bold', color: currentOrder.paymentStatus === 'COD_COLLECTED' ? 'green' : 'orange'}}>{currentOrder.paymentStatus}</span></p>
+                        <p><strong>Trạng thái:</strong> <span style={{fontWeight:'bold', color: getStatusColor(currentOrder.paymentStatus)  }}>{translateStatus(currentOrder.paymentStatus, 'payment') }</span></p>
                     </Card>
                 </div>
             </div>

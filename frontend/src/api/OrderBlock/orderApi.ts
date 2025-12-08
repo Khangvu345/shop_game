@@ -1,5 +1,5 @@
-import {BaseApi} from "../baseApi.ts";
-import type {IOrder, ICreateOrderPayload, IServerResponse, IPageResponse} from "../../types";
+import { BaseApi } from "../baseApi.ts";
+import type { IOrder, ICreateOrderPayload, IServerResponse, IPageResponse } from "../../types";
 import axiosClient from "../axiosClient.ts";
 
 export interface IOrderListResponse {
@@ -40,7 +40,7 @@ export class OrderApi extends BaseApi<IOrder> {
     // User
     async placeOrder(payload: ICreateOrderPayload): Promise<IOrder> {
         const response = await axiosClient.post<IOrder>(`/${this.resource}`, payload);
-        return response.data    ;
+        return response.data;
     }
 
     async getMyOrders(params: { page: number; size: number }): Promise<IOrderListResponse> {
@@ -78,7 +78,7 @@ export class OrderApi extends BaseApi<IOrder> {
     }
 
     async updatePaymentStatus(orderId: number | string, payload: IUpdatePaymentStatusRequest): Promise<IOrder> {
-        const response = await axiosClient.put<IOrder>(`/${this.resource}/${orderId}/payment-status`,  payload );
+        const response = await axiosClient.put<IOrder>(`/${this.resource}/${orderId}/payment-status`, payload);
         return response.data;
     }
 

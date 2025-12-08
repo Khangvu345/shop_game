@@ -7,6 +7,7 @@ import { AdminPageHeader } from '../../../components/features/admin/AdminPageHea
 import '../../../components/features/admin/AdminPageHeader/AdminPageHeader.css';
 import { Pagination } from '../../../components/ui/pagination/Pagination.tsx';
 import type { IColumn, IOrder } from '../../../types';
+import {getStatusColor, translateStatus} from "../../../store/utils/statusTranslator.ts";
 
 export function ManageOrderPage() {
     const dispatch = useAppDispatch();
@@ -42,13 +43,7 @@ export function ManageOrderPage() {
         setFilters(prev => ({ ...prev, page: newPage - 1 })); // Backend start 0
     };
 
-    const getStatusColor = (status: string) => {
-        const colors: Record<string, string> = {
-            PENDING: 'orange', CONFIRMED: 'blue', SHIPPED: 'purple',
-            COMPLETED: 'green', CANCELLED: 'red', RETURNED: 'gray'
-        };
-        return colors[status] || 'black';
-    };
+
 
     // Columns
     const columns: IColumn<IOrder>[] = [
@@ -80,7 +75,7 @@ export function ManageOrderPage() {
                     borderRadius: '12px',
                     fontSize: '0.85rem'
                 }}>
-                    {item.status}
+                    {translateStatus(item.status, "order")}
                 </span>
             )
         },
@@ -88,8 +83,8 @@ export function ManageOrderPage() {
             title: 'Thanh toán',
             key: 'paymentStatus',
             render: (item) => (
-                <span style={{ color: item.paymentStatus === 'PAID' ? 'green' : 'orange' }}>
-                    {item.paymentStatus}
+                <span style={{ color: getStatusColor(item.paymentStatus )}}>
+                     {translateStatus(item.paymentStatus, 'payment')}
                 </span>
             )
         }

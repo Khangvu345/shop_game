@@ -8,6 +8,8 @@ import { Modal } from '../../../components/ui/Modal/Modal';
 import { Input } from '../../../components/ui/input/Input';
 import './OrderDetailPage.css';
 import {vnpayAPI} from "../../../api/PaymentBlock/paymentApi.ts";
+import {getStatusColor, translateStatus} from "../../../store/utils/statusTranslator.ts";
+import {color} from "chart.js/helpers";
 
 export function OrderDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -45,28 +47,14 @@ export function OrderDetailPage() {
         }
     };
 
-    // Format Helpers
     const formatCurrency = (amount: number) =>
         new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
-    const translateStatus = (status: string) => {
-        const map: Record<string, string> = {
-            PENDING: 'Chờ xử lý',
-            CONFIRMED: 'Đã xác nhận',
-            PREPARING: 'Đang chuẩn bị',
-            SHIPPED: 'Đang giao hàng',
-            DELIVERED: 'Giao thành công',
-            COMPLETED: 'Hoàn thành',
-            CANCELLED: 'Đã hủy',
-            RETURNED: 'Đã trả hàng'
-        };
-        return map[status] || status;
-    };
 
-    // Stepper Logic: Xác định bước hiện tại (1-4)
+
     const getStepStatus = (status: string) => {
         const steps = ['PENDING', 'CONFIRMED', 'SHIPPED', 'COMPLETED'];
-        if (status === 'DELIVERED') return 3; // Coi như bước 3 (Giao hàng) đã xong
+        if (status === 'DELIVERED') return 3;
         if (status === 'CANCELLED' || status === 'RETURNED') return -1;
         
         // Tìm vị trí trong mảng steps
@@ -126,8 +114,8 @@ export function OrderDetailPage() {
                             <span>|</span>
                             <span>Ngày đặt: {new Date(currentOrder.createdAt).toLocaleDateString('vi-VN')}</span>
                             <span>|</span>
-                            <span className={`od-status-badge status-${currentOrder.status}`}>
-                                {translateStatus(currentOrder.status)}
+                            <span className={`od-status-badge`} style={{color: getStatusColor(currentOrder.status)}}>
+                                {translateStatus(currentOrder.status, 'order')}
                             </span>
                         </div>
                     </div>
@@ -255,14 +243,15 @@ export function OrderDetailPage() {
                             <div className="info-group">
                                 <div className="info-row">
                                     <div className="info-label">Phương thức</div>
-                                    <div className="info-content">{currentOrder.paymentMethod}</div>
+                                    <div className="info-content" style={{fontWeight: 700, color: "blueviolet"}}>{ currentOrder.paymentMethod}</div>
                                 </div>
                                 <div className="info-row">
                                     <div className="info-label">Trạng thái</div>
                                     <div className="info-content" style={{
-                                        fontWeight: 700
+                                        fontWeight: 700,
+                                        color: getStatusColor(currentOrder.paymentStatus)
                                     }}>
-                                        {currentOrder.paymentStatus}
+                                        {translateStatus(currentOrder.paymentStatus, 'payment')}
                                     </div>
                                 </div>
                                 <div className="info-row">
@@ -278,22 +267,47 @@ export function OrderDetailPage() {
             </div>
 
             {/* Cancel Modal */}
-            <Modal isOpen={isCancelModalOpen} onClose={() => setIsCancelModalOpen(false)} title="Hủy Đơn Hàng">
-                <div style={{minWidth: '400px'}}>
-                    <p style={{color: '#64748b', marginBottom: '1.5rem'}}>
-                        Bạn có chắc chắn muốn hủy đơn hàng <strong>#{currentOrder.orderId}</strong> không? Hành động này không thể hoàn tác.
-                    </p>
-                    <Input 
-                        label="Lý do hủy đơn" 
-                        value={cancelReason} 
-                        onChange={(e) => setCancelReason(e.target.value)} 
-                        placeholder="VD: Đặt nhầm, thay đổi địa chỉ..."
-                    />
-                    <div style={{display:'flex', justifyContent:'flex-end', gap:'10px', marginTop:'20px'}}>
-                        <Button color="0" onClick={() => setIsCancelModalOpen(false)}>Đóng</Button>
+            <Modal isOpen={isCancelModalOpen} onClose={() => setIsCancelModalOpen(false)} title="Xác nhận Hủy Đơn Hàng">
+                <div className="cancel-modal-wrapper">
+                    {/* Hộp cảnh báo */}
+                    <div className="cancel-warning-box">
+                        <span className="warning-icon">⚠️</span>
+                        <p className="cancel-warning-text">
+                            Bạn có chắc chắn muốn hủy đơn hàng <strong>#{currentOrder.orderId}</strong> không? 
+                            <br/>
+                            Hành động này không thể hoàn tác và mã giảm giá (nếu có) sẽ không được hoàn lại.
+                        </p>
+                    </div>
+
+                    {/* Input lý do */}
+                    <div style={{ marginBottom: '10px' }}>
+                        <Input 
+                            label="Lý do hủy đơn (Bắt buộc)" 
+                            value={cancelReason} 
+                            onChange={(e) => setCancelReason(e.target.value)} 
+                            placeholder="VD: Đổi ý, tìm thấy giá rẻ hơn, sai địa chỉ..."
+                            autoFocus // Tự động focus vào ô nhập
+                        />
+                    </div>
+
+                    {/* Các nút hành động */}
+                    <div className="cancel-modal-actions">
+                        <Button 
+                            color="0" 
+                            onClick={() => setIsCancelModalOpen(false)}
+                            size="medium"
+                        >
+                            Đóng
+                        </Button>
                         <Button 
                             onClick={handleCancelSubmit} 
-                            style={{backgroundColor: '#ef4444', borderColor: '#ef4444'}}
+                            size="medium"
+                            style={{
+                                backgroundColor: '#ef4444', 
+                                borderColor: '#ef4444', 
+                                color: 'white',
+                                boxShadow: '0 4px 6px rgba(239, 68, 68, 0.2)'
+                            }}
                         >
                             Xác nhận Hủy
                         </Button>

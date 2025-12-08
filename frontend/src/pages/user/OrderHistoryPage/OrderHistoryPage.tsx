@@ -7,6 +7,7 @@ import { Button } from '../../../components/ui/button/Button';
 import { Spinner } from '../../../components/ui/loading/Spinner';
 import { Pagination } from '../../../components/ui/pagination/Pagination';
 import type { IOrder } from '../../../types';
+import {getStatusColor, translateStatus} from "../../../store/utils/statusTranslator.ts";
 
 export function OrderHistoryPage() {
     const dispatch = useAppDispatch();
@@ -27,38 +28,9 @@ export function OrderHistoryPage() {
         setCurrentPage(page);
     };
 
-    // Helper: Format tiền tệ
     const formatCurrency = (amount: number) =>
         new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
-    // Helper: Màu sắc trạng thái
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'COMPLETED': return 'green';
-            case 'DELIVERED': return 'blue';
-            case 'SHIPPED': return 'blue';
-            case 'CONFIRMED': return 'teal';
-            case 'PENDING': return 'orange';
-            case 'CANCELLED': return 'red';
-            case 'RETURNED': return 'gray';
-            default: return 'black';
-        }
-    };
-
-    // Helper: Dịch trạng thái sang tiếng Việt
-    const translateStatus = (status: string) => {
-        const map: Record<string, string> = {
-            PENDING: 'Chờ xử lý',
-            CONFIRMED: 'Đã xác nhận',
-            PREPARING: 'Đang chuẩn bị',
-            SHIPPED: 'Đang giao hàng',
-            DELIVERED: 'Giao thành công',
-            COMPLETED: 'Hoàn thành',
-            CANCELLED: 'Đã hủy',
-            RETURNED: 'Đã trả hàng'
-        };
-        return map[status] || status;
-    };
 
     if (status === 'loading') {
         return <div style={{ height: '50vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Spinner /></div>;
@@ -110,7 +82,7 @@ export function OrderHistoryPage() {
                                     fontSize: '0.85rem',
                                     fontWeight: 600
                                 }}>
-                                    {translateStatus(order.status)}
+                                    {translateStatus(order.status, 'order')}
                                 </span>
                             </div>
                         </div>
