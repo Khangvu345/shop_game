@@ -267,22 +267,47 @@ export function OrderDetailPage() {
             </div>
 
             {/* Cancel Modal */}
-            <Modal isOpen={isCancelModalOpen} onClose={() => setIsCancelModalOpen(false)} title="Hủy Đơn Hàng">
-                <div style={{minWidth: '400px'}}>
-                    <p style={{color: '#64748b', marginBottom: '1.5rem'}}>
-                        Bạn có chắc chắn muốn hủy đơn hàng <strong>#{currentOrder.orderId}</strong> không? Hành động này không thể hoàn tác.
-                    </p>
-                    <Input 
-                        label="Lý do hủy đơn" 
-                        value={cancelReason} 
-                        onChange={(e) => setCancelReason(e.target.value)} 
-                        placeholder="VD: Đặt nhầm, thay đổi địa chỉ..."
-                    />
-                    <div style={{display:'flex', justifyContent:'flex-end', gap:'10px', marginTop:'20px'}}>
-                        <Button color="0" onClick={() => setIsCancelModalOpen(false)}>Đóng</Button>
+            <Modal isOpen={isCancelModalOpen} onClose={() => setIsCancelModalOpen(false)} title="Xác nhận Hủy Đơn Hàng">
+                <div className="cancel-modal-wrapper">
+                    {/* Hộp cảnh báo */}
+                    <div className="cancel-warning-box">
+                        <span className="warning-icon">⚠️</span>
+                        <p className="cancel-warning-text">
+                            Bạn có chắc chắn muốn hủy đơn hàng <strong>#{currentOrder.orderId}</strong> không? 
+                            <br/>
+                            Hành động này không thể hoàn tác và mã giảm giá (nếu có) sẽ không được hoàn lại.
+                        </p>
+                    </div>
+
+                    {/* Input lý do */}
+                    <div style={{ marginBottom: '10px' }}>
+                        <Input 
+                            label="Lý do hủy đơn (Bắt buộc)" 
+                            value={cancelReason} 
+                            onChange={(e) => setCancelReason(e.target.value)} 
+                            placeholder="VD: Đổi ý, tìm thấy giá rẻ hơn, sai địa chỉ..."
+                            autoFocus // Tự động focus vào ô nhập
+                        />
+                    </div>
+
+                    {/* Các nút hành động */}
+                    <div className="cancel-modal-actions">
+                        <Button 
+                            color="0" 
+                            onClick={() => setIsCancelModalOpen(false)}
+                            size="medium"
+                        >
+                            Đóng
+                        </Button>
                         <Button 
                             onClick={handleCancelSubmit} 
-                            style={{backgroundColor: '#ef4444', borderColor: '#ef4444'}}
+                            size="medium"
+                            style={{
+                                backgroundColor: '#ef4444', 
+                                borderColor: '#ef4444', 
+                                color: 'white',
+                                boxShadow: '0 4px 6px rgba(239, 68, 68, 0.2)'
+                            }}
                         >
                             Xác nhận Hủy
                         </Button>

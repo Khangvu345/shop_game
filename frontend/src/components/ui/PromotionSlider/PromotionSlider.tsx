@@ -7,9 +7,9 @@ import banner2 from '../../../assets/banners/event2.png';
 import banner3 from '../../../assets/banners/event3.png';
 
 const slides = [
-  { id: 1, image: banner1, alt: "Mùa Hè Sôi Động" },
-  { id: 2, image: banner2, alt: "Sự Kiện IU Club" },
-  { id: 3, image: banner3, alt: "Hàng Mới Về" },
+  { id: 1, image: banner1, alt: "Nintendo Switch 2" },
+  { id: 2, image: banner2, alt: "Sự Kiện Black Friday" },
+  { id: 3, image: banner3, alt: "GTA 6 sắp ra mắt" },
 ];
 
 const PromotionSlider = () => {

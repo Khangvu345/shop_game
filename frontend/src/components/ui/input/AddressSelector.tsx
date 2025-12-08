@@ -117,17 +117,33 @@ export const AddressSelector: React.FC<AddressSelectorProps> = ({
 
     return (
         <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
-            <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    border: '1px solid #e0e0e0',
+                    borderRadius: '8px',
+                    padding: '10px 10px',
+                    background: '#fafafa',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                }}
+            >
                 <span
                     onClick={toggleMode}
-                    style={{fontSize: '0.8rem', color: 'blue', cursor: 'pointer', textDecoration: 'underline'}}
+                    style={{
+                        fontSize: '0.9rem',
+                        color: '#000000ff',
+                        cursor: 'pointer',
+                        fontWeight: '500',
+                    }}
+
                 >
                     {isManualMode ? 'Chuyển sang chọn danh sách' : 'Không tìm thấy? Nhập tay'}
                 </span>
             </div>
-
             {isManualMode ? (
                 // MODE NHẬP TAY
+                
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px'}}>
                     <Input
                         label="Tỉnh / Thành phố"
@@ -144,12 +160,24 @@ export const AddressSelector: React.FC<AddressSelectorProps> = ({
                 </div>
             ) : (
                 // MODE DROPDOWN
-                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px'}}>
+                <div style={{
+                    display: 'grid', 
+                    gridTemplateColumns: '1fr 1fr', 
+                    gap: '10px',
+                    }}>
                     <Select
                         label="Tỉnh / Thành phố"
                         value={selectedProvinceCode}
                         onChange={handleProvinceChange}
                         disabled={isLoading && provinces.length === 0}
+                        style={{
+                        width: '100%',
+                        border: '1px solid #e0e0e0',
+                        borderRadius: '8px',
+                        padding: '10px 10px',
+                        background: '#fafafa',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                        }}
                         options={[
                             { label: '-- Chọn Tỉnh/TP --', value: '' },
                             ...provinces.map(p => ({ label: p.tenDonVi, value: p.ma }))
@@ -160,6 +188,14 @@ export const AddressSelector: React.FC<AddressSelectorProps> = ({
                         value={wardValue}
                         onChange={handleWardChange}
                         disabled={!selectedProvinceCode}
+                        style={{
+                        width: '100%',
+                        border: '1px solid #e0e0e0',
+                        borderRadius: '8px',
+                        padding: '10px 10px',
+                        background: '#fafafa',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                        }}
                         options={[
                             { label: '-- Chọn Địa phương --', value: '' },
                             ...wards.map(w => ({ label: w.tenDonVi, value: w.tenDonVi }))

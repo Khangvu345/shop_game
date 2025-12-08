@@ -117,7 +117,7 @@ export function DashboardPage() {
                     value={filter.month}
                     onChange={handleMonthChange}
                     options={Array.from({ length: 12 }, (_, i) => ({ label: `Tháng ${i + 1}`, value: i + 1 }))}
-                    style={{ width: '120px' }}
+                    style={{ width: '140px' }}
                 />
                 <Select
                     value={filter.year}
@@ -126,7 +126,7 @@ export function DashboardPage() {
                         { label: '2024', value: 2024 },
                         { label: '2025', value: 2025 },
                     ]}
-                    style={{ width: '100px' }}
+                    style={{ width: '120px' }}
                 />
             </div>
 
