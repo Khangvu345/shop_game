@@ -44,9 +44,9 @@ export const TruckOrderButton: React.FC<TruckOrderButtonProps> = ({
             type="submit" // Quan trọng để submit form
             form={form} // Liên kết với ID của form
         >
-            <span className="default">ĐẶT HÀNG NGAY</span>
+            <span className="default">ĐẶT HÀNG</span>
             <span className="success">
-                Đặt hàng thành công
+                Đặt hàng ngay hôm nay
                 <svg viewBox="0 0 12 10">
                     <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
                 </svg>

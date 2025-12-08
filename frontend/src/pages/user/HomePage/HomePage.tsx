@@ -99,7 +99,7 @@ export function HomePage() {
             <section className="hero-banner" >
                 <h1>TRẢI NGHIỆM TƯƠNG LAI CỦA TRÒ CHƠI</h1>
                 <p>Khám phá thế giới game nhập vai với PlayStation 5. Đồ họa siêu nét, tải siêu nhanh, phản hồi xúc giác tiên tiến.</p>
-                <Link to="/products" className="shop-now-button" >Khám phá các Gói PS5</Link>
+                <Link to="/products" className="shop-now-button" >Khám phá các sản phẩm</Link>
             </section>
 
             {/* 4. SẢN PHẨM NỔI BẬT */}
