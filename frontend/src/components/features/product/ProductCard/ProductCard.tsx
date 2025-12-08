@@ -37,16 +37,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
                     />
                 </Link>
                 
-                {/* Quick Action Overlay (Tùy chọn: hiện nút khi hover vào ảnh) */}
-                <div className="product-card-overlay">
-                    <button 
-                        className="quick-add-btn"
-                        onClick={() => onAddToCart(product)}
-                        title="Thêm nhanh vào giỏ"
-                    >
-                        <CartIcon width={20} height={20} />
-                    </button>
-                </div>
+
             </div>
 
             {/* Vùng Nội dung */}

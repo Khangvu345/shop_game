@@ -124,24 +124,45 @@ export const AdminForm = <T extends Record<string, any>>({
         );
     };
 
-    return (
-        <form className={"admin-form-container"} onSubmit={handleSubmit}>
-            {/* Grid Layout 2 cột */}
-            <div className={'admin-form-colum-container'}>
-                {fields.map((field) => (
-                    <div key={String(field.name)} style={{ gridColumn: field.colSpan === 2 ? 'span 2' : 'span 1' }}>
-                        {renderField(field)}
-                    </div>
-                ))}
-            </div>
+return (
+  <div className="admin-form-overlay" onClick={onCancel}>
+    <div className="admin-form-container" onClick={(e) => e.stopPropagation()}>
+      <div className="admin-form-header">
+        <h2>{initialData ? 'Cập nhật thông tin' : 'Thêm mới'}</h2>
+      </div>
 
-            {/* Buttons */}
-            <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end', gap: '1rem', borderTop: '1px solid #eee', paddingTop: '1rem' }}>
-                <Button type="button" onClick={onCancel} disabled={isSubmitting}>Hủy</Button>
-                <Button type="submit" disabled={isSubmitting || !skuValid}>
-                    {initialData ? 'Lưu thay đổi' : 'Tạo mới'}
-                </Button>
+      <form onSubmit={handleSubmit} className="admin-form-content">
+        <div className="admin-form-column-container">
+          {fields.map((field) => (
+            <div
+              key={String(field.name)}
+              className="form-group"
+              style={{ gridColumn: field.colSpan === 2 ? 'span 2' : 'auto' }}
+            >
+              {renderField(field)}
             </div>
-        </form>
-    );
+          ))}
+        </div>
+
+        {/* Không cần button ẩn nữa */}
+      </form>
+
+      <div className="admin-form-actions">
+        <Button type="button" onClick={onCancel} disabled={isSubmitting}>
+          Hủy
+        </Button>
+        <Button
+          type="button"
+          onClick={() => {
+            const form = document.querySelector('.admin-form-content') as HTMLFormElement;
+            form?.requestSubmit();
+          }}
+          disabled={isSubmitting || !skuValid}
+        >
+          {initialData ? 'Lưu thay đổi' : 'Tạo mới'}
+        </Button>
+      </div>
+    </div>
+  </div>
+);
 };
