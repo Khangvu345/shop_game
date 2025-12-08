@@ -104,7 +104,7 @@ export function ManageShipmentPage() {
         if (!window.confirm("Xác nhận đã giao hàng và đã thu tiền COD?")) return;
 
         try {
-            if (selectedShipment.orderId && currentOrder.paymentMethod === 'COD') {
+            if (selectedShipment.orderId) {
 
                 await dispatch(updateOrderStatusThunk({
                     id: selectedShipment.orderId,
