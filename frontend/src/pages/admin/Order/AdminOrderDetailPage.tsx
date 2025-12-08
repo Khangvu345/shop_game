@@ -59,7 +59,7 @@ export function AdminOrderDetailPage() {
             dispatch(fetchAdminOrderDetail(id));
 
             setIsShipModalOpen(false);
-            alert("Đã tạo vận đơn và chuyển trạng thái SHIPPED");
+            alert("Đã tạo vận đơn và bàn giao cho đơn vị vận chuyểb");
         } catch (error) {
             alert("Tạo vận đơn thất bại");
         }

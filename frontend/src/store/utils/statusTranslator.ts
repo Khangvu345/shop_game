@@ -9,7 +9,7 @@ const ORDER_STATUS_MAP: Record<string, string> = {
 };
 
 const PAYMENT_STATUS_MAP: Record<string, string> = {
-    PENDING: "Đợi thang toán",
+    PENDING: "Đợi thanh toán",
     PAID: "Đã thanh toán",
     COD_PENDING:"Chưa thanh toán",
     COD_COLLECTED:"Đã thu COD",

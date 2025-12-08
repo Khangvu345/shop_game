@@ -4,7 +4,6 @@ import { fetchShipments, updateShipmentStatus } from '../../store/slices/OrderBl
 // 1. Import action updateOrder để cập nhật thanh toán
 import {
     fetchAdminOrderDetail,
-    fetchOrderDetail,
     updateOrderStatusThunk,
     updatePaymentStatusThunk
 } from '../../store/slices/OrderBlock/orderSlice';
@@ -104,7 +103,7 @@ export function ManageShipmentPage() {
         if (!window.confirm("Xác nhận đã giao hàng và đã thu tiền COD?")) return;
 
         try {
-            if (selectedShipment.orderId && currentOrder.paymentMethod === 'COD') {
+            if (selectedShipment.orderId) {
 
                 await dispatch(updateOrderStatusThunk({
                     id: selectedShipment.orderId,
@@ -279,44 +278,54 @@ export function ManageShipmentPage() {
             )}
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={`Cập nhật vận đơn #${selectedShipment?.trackingNo}`}>
-                <div style={{ minWidth: '400px', display: 'flex', flexDirection: 'column', gap: '15px', backgroundColor: "white" }}>
-
-                    {selectedShipment && (
-                        <div>
-                            <p>Mã đơn hàng: <strong>{selectedShipment?.orderId}</strong></p>
-                            <p>Mã vận đơn: <strong>{selectedShipment?.trackingNo}</strong></p>
-                            <p>Đơn vị vận chuyển: <strong>{selectedShipment?.carrier}</strong></p>
-                            <p>Ghi chú: <strong>{selectedShipment?.notes}</strong></p>
-                            <p>Trạng thái hiện tại: <strong style={{ color: getStatusColor(selectedShipment?.status), }}>{translateStatus(selectedShipment.status, 'shipment')}
-                            </strong></p>
+                <div className={'admin-form-overlay'}>
+                    <div className={'admin-form-container'}>
+                        <div className="admin-form-header">
+                            <h2>Cập nhật vận đơn #{selectedShipment?.trackingNo}</h2>
                         </div>
+                        <div className={"admin-form-content"} style={{ minWidth: '400px', display: 'flex', flexDirection: 'column', gap: '15px', backgroundColor: "white" }}>
 
-                    )}
+                            {selectedShipment && (
+                                <div className={'admin-form-column-container'}>
+                                    <p className={'form-group'}>Mã đơn hàng: <strong>{selectedShipment?.orderId}</strong></p>
+                                    <p className={'form-group'}>Mã vận đơn: <strong>{selectedShipment?.trackingNo}</strong></p>
+                                    <p className={'form-group'}>Đơn vị vận chuyển: <strong>{selectedShipment?.carrier}</strong></p>
+                                    <p className={'form-group'}>Ghi chú: <strong>{selectedShipment?.notes}</strong></p>
+                                    <p className={'form-group'}>Trạng thái hiện tại: <strong style={{ color: getStatusColor(selectedShipment?.status), }}>{translateStatus(selectedShipment.status, 'shipment')}
+                                    </strong></p>
+                                </div>
 
-                    {/* Nút bấm chuyển trạng thái */}
-                    {selectedShipment?.status === 'Ready' && (
-                        <Button onClick={shippedSubmit} disabled={shipmentStatus === 'loading'}>
-                            {shipmentStatus === 'loading' ? <Spinner /> : '📦 Bắt đầu vận chuyển hàng'}
-                        </Button>
-                    )}
+                            )}
 
-                    {selectedShipment?.status === 'Shipped' && (
-                        <>
-                            <Button onClick={doneSubmit} disabled={shipmentStatus === 'loading'} style={{ background: 'green', borderColor: 'green' }}>
-                                {shipmentStatus === 'loading' ? <Spinner /> : '✅ Giao hàng thành công'}
-                            </Button>
-                            <Button onClick={returnSUbmit} disabled={shipmentStatus === 'loading'} style={{ background: 'red', borderColor: 'red' }}>
-                                {shipmentStatus === 'loading' ? <Spinner /> : '↩Khách hàng không nhận hàng'}
-                            </Button>
-                        </>
+                        </div>
+                        <div className="admin-form-actions">
 
-                    )}
+                            {/* Nút bấm chuyển trạng thái */}
+                            {selectedShipment?.status === 'Ready' && (
+                                <Button onClick={shippedSubmit} disabled={shipmentStatus === 'loading'}>
+                                    {shipmentStatus === 'loading' ? <Spinner /> : '📦 Bắt đầu vận chuyển hàng'}
+                                </Button>
+                            )}
 
+                            {selectedShipment?.status === 'Shipped' && (
+                                <>
+                                    <Button onClick={doneSubmit} disabled={shipmentStatus === 'loading'} style={{ background: 'green', borderColor: 'green' }}>
+                                        {shipmentStatus === 'loading' ? <Spinner /> : '✅ Giao hàng thành công'}
+                                    </Button>
+                                    <Button onClick={returnSUbmit} disabled={shipmentStatus === 'loading'} style={{ background: 'red', borderColor: 'red' }}>
+                                        {shipmentStatus === 'loading' ? <Spinner /> : '↩Khách hàng không nhận hàng'}
+                                    </Button>
+                                </>
 
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
-                        <Button color="0" onClick={() => setIsModalOpen(false)}>Đóng</Button>
+                            )}
+
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                                <Button color="0" onClick={() => setIsModalOpen(false)}>Đóng</Button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </Modal>
         </div>
     );
