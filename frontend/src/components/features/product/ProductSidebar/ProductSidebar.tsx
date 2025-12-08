@@ -19,12 +19,9 @@ export const ProductSidebar: React.FC<ProductSidebarProps> = ({
     const dispatch = useAppDispatch();
     const { data: categories } = useAppSelector((state) => state.categories);
 
-    // Load danh mục nếu chưa có
     useEffect(() => {
-        if (!categories || categories.length === 0) {
-            dispatch(fetchCategories({}));
-        }
-    }, [dispatch, categories]);
+        dispatch(fetchCategories({size:99}));
+    }, [dispatch]);
 
     // --- HANDLERS ---
 

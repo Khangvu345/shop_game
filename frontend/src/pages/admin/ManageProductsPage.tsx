@@ -23,11 +23,8 @@ export function ManageProductsPage() {
     dispatch(resetProductState())
 
     useEffect(() => {
-        if (!categories || categories.length === 0) {
-            dispatch(fetchCategories({}));
-        }
-    }, [dispatch, categories]);
-
+        dispatch(fetchCategories({size:99}));
+    }, [dispatch]);
     // 1. Định nghĩa Cột hiển thị
     const columns: IColumn<IProduct>[] = [
         { title: 'ID', key: 'productId' },

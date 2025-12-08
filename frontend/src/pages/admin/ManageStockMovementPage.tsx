@@ -15,14 +15,14 @@ export function ManageStockMovementPage() {
     // Lấy danh sách sản phẩm để lọc
     const { data: products } = useAppSelector((state) => state.products);
 
+
     // Local state cho filter input
     const [filterType, setFilterType] = useState<'date' | 'product' | 'reason'>('date');
 
+
     useEffect(() => {
         // Load sản phẩm để fill vào dropdown lọc
-        if (!products || products.length === 0) {
-            dispatch(fetchProducts({}));
-        }
+        dispatch(fetchProducts({size:999}));
         // Load dữ liệu ban đầu
         dispatch(fetchStockMovements(filter));
     }, [dispatch]);

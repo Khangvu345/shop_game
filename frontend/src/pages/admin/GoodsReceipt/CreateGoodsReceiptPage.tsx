@@ -38,7 +38,7 @@ export function CreateGoodsReceiptPage() {
 
     useEffect(() => {
         dispatch(fetchSuppliers({}));
-        dispatch(fetchProducts({}));
+        dispatch(fetchProducts({size:999}));
         dispatch(resetStatus());
     }, [dispatch]);
 
