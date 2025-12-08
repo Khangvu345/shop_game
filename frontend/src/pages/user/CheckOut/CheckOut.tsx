@@ -8,7 +8,7 @@ import type { ICreateOrderPayload } from '../../../types';
 import { TruckOrderButton } from '../../../components/ui/button/TruckOrderButton.tsx';
 import './CheckOut.css';
 import {fetchMyAddress, fetchMyProfile} from "../../../store/slices/AccountBlock/customerSlice.tsx";
-import {AddressSelector} from "../../../components/ui/input/AddressSelector.tsx";
+import {AddressSelector} from "../../../components/features/input/AddressSelector.tsx";
 import {customerApi} from "../../../api/AccountBlock/customerApi.ts";
 
 export function CheckoutPage() {

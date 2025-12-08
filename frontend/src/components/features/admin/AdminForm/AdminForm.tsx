@@ -6,7 +6,7 @@ import type { IFieldConfig } from "../../../../types";
 
 import './AdminForm.css'
 import { ImageUpload } from "../../../ui/input/ImageUpload.tsx";
-import { SkuInput } from "../../../ui/input/SkuInput.tsx";
+import { SkuInput } from "../../input/SkuInput.tsx";
 
 interface AdminFormProps<T> {
   fields: IFieldConfig<T>[];
