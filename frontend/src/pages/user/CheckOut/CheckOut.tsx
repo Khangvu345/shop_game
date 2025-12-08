@@ -3,9 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { placeOrder } from '../../../store/slices/OrderBlock/orderSlice';
 import { clearCart } from '../../../store/slices/cartSlice';
-import { Button } from '../../../components/ui/button/Button';
 import { Input } from '../../../components/ui/input/Input';
-import { Spinner } from '../../../components/ui/loading/Spinner';
 import type { ICreateOrderPayload } from '../../../types';
 import { TruckOrderButton } from '../../../components/ui/button/TruckOrderButton.tsx';
 import './CheckOut.css';
@@ -25,7 +23,7 @@ export function CheckoutPage() {
 
     const cartItems = useAppSelector((state) => state.cart.items);
     const { user } = useAppSelector((state) => state.auth);
-    const {currentOrder, status, error } = useAppSelector((state) => state.orders);
+    const { status, error } = useAppSelector((state) => state.orders);
 
     const isOrderSuccess = useRef(false);
 
@@ -48,13 +46,23 @@ export function CheckoutPage() {
         if (user) {
             const loadDefaultAddress = async () => {
                 try {
-                    const address = await customerApi.getDefaultAddress();
                     const profile = await customerApi.getProfile()
-                    if (profile && address) {
+                    if (profile) {
                         setFormData(prev => ({
                             ...prev,
                             recipientName: profile.fullName,
                             phone: profile.phone,
+
+                        }));
+                    }
+                } catch (err) {
+                    console.log("Chưa có địa chỉ mặc định hoặc lỗi tải địa chỉ");
+                }
+                try {
+                    const address = await customerApi.getDefaultAddress();
+                    if ( address) {
+                        setFormData(prev => ({
+                            ...prev,
                             city: address.city || '',
                             ward: address.ward || '',
                             street: address.line1 || '',
