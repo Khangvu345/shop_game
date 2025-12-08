@@ -60,6 +60,16 @@ public class DashboardStatsResponseDto {
     private RevenueBreakdownDto revenueBreakdown;
 
     /**
+     * Cash flow analysis (revenue-in vs expenses-out)
+     */
+    private CashFlowDto cashFlow;
+
+    /**
+     * Capital management metrics (inventory value, turnover, etc.)
+     */
+    private CapitalManagementDto capitalManagement;
+
+    /**
      * Time period for these statistics
      */
     private PeriodDto period;

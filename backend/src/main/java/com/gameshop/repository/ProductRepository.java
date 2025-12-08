@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -52,6 +53,16 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
          */
         @Query("SELECT COUNT(p) FROM Product p WHERE p.stockQuantity = 0 AND p.status = 'Active'")
         Integer countOutOfStockProducts();
+
+        /**
+         * Tính tổng giá trị hàng tồn kho hiện tại (Dashboard - Capital Management)
+         * Công thức: SUM(stockQuantity × purchasePrice)
+         * 
+         * @return Tổng giá trị tồn kho
+         */
+        @Query("SELECT COALESCE(SUM(p.stockQuantity * p.purchasePrice), 0) FROM Product p " +
+                        "WHERE p.status = 'Active' AND p.stockQuantity > 0")
+        BigDecimal calculateTotalInventoryValue();
 
         @Modifying
         @Query(value = """
