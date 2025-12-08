@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchShipments, updateShipmentStatus } from '../../store/slices/OrderBlock/shipmentSlice';
 // 1. Import action updateOrder để cập nhật thanh toán
-import { updateOrderStatusThunk, updatePaymentStatusThunk } from '../../store/slices/OrderBlock/orderSlice';
+import {
+    fetchAdminOrderDetail,
+    fetchOrderDetail,
+    updateOrderStatusThunk,
+    updatePaymentStatusThunk
+} from '../../store/slices/OrderBlock/orderSlice';
 import { AdminTable } from '../../components/features/admin/AdminTable/AdminTable';
 import { AdminPageHeader } from '../../components/features/admin/AdminPageHeader/AdminPageHeader';
 import '../../components/features/admin/AdminPageHeader/AdminPageHeader.css';
@@ -15,6 +20,8 @@ import type { IColumn, IShipment } from '../../types';
 export function ManageShipmentPage() {
     const dispatch = useAppDispatch();
     const { data, status: shipmentStatus, pagination } = useAppSelector((state: any) => state.shipments);
+    const {currentOrder} = useAppSelector((state: any) => state.orders)
+
 
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedShipment, setSelectedShipment] = useState<IShipment | null>(null);
@@ -23,10 +30,15 @@ export function ManageShipmentPage() {
     const [statusFilter, setStatusFilter] = useState('');
     const [carrierFilter, setCarrierFilter] = useState('');
 
-    // 2. Sửa useEffect: Bỏ selectedShipment?.status ra khỏi dependency để tránh loop hoặc reload không kiểm soát
     useEffect(() => {
         dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
     }, [dispatch, currentPage]);
+
+    useEffect(() => {
+        if (selectedShipment?.orderId) {
+            dispatch(fetchAdminOrderDetail(selectedShipment.orderId));
+        }
+    }, [selectedShipment?.orderId, dispatch]);
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -50,7 +62,7 @@ export function ManageShipmentPage() {
                 id: selectedShipment.shipmentId,
                 payload: { status: 'Shipped' }
             })).unwrap();
-            alert("Đã chuyển trạng thái đang giao (Shipped)!");
+            alert("Đã bắt đầu giao hàng!");
 
             dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
 
@@ -65,10 +77,10 @@ export function ManageShipmentPage() {
     const doneSubmit = async () => {
         if (!selectedShipment) return;
 
-        if (!window.confirm("Xác nhận đã giao hàng và đã thu tiền COD?")) return;
+        if (!window.confirm("Xác nhận đã giao hàng thành công?")) return;
 
         try {
-            if (selectedShipment.orderId) {
+            if (selectedShipment.orderId && currentOrder.paymentMethod === 'COD') {
                 await dispatch(updatePaymentStatusThunk({
                     id: selectedShipment.orderId,
                     payload: {
@@ -82,7 +94,7 @@ export function ManageShipmentPage() {
                 id: selectedShipment.shipmentId,
                 payload: { status: 'Delivered' }
             })).unwrap();
-            alert("Giao hàng thành công & đã thu tiền!");
+            alert("Giao hàng thành công!");
             dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
 
             setIsModalOpen(false);
@@ -91,6 +103,37 @@ export function ManageShipmentPage() {
             dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
         }
     };
+
+    const returnSUbmit = async () => {
+        if (!selectedShipment) return;
+
+        if (!window.confirm("Xác nhận đã giao hàng và đã thu tiền COD?")) return;
+
+        try {
+            if (selectedShipment.orderId && currentOrder.paymentMethod === 'COD') {
+
+                await dispatch(updateOrderStatusThunk({
+                    id: selectedShipment.orderId,
+                    payload: { status: 'RETURNED' }
+                })).unwrap();
+                await dispatch(updateShipmentStatus({
+                    id: selectedShipment.shipmentId,
+                    payload: { status: 'Returned' }
+                })).unwrap();
+                alert("Đã hoàn hàng về shop");
+
+            }
+
+
+            dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
+
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error(error);
+            dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
+        }
+    };
+
 
     const columns: IColumn<IShipment>[] = [
         { title: 'ID', key: 'shipmentId' },
@@ -257,15 +300,22 @@ export function ManageShipmentPage() {
                     {/* Nút bấm chuyển trạng thái */}
                     {selectedShipment?.status === 'Ready' && (
                         <Button onClick={shippedSubmit} disabled={shipmentStatus === 'loading'}>
-                            {shipmentStatus === 'loading' ? <Spinner /> : '📦 Xác nhận đã gửi hàng (Shipped)'}
+                            {shipmentStatus === 'loading' ? <Spinner /> : '📦 Bắt đầu vận chuyển hàng'}
                         </Button>
                     )}
 
                     {selectedShipment?.status === 'Shipped' && (
-                        <Button onClick={doneSubmit} disabled={shipmentStatus === 'loading'} style={{ background: 'green', borderColor: 'green' }}>
-                            {shipmentStatus === 'loading' ? <Spinner /> : '✅ Đã giao & Đã thu tiền (Delivered)'}
-                        </Button>
+                        <>
+                            <Button onClick={doneSubmit} disabled={shipmentStatus === 'loading'} style={{ background: 'green', borderColor: 'green' }}>
+                                {shipmentStatus === 'loading' ? <Spinner /> : '✅ Giao hàng thành công'}
+                            </Button>
+                            <Button onClick={returnSUbmit} disabled={shipmentStatus === 'loading'} style={{ background: 'red', borderColor: 'red' }}>
+                                {shipmentStatus === 'loading' ? <Spinner /> : '↩Khách hàng không nhận hàng'}
+                            </Button>
+                        </>
+
                     )}
+
 
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
                         <Button color="0" onClick={() => setIsModalOpen(false)}>Đóng</Button>
