@@ -16,7 +16,7 @@
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
     margin-bottom: 30px;
 }
@@ -31,7 +31,8 @@
 }
 
 .stat-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-2px);
+    border-color: var(--admin-primary);
 }
 
 .stat-title {
@@ -75,6 +76,41 @@
     color: #667eea;
 }
 
+/* Card Chi Nhập Hàng */
+.stat-card.expenses .stat-value {
+    color: #ef4444;
+}
+
+.stat-card.expenses:hover {
+    border-color: #ef4444;
+}
+
+/* Card Giá Trị Tồn Kho */
+.stat-card.inventory-value .stat-value {
+    color: #3b82f6;
+}
+
+.stat-card.inventory-value:hover {
+    border-color: #3b82f6;
+}
+
+/* Card Cash Flow - Dynamic color */
+.stat-card.cash-flow.positive .stat-value {
+    color: #10b981;
+}
+
+.stat-card.cash-flow.negative .stat-value {
+    color: #ef4444;
+}
+
+.stat-card.cash-flow.positive:hover {
+    border-color: #10b981;
+}
+
+.stat-card.cash-flow.negative:hover {
+    border-color: #ef4444;
+}
+
 .charts-section {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -91,6 +127,10 @@
 
 @media (max-width: 768px) {
     .charts-section {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
         grid-template-columns: 1fr;
     }
 }

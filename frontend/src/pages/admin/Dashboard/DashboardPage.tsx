@@ -5,20 +5,11 @@ import { Spinner } from '../../../components/ui/loading/Spinner';
 import { Select } from '../../../components/ui/input/Select';
 import { AdminPageHeader } from '../../../components/features/admin/AdminPageHeader/AdminPageHeader';
 import '../../../components/features/admin/AdminPageHeader/AdminPageHeader.css';
-import {
-    Chart as ChartJS,
-    ArcElement,
-    Tooltip,
-    Legend,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title
-} from 'chart.js';
-import { Doughnut, Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';
+import { Doughnut, Bar, Line } from 'react-chartjs-2';
 import './Dashboard.css';
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend);
 
 export function DashboardPage() {
     const dispatch = useAppDispatch();
@@ -42,23 +33,24 @@ export function DashboardPage() {
 
     // --- Cấu hình biểu đồ ---
 
-    // 1. Biểu đồ Doughnut: Tỷ lệ Hàng tồn kho vs Hàng sắp hết
+    // 1. Biểu đồ Doughnut: Tỷ lệ Hàng tồn kho (3 loại)
     const inventoryChartData = {
-        labels: ['Hàng an toàn', 'Sắp hết hàng (<5)'],
+        labels: ['Hàng An Toàn', 'Sắp Hết Hàng (<5)', 'Hết Hàng'],
         datasets: [
             {
                 data: stats ? [
-                    Number(stats.totalInventory) - (stats.lowStockCount || 0),
-                    stats.lowStockCount
-                ] : [0, 0],
-                backgroundColor: ['#10b981', '#ef4444'],
-                borderColor: ['#ffffff', '#ffffff'],
+                    stats.safeStockCount || 0,
+                    stats.lowStockCount || 0,
+                    stats.outOfStockCount || 0
+                ] : [0, 0, 0],
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                borderColor: ['#ffffff', '#ffffff', '#ffffff'],
                 borderWidth: 2,
             },
         ],
     };
 
-    // 2. Biểu đồ Bar: Phân tích doanh thu (Doanh thu vs Chi phí vs Lợi nhuận)
+    // 2. Biểu đồ Bar: Phân tích doanh thu
     const revenueBreakdownChartData = {
         labels: ['Doanh Thu', 'Chi Phí', 'Lợi Nhuận'],
         datasets: [
@@ -74,14 +66,32 @@ export function DashboardPage() {
         ],
     };
 
-    // 3. Biểu đồ Bar: Hiệu suất (Đơn hàng mới vs Khách hàng mới)
-    const metricsChartData = {
-        labels: ['Đơn hàng mới', 'Khách hàng mới'],
+    // 3. Biểu đồ Line: Dòng Tiền
+    const cashFlowChartData = {
+        labels: ['Thu Vào', 'Chi Ra', 'Ròng'],
         datasets: [
             {
-                label: 'Số lượng',
-                data: stats ? [stats.newOrders, stats.newCustomers] : [0, 0],
-                backgroundColor: ['#3b82f6', '#8b5cf6'],
+                label: 'Dòng Tiền (VNĐ)',
+                data: stats?.cashFlow ? [
+                    stats.cashFlow.cashIn,
+                    stats.cashFlow.cashOut,
+                    stats.cashFlow.netCashFlow
+                ] : [0, 0, 0],
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: (context: any) => {
+                    const index = context.dataIndex;
+                    if (index === 0) return '#10b981'; // Thu vào
+                    if (index === 1) return '#ef4444'; // Chi ra
+                    if (index === 2) {
+                        return stats?.cashFlow?.netCashFlow >= 0 ? '#10b981' : '#ef4444';
+                    }
+                    return '#3b82f6';
+                },
+                pointRadius: 8,
+                pointHoverRadius: 10,
             },
         ],
     };
@@ -99,7 +109,6 @@ export function DashboardPage() {
 
     return (
         <div className="admin-page-container">
-            {/* HEADER - 3 columns only */}
             <AdminPageHeader title="Tổng Quan Kinh Doanh" />
 
             {/* ACTION BAR - Filters */}
@@ -132,12 +141,15 @@ export function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Card 2: Đơn hàng */}
+                {/* Card 2: Đơn chờ xử lý */}
                 <div className="stat-card orders">
                     <span className="stat-icon">📦</span>
-                    <div className="stat-title">Đơn Hàng Mới</div>
+                    <div className="stat-title">Đơn Chờ Xử Lý</div>
                     <div className="stat-value">
                         {stats?.newOrders || 0}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#999', marginTop: '3px' }}>
+                        (Chờ xử lý + Đã xác nhận)
                     </div>
                 </div>
 
@@ -169,8 +181,58 @@ export function DashboardPage() {
                     <div className="stat-value">
                         {stats?.totalInventory?.toLocaleString() || 0}
                     </div>
-                    <div style={{ fontSize: '0.8rem', color: '#ef4444', marginTop: '5px' }}>
-                        ⚠ {stats?.lowStockCount} sản phẩm sắp hết
+                    <div style={{ fontSize: '0.75rem', marginTop: '8px', lineHeight: '1.5' }}>
+                        <div style={{ color: '#10b981' }}>✓ {stats?.safeStockCount || 0} sản phẩm an toàn</div>
+                        <div style={{ color: '#f59e0b' }}>⚠ {stats?.lowStockCount || 0} sản phẩm sắp hết</div>
+                        <div style={{ color: '#ef4444' }}>✕ {stats?.outOfStockCount || 0} sản phẩm hết hàng</div>
+                    </div>
+                </div>
+
+                {/* Card 6: Chi Nhập Hàng */}
+                <div className="stat-card expenses">
+                    <span className="stat-icon">💸</span>
+                    <div className="stat-title">Chi Nhập Hàng</div>
+                    <div className="stat-value">
+                        {stats?.capitalManagement
+                            ? formatCurrency(stats.capitalManagement.totalGoodsReceiptCost)
+                            : '0 đ'}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#999', marginTop: '3px' }}>
+                        Tháng {filter.month}/{filter.year}
+                    </div>
+                </div>
+
+                {/* Card 7: Giá Trị Tồn Kho */}
+                <div className="stat-card inventory-value">
+                    <span className="stat-icon">🏦</span>
+                    <div className="stat-title">Giá Trị Tồn Kho</div>
+                    <div className="stat-value">
+                        {stats?.capitalManagement
+                            ? formatCurrency(stats.capitalManagement.inventoryValue)
+                            : '0 đ'}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#999', marginTop: '3px' }}>
+                        Vốn đang trong kho
+                    </div>
+                </div>
+
+                {/* Card 8: Cash Flow Ròng */}
+                <div className={`stat-card cash-flow ${stats?.cashFlow?.netCashFlow >= 0 ? 'positive' : 'negative'
+                    }`}>
+                    <span className="stat-icon">�</span>
+                    <div className="stat-title">Cash Flow Ròng</div>
+                    <div className="stat-value">
+                        {stats?.cashFlow
+                            ? formatCurrency(stats.cashFlow.netCashFlow)
+                            : '0 đ'}
+                    </div>
+                    <div style={{
+                        fontSize: '0.75rem',
+                        color: stats?.cashFlow?.netCashFlow >= 0 ? '#10b981' : '#ef4444',
+                        marginTop: '3px',
+                        fontWeight: 'bold'
+                    }}>
+                        {stats?.cashFlow?.netCashFlow >= 0 ? '↑ Dương' : '↓ Âm'}
                     </div>
                 </div>
             </div>
@@ -185,7 +247,7 @@ export function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Chart 2: Sức khỏe kho hàng */}
+                {/* Chart 2: Tình trạng kho hàng */}
                 <div className="chart-container">
                     <h3 style={{ textAlign: 'center', marginBottom: '15px', fontSize: '1.1rem' }}>Tình Trạng Kho Hàng</h3>
                     <div style={{ height: '250px' }}>
@@ -193,11 +255,13 @@ export function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Chart 3: Chỉ số tăng trưởng */}
+                {/* Chart 3: Dòng Tiền */}
                 <div className="chart-container">
-                    <h3 style={{ textAlign: 'center', marginBottom: '15px', fontSize: '1.1rem' }}>Hiệu Suất Tháng {filter.month}</h3>
+                    <h3 style={{ textAlign: 'center', marginBottom: '15px', fontSize: '1.1rem' }}>
+                        Dòng Tiền Tháng {filter.month}
+                    </h3>
                     <div style={{ height: '250px' }}>
-                        <Bar data={metricsChartData} options={chartOptions} />
+                        <Line data={cashFlowChartData} options={chartOptions} />
                     </div>
                 </div>
             </div>

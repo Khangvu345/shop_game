@@ -1,4 +1,5 @@
 import React from 'react';
+import './Select.css';
 
 // Định nghĩa kiểu dữ liệu cho một lựa chọn (Option)
 export interface SelectOption {
@@ -14,13 +15,13 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 export const Select: React.FC<SelectProps> = ({
-                                                  label,
-                                                  options,
-                                                  error,
-                                                  className = '',
-                                                  id,
-                                                  ...props
-                                              }) => {
+    label,
+    options,
+    error,
+    className = '',
+    id,
+    ...props
+}) => {
 
     // Tạo ID ngẫu nhiên nếu không truyền vào (để label hoạt động)
     const selectId = id || props.name;

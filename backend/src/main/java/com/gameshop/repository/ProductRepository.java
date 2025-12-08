@@ -8,49 +8,76 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
-    List<Product> findByProductNameContainingIgnoreCase(String keyword);
+        List<Product> findByProductNameContainingIgnoreCase(String keyword);
 
-    List<Product> findByCategory_CategoryId(Long categoryId);
+        List<Product> findByCategory_CategoryId(Long categoryId);
 
-    List<Product> findByCategory_CategoryIdIn(List<Long> categoryIds);
+        List<Product> findByCategory_CategoryIdIn(List<Long> categoryIds);
 
-    /**
-     * Calculate total inventory (sum of stock quantities) for active products
-     * 
-     * @return Total stock quantity across all active products
-     */
-    @Query("SELECT COALESCE(SUM(p.stockQuantity), 0) FROM Product p " +
-            "WHERE p.status = 'Active'")
-    Long sumTotalInventory();
+        /**
+         * Calculate total inventory (sum of stock quantities) for active products
+         * 
+         * @return Total stock quantity across all active products
+         */
+        @Query("SELECT COALESCE(SUM(p.stockQuantity), 0) FROM Product p " +
+                        "WHERE p.status = 'Active'")
+        Long sumTotalInventory();
 
-    /**
-     * Count products with low stock (below threshold)
-     * 
-     * @param threshold Stock quantity threshold
-     * @return Count of products with stock below threshold
-     */
-    @Query("SELECT COUNT(p) FROM Product p " +
-            "WHERE p.stockQuantity < :threshold AND p.status = 'Active'")
-    Integer countLowStockProducts(@Param("threshold") Integer threshold);
+        /**
+         * Count products with low stock (below threshold but > 0)
+         * 
+         * @param threshold Stock quantity threshold
+         * @return Count of products with stock below threshold
+         */
+        @Query("SELECT COUNT(p) FROM Product p " +
+                        "WHERE p.stockQuantity < :threshold AND p.stockQuantity > 0 AND p.status = 'Active'")
+        Integer countLowStockProducts(@Param("threshold") Integer threshold);
 
-    @Modifying
-    @Query(value = """
-            UPDATE product p
-            JOIN order_line ol ON ol.product_id = p.product_id
-            SET p.stock_quantity = p.stock_quantity + ol.quantity
-            WHERE ol.order_id = :orderId
-            """, nativeQuery = true)
-    int restoreStockByOrderId(@Param("orderId") Long orderId);
+        /**
+         * Count total number of active products
+         * 
+         * @return Count of active products
+         */
+        @Query("SELECT COUNT(p) FROM Product p WHERE p.status = 'Active'")
+        Integer countActiveProducts();
 
-    /**
-     * Check if a product with the given SKU already exists
-     * 
-     * @param sku Product SKU to check
-     * @return true if SKU exists, false otherwise
-     */
-    boolean existsBySku(String sku);
+        /**
+         * Count products that are out of stock
+         * 
+         * @return Count of out-of-stock products
+         */
+        @Query("SELECT COUNT(p) FROM Product p WHERE p.stockQuantity = 0 AND p.status = 'Active'")
+        Integer countOutOfStockProducts();
+
+        /**
+         * Tính tổng giá trị hàng tồn kho hiện tại (Dashboard - Capital Management)
+         * Công thức: SUM(stockQuantity × purchasePrice)
+         * 
+         * @return Tổng giá trị tồn kho
+         */
+        @Query("SELECT COALESCE(SUM(p.stockQuantity * p.purchasePrice), 0) FROM Product p " +
+                        "WHERE p.status = 'Active' AND p.stockQuantity > 0")
+        BigDecimal calculateTotalInventoryValue();
+
+        @Modifying
+        @Query(value = """
+                        UPDATE product p
+                        JOIN order_line ol ON ol.product_id = p.product_id
+                        SET p.stock_quantity = p.stock_quantity + ol.quantity
+                        WHERE ol.order_id = :orderId
+                        """, nativeQuery = true)
+        int restoreStockByOrderId(@Param("orderId") Long orderId);
+
+        /**
+         * Check if a product with the given SKU already exists
+         * 
+         * @param sku Product SKU to check
+         * @return true if SKU exists, false otherwise
+         */
+        boolean existsBySku(String sku);
 }
