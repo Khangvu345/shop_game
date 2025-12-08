@@ -174,9 +174,8 @@ export const AddressSelector: React.FC<AddressSelectorProps> = ({
                         width: '100%',
                         border: '1px solid #e0e0e0',
                         borderRadius: '8px',
-                        padding: '10px 10px',
-                        background: '#fafafa',
-                        boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                        padding: '15px 10px',
+                        background: '#fff',
                         }}
                         options={[
                             { label: '-- Chọn Tỉnh/TP --', value: '' },
@@ -192,9 +191,8 @@ export const AddressSelector: React.FC<AddressSelectorProps> = ({
                         width: '100%',
                         border: '1px solid #e0e0e0',
                         borderRadius: '8px',
-                        padding: '10px 10px',
-                        background: '#fafafa',
-                        boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                        padding: '15px 10px',
+                        background: '#fff',
                         }}
                         options={[
                             { label: '-- Chọn Địa phương --', value: '' },
