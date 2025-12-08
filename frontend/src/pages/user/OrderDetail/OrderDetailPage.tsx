@@ -243,14 +243,15 @@ export function OrderDetailPage() {
                             <div className="info-group">
                                 <div className="info-row">
                                     <div className="info-label">Phương thức</div>
-                                    <div className="info-content">{currentOrder.paymentMethod}</div>
+                                    <div className="info-content" style={{fontWeight: 700, color: "blueviolet"}}>{ currentOrder.paymentMethod}</div>
                                 </div>
                                 <div className="info-row">
                                     <div className="info-label">Trạng thái</div>
                                     <div className="info-content" style={{
-                                        fontWeight: 700
+                                        fontWeight: 700,
+                                        color: getStatusColor(currentOrder.paymentStatus)
                                     }}>
-                                        {currentOrder.paymentStatus}
+                                        {translateStatus(currentOrder.paymentStatus, 'payment')}
                                     </div>
                                 </div>
                                 <div className="info-row">
