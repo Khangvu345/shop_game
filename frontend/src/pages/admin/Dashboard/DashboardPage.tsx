@@ -219,8 +219,8 @@ export function DashboardPage() {
                 {/* Card 8: Cash Flow Ròng */}
                 <div className={`stat-card cash-flow ${stats?.cashFlow?.netCashFlow >= 0 ? 'positive' : 'negative'
                     }`}>
-                    <span className="stat-icon">�</span>
-                    <div className="stat-title">Cash Flow Ròng</div>
+                    <span className="stat-icon">🪙</span>
+                    <div className="stat-title">Dòng tiền Ròng</div>
                     <div className="stat-value">
                         {stats?.cashFlow
                             ? formatCurrency(stats.cashFlow.netCashFlow)

@@ -308,8 +308,8 @@
 /* Màn hình cực lớn (Large Desktop) - Nếu muốn chia 3 cột đều */
 @media (min-width: 1440px) {
   .charts-section > div:nth-child(1) { grid-column: span 6; } /* Doanh thu */
-  .charts-section > div:nth-child(3) { grid-column: span 6; } /* Dòng tiền */
-  .charts-section > div:nth-child(2) { grid-column: span 12; order: 3; display: flex; justify-content: center;} /* Kho hàng xuống dưới */
+  .charts-section > div:nth-child(2) { grid-column: span 6; } /* Dòng tiền */
+  .charts-section > div:nth-child(3) { grid-column: span 12; order: 3; display: flex; justify-content: center;} /* Kho hàng xuống dưới */
   
   /* Riêng chart tròn cho nhỏ lại chút khi full width */
   .charts-section > div:nth-child(2) > div {
