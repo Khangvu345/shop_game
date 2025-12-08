@@ -16,12 +16,12 @@ const categories = [
     {
         id: 1,
         name: 'Consoles',
-        icon: 'https://res.cloudinary.com/ddehnsjtw/image/upload/v1764779169/Sony_Unveils_PlayStation_5_Game_Console___WERD_zgljzx.jpg',
+        icon: 'https://res.cloudinary.com/ddehnsjtw/image/upload/v1765173573/console_mn3zyf.jpg',
         link: '/products?categoryId=1'
     },
     { id: 2, name: 'Thiết bị cầm tay', icon: 'https://res.cloudinary.com/ddehnsjtw/image/upload/v1764779382/Game_Control_Glyph_Icon_Vector_Game_Icons_Control_Icons_Controller_Clipart_PNG_and_Vector_with_Transparent_Background_for_Free_Download_jeu9yu.jpg', link: '/products?categoryId=3' },
-    { id: 3, name: 'Phụ kiện', icon: '🎧', link: '/products?categoryId=3' },
-    { id: 4, name: 'Trò chơi', icon: '💿', link: '/products?categoryId=2' },
+    { id: 3, name: 'Phụ kiện', icon: 'https://res.cloudinary.com/ddehnsjtw/image/upload/v1765173709/s%C5%82uchawki_ikona_Stock_Vector_cgakmo.jpg', link: '/products?categoryId=3' },
+    { id: 4, name: 'Trò chơi', icon: 'https://res.cloudinary.com/ddehnsjtw/image/upload/v1765173593/game_lhndz8.jpg', link: '/products?categoryId=2' },
 ];
 
 
@@ -158,16 +158,7 @@ export function HomePage() {
                 className="slider-section container"
                 style={{ marginTop: '3rem', marginBottom: '3rem' }}
             >
-                <h2
-                    style={{
-                        textAlign: 'center',
-                        marginBottom: '1.5rem',
-                        fontWeight: 600,
-                        fontSize: '2.3rem',
-                        letterSpacing: '-0.5px',
-                    }}
-                >
-                    CÁC SỰ KIỆN SẮP TỚI
+                <h2>CÁC SỰ KIỆN SẮP TỚI
                 </h2>
                 <PromotionSlider />
             </section>
@@ -199,6 +190,7 @@ export function HomePage() {
                     ))}
                 </div>
             </section>
+            
             {/* 6. TIN TỨC & CẬP NHẬT */}
             <section className="news-section container">
                 <h2>TIN TỨC & CẬP NHẬT MỚI NHẤT</h2>

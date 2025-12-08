@@ -10,6 +10,7 @@ import { Pagination } from '../../components/ui/pagination/Pagination';
 import { Button } from '../../components/ui/button/Button';
 import { Modal } from '../../components/ui/Modal/Modal';
 import { Spinner } from '../../components/ui/loading/Spinner';
+import '../../components/features/admin/AdminForm/AdminForm.css';
 import type { IColumn, IShipment } from '../../types';
 
 export function ManageShipmentPage() {
