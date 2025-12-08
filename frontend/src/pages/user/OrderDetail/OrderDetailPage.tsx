@@ -8,6 +8,8 @@ import { Modal } from '../../../components/ui/Modal/Modal';
 import { Input } from '../../../components/ui/input/Input';
 import './OrderDetailPage.css';
 import {vnpayAPI} from "../../../api/PaymentBlock/paymentApi.ts";
+import {getStatusColor, translateStatus} from "../../../store/utils/statusTranslator.ts";
+import {color} from "chart.js/helpers";
 
 export function OrderDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -45,28 +47,14 @@ export function OrderDetailPage() {
         }
     };
 
-    // Format Helpers
     const formatCurrency = (amount: number) =>
         new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
-    const translateStatus = (status: string) => {
-        const map: Record<string, string> = {
-            PENDING: 'Chờ xử lý',
-            CONFIRMED: 'Đã xác nhận',
-            PREPARING: 'Đang chuẩn bị',
-            SHIPPED: 'Đang giao hàng',
-            DELIVERED: 'Giao thành công',
-            COMPLETED: 'Hoàn thành',
-            CANCELLED: 'Đã hủy',
-            RETURNED: 'Đã trả hàng'
-        };
-        return map[status] || status;
-    };
 
-    // Stepper Logic: Xác định bước hiện tại (1-4)
+
     const getStepStatus = (status: string) => {
         const steps = ['PENDING', 'CONFIRMED', 'SHIPPED', 'COMPLETED'];
-        if (status === 'DELIVERED') return 3; // Coi như bước 3 (Giao hàng) đã xong
+        if (status === 'DELIVERED') return 3;
         if (status === 'CANCELLED' || status === 'RETURNED') return -1;
         
         // Tìm vị trí trong mảng steps
@@ -126,8 +114,8 @@ export function OrderDetailPage() {
                             <span>|</span>
                             <span>Ngày đặt: {new Date(currentOrder.createdAt).toLocaleDateString('vi-VN')}</span>
                             <span>|</span>
-                            <span className={`od-status-badge status-${currentOrder.status}`}>
-                                {translateStatus(currentOrder.status)}
+                            <span className={`od-status-badge`} style={{color: getStatusColor(currentOrder.status)}}>
+                                {translateStatus(currentOrder.status, 'order')}
                             </span>
                         </div>
                     </div>

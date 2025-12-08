@@ -17,6 +17,7 @@ import { Modal } from '../../components/ui/Modal/Modal';
 import { Spinner } from '../../components/ui/loading/Spinner';
 import '../../components/features/admin/AdminForm/AdminForm.css';
 import type { IColumn, IShipment } from '../../types';
+import {translateStatus, getStatusColor} from "../../store/utils/statusTranslator.ts";
 
 export function ManageShipmentPage() {
     const dispatch = useAppDispatch();
@@ -32,7 +33,7 @@ export function ManageShipmentPage() {
     const [carrierFilter, setCarrierFilter] = useState('');
 
     useEffect(() => {
-        dispatch(fetchShipments({ page: currentPage - 1, size: 10 }));
+        dispatch(fetchShipments({ page: currentPage - 1, size: 10, sort: 'shipmentId,desc'}));
     }, [dispatch, currentPage]);
 
     useEffect(() => {
@@ -41,14 +42,6 @@ export function ManageShipmentPage() {
         }
     }, [selectedShipment?.orderId, dispatch]);
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'Delivered': return 'green';
-            case 'Returned': return 'gray';
-            case 'Shipped': return 'blue';
-            default: return 'orange';
-        }
-    };
 
     const handleEdit = (item: IShipment) => {
         setSelectedShipment(item);
@@ -166,7 +159,8 @@ export function ManageShipmentPage() {
                     borderRadius: '12px',
                     fontSize: '0.8rem'
                 }}>
-                    {item.status}
+                    {translateStatus(item.status, 'shipment')}
+                    {}
                 </span>
             )
         }
@@ -293,7 +287,8 @@ export function ManageShipmentPage() {
                             <p>Mã vận đơn: <strong>{selectedShipment?.trackingNo}</strong></p>
                             <p>Đơn vị vận chuyển: <strong>{selectedShipment?.carrier}</strong></p>
                             <p>Ghi chú: <strong>{selectedShipment?.notes}</strong></p>
-                            <p>Trạng thái hiện tại: <strong style={{ color: getStatusColor(selectedShipment?.status), }}>{selectedShipment?.status}</strong></p>
+                            <p>Trạng thái hiện tại: <strong style={{ color: getStatusColor(selectedShipment?.status), }}>{translateStatus(selectedShipment.status, 'shipment')}
+                            </strong></p>
                         </div>
 
                     )}
