@@ -42,17 +42,19 @@ export function DashboardPage() {
 
     // --- Cấu hình biểu đồ ---
 
-    // 1. Biểu đồ Doughnut: Tỷ lệ Hàng tồn kho vs Hàng sắp hết
+
+    // 1. Biểu đồ Doughnut: Tỷ lệ Hàng tồn kho (3 loại)
     const inventoryChartData = {
-        labels: ['Hàng an toàn', 'Sắp hết hàng (<5)'],
+        labels: ['Hàng An Toàn', 'Sắp Hết Hàng (<5)', 'Hết Hàng'],
         datasets: [
             {
                 data: stats ? [
-                    Number(stats.totalInventory) - (stats.lowStockCount || 0),
-                    stats.lowStockCount
-                ] : [0, 0],
-                backgroundColor: ['#10b981', '#ef4444'],
-                borderColor: ['#ffffff', '#ffffff'],
+                    stats.safeStockCount || 0,     // Hàng an toàn (màu xanh)
+                    stats.lowStockCount || 0,      // Sắp hết hàng (màu vàng)
+                    stats.outOfStockCount || 0     // Hết hàng (màu đỏ)
+                ] : [0, 0, 0],
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                borderColor: ['#ffffff', '#ffffff', '#ffffff'],
                 borderWidth: 2,
             },
         ],
@@ -162,6 +164,7 @@ export function DashboardPage() {
                     </div>
                 </div>
 
+
                 {/* Card 5: Tồn kho */}
                 <div className="stat-card inventory">
                     <span className="stat-icon">🏭</span>
@@ -169,8 +172,10 @@ export function DashboardPage() {
                     <div className="stat-value">
                         {stats?.totalInventory?.toLocaleString() || 0}
                     </div>
-                    <div style={{ fontSize: '0.8rem', color: '#ef4444', marginTop: '5px' }}>
-                        ⚠ {stats?.lowStockCount} sản phẩm sắp hết
+                    <div style={{ fontSize: '0.75rem', marginTop: '8px', lineHeight: '1.5' }}>
+                        <div style={{ color: '#10b981' }}>✓ {stats?.safeStockCount || 0} sản phẩm an toàn</div>
+                        <div style={{ color: '#f59e0b' }}>⚠ {stats?.lowStockCount || 0} sản phẩm sắp hết</div>
+                        <div style={{ color: '#ef4444' }}>✕ {stats?.outOfStockCount || 0} sản phẩm hết hàng</div>
                     </div>
                 </div>
             </div>

@@ -40,9 +40,19 @@ public class DashboardStatsResponseDto {
     private Long totalInventory;
 
     /**
-     * Number of products with low stock (below threshold)
+     * Number of products with safe stock (above threshold)
+     */
+    private Integer safeStockCount;
+
+    /**
+     * Number of products with low stock (below threshold but > 0)
      */
     private Integer lowStockCount;
+
+    /**
+     * Number of products that are out of stock (stockQuantity = 0)
+     */
+    private Integer outOfStockCount;
 
     /**
      * Revenue breakdown with sales, cost, and profit analysis

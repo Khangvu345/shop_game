@@ -57,7 +57,13 @@ public class DashboardService {
         Integer newOrders = countNewOrders(startDateTime, endDateTime);
         Integer newCustomers = countNewCustomers(startDateTime, endDateTime);
         Long totalInventory = getTotalInventory();
+
+        // Tính 3 mức hàng tồn kho
+        Integer outOfStockCount = countOutOfStockProducts();
         Integer lowStockCount = countLowStockProducts(LOW_STOCK_THRESHOLD);
+        Integer totalActiveProducts = productRepository.countActiveProducts();
+        Integer safeStockCount = totalActiveProducts - lowStockCount - outOfStockCount;
+
         RevenueBreakdownDto revenueBreakdown = calculateRevenueBreakdown(startDateTime, endDateTime);
 
         // Create period DTO
@@ -72,7 +78,9 @@ public class DashboardService {
         response.setNewOrders(newOrders);
         response.setNewCustomers(newCustomers);
         response.setTotalInventory(totalInventory);
+        response.setSafeStockCount(safeStockCount);
         response.setLowStockCount(lowStockCount);
+        response.setOutOfStockCount(outOfStockCount);
         response.setRevenueBreakdown(revenueBreakdown);
         response.setPeriod(period);
         response.setLastUpdated(LocalDateTime.now());
@@ -130,6 +138,15 @@ public class DashboardService {
      */
     private Integer countLowStockProducts(Integer threshold) {
         return productRepository.countLowStockProducts(threshold);
+    }
+
+    /**
+     * Tính sản phẩm hết hàng
+     * 
+     * @return 
+     */
+    private Integer countOutOfStockProducts() {
+        return productRepository.countOutOfStockProducts();
     }
 
     /**
