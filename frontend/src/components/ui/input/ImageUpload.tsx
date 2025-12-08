@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './ImageUpload.css';
 
 interface ImageUploadProps {
     label?: string;
@@ -29,46 +30,28 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ label, onChange, initi
         <div className="form-group">
             {label && <label className="form-label">{label}</label>}
 
-            <div style={{
-                border: '2px dashed var(--color-primary-3)',
-                borderRadius: '8px',
-                padding: '20px',
-                textAlign: 'center',
-                cursor: 'pointer',
-                position: 'relative',
-                backgroundColor: '#fff',
-                minHeight: '150px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}>
+            <div className="image-upload-container">
                 <input
                     type="file"
                     accept="image/*"
                     onChange={handleFileChange}
-                    style={{
-                        opacity: 0,
-                        position: 'absolute',
-                        top: 0, left: 0, width: '100%', height: '100%',
-                        cursor: 'pointer'
-                    }}
+                    className="image-upload-input"
                 />
 
                 {preview ? (
                     <img
                         src={preview}
                         alt="Preview"
-                        style={{ maxHeight: '130px', borderRadius: '4px', objectFit: 'contain' }}
+                        className="image-upload-preview"
                     />
                 ) : (
-                    <div style={{ color: '#888' }}>
-                        <span style={{fontSize: '2rem'}}>📷</span>
+                    <div className="image-upload-placeholder">
+                        <span className="image-upload-placeholder-icon">📷</span>
                         <p>Kéo thả ảnh vào đây hoặc click để chọn</p>
                     </div>
                 )}
             </div>
-            {error && <span className="form-error-message" style={{color: 'red', fontSize: '0.85rem'}}>{error}</span>}
+            {error && <span className="form-error-message" style={{ color: 'red', fontSize: '0.85rem' }}>{error}</span>}
         </div>
     );
 };
