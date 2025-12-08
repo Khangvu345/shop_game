@@ -115,7 +115,7 @@ export function Page404() {
                                         {winner === 'Draw' ? (
                                             <>
                                                 <div className="result-icon draw">🤝</div>
-                                                <p className="result-text">It&apos;s a Draw!</p>
+                                                <p className="result-text">Hòa rồi</p>
                                             </>
                                         ) : (
                                             <>
