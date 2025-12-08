@@ -26,6 +26,7 @@ import { ManageShipmentPage} from "../pages/admin/ManageShipmentPage.tsx";
 import {FAQPage} from "../pages/user/FAQPage/FAQPage.tsx";
 import { ContactPage } from '../pages/user/ContactPage/ContactPage.tsx';
 import { AuthPage } from '../pages/auth/AuthPage.tsx';
+import {Page404} from "../pages/Page404.tsx";
 
 export function AppRoutes() {
     return (
@@ -65,6 +66,7 @@ export function AppRoutes() {
                     <Route path='shipments' element={<ManageShipmentPage />} />
                 </Route>
             </Route>
+            <Route path={'*'} element={<Page404/>}/>
         </Routes>    );
 }
 //test
