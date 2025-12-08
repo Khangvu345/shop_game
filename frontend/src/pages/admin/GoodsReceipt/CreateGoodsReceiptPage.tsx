@@ -34,7 +34,7 @@ export function CreateGoodsReceiptPage() {
     // Temp Item Input
     const [selectedProductId, setSelectedProductId] = useState<number | ''>('');
     const [quantity, setQuantity] = useState<number>(1);
-    const [unitCost, setUnitCost] = useState<number>(0);
+    const [unitCost, setUnitCost] = useState<number>(NaN);
 
     useEffect(() => {
         dispatch(fetchSuppliers({}));
