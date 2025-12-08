@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Input } from './Input';
-import { productApi } from '../../../api/ProductBlock/productApi';
+import { Input } from '../../ui/input/Input.tsx';
+import { productApi } from '../../../api/ProductBlock/productApi.ts';
 
 interface SkuInputProps {
     label: string;

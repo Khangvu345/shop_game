@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { locationApi, type IPTITLocation } from '../../../api/ThirdParty/locationApi.ts';
-import { Select } from './Select';
-import { Input } from './Input';
+import { Select } from '../../ui/input/Select.tsx';
+import { Input } from '../../ui/input/Input.tsx';
 
 interface AddressSelectorProps {
     initialCity?: string;

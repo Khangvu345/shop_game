@@ -135,8 +135,9 @@
 
 /* 5. Inventory: Orange/Amber Gradient */
 .stat-card.inventory {
-    background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
-    box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.4);
+  background: linear-gradient(135deg, #06b6d4 0%, #0e7490 100%);
+  box-shadow: 0 10px 20px -5px rgba(6, 182, 212, 0.4);
+
 }
 /* --- 6. Expenses (Chi Nhập Hàng): Red/Rose Gradient --- */
 .stat-card.expenses {
@@ -146,8 +147,9 @@
 
 /* --- 7. Inventory Value (Giá Trị Tồn Kho): Cyan/Teal Gradient --- */
 .stat-card.inventory-value {
-  background: linear-gradient(135deg, #06b6d4 0%, #0e7490 100%);
-  box-shadow: 0 10px 20px -5px rgba(6, 182, 212, 0.4);
+  background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+  box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.4);
+
 }
 
 /* --- 8. Cash Flow (Dòng Tiền): Slate/Dark Blue Gradient --- */

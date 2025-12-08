@@ -11,6 +11,7 @@ import { Spinner } from '../../../components/ui/loading/Spinner';
 import { OrderHistoryPage } from "../OrderHistoryPage/OrderHistoryPage.tsx";
 import { UserIcon, CartIcon, PhoneIcon, PasswordIcon } from '../../../components/ui/icon/icon';
 import './UserProfilePage.css';
+import {AddressSelector} from "../../../components/features/input/AddressSelector.tsx";
 
 export function UserProfilePage() {
     const dispatch = useAppDispatch();
@@ -119,6 +120,8 @@ function ProfileInfoTab({ profile, dispatch }: any) {
         });
     };
 
+
+
     return (
         <div className="tab-content">
             <h2 className="tab-title">Thông tin tài khoản</h2>
@@ -167,6 +170,15 @@ function ProfileInfoTab({ profile, dispatch }: any) {
 function AddressTab({ address, dispatch }: any) {
     const [form, setForm] = useState({ line1: '', line2: '', ward: '', city: '', postalCode: '' });
 
+    const handleLocationChange = (data: { city: string; ward: string }) => {
+        setForm(prev => ({
+            ...prev,
+            city: data.city,
+            ward: data.ward
+        }));
+    };
+
+
     useEffect(() => {
         if (address) {
             setForm({
@@ -199,8 +211,14 @@ function AddressTab({ address, dispatch }: any) {
                     <div className="full-width">
                         <Input label="Địa chỉ bổ sung (Tòa nhà, số tầng...)" value={form.line2} onChange={e => setForm({ ...form, line2: e.target.value })} />
                     </div>
-                    <Input label="Phường/Xã" value={form.ward} onChange={e => setForm({ ...form, ward: e.target.value })} />
-                    <Input label="Tỉnh/Thành phố" value={form.city} onChange={e => setForm({ ...form, city: e.target.value })} />
+                    <div className="full-width">
+                        <AddressSelector
+                            initialCity={form.city}
+                            initialWard={form.ward}
+                            onChange={handleLocationChange}
+                        />
+                    </div>
+
                     <Input label="Mã bưu điện (Zip Code)" value={form.postalCode} onChange={e => setForm({ ...form, postalCode: e.target.value })} />
                 </div>
 

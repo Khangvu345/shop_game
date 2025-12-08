@@ -228,10 +228,10 @@ export function ManageShipmentPage() {
                     onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ddd'}
                 >
                     <option value="">-- Tất cả trạng thái --</option>
-                    <option value="Ready">Ready</option>
-                    <option value="Shipped">Shipped</option>
-                    <option value="Delivered">Delivered</option>
-                    <option value="Returned">Returned</option>
+                    <option value="Ready"> {translateStatus('Ready', 'shipment')}</option>
+                    <option value="Shipped">{translateStatus('Shipped', 'shipment')}</option>
+                    <option value="Delivered">{translateStatus('Delivered', 'shipment')}</option>
+                    <option value="Returned">{translateStatus('Returned', 'shipment')}</option>
                 </select>
 
                 {/* Carrier Select */}

@@ -211,7 +211,7 @@ export function DashboardPage() {
                             ? formatCurrency(stats.capitalManagement.inventoryValue)
                             : '0 đ'}
                     </div>
-                    <div style={{ fontSize: '0.75rem', color: '#999', marginTop: '3px' }}>
+                    <div style={{ fontSize: '0.75rem', color: '#111', marginTop: '3px' }}>
                         Vốn đang trong kho
                     </div>
                 </div>
